@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import { UserRoutes } from "./routes/user.routes";
+import { TweetRoutes } from "./routes/tweet.routes";
 
 const app = express();
 const port = process.env.PORT;
@@ -14,6 +16,9 @@ app.get('/', (_req: Request, res: Response) => {
         message: "Bem-vindo a API GrowTweet 🚀"
     })
 })
+
+app.use(UserRoutes.execute())
+app.use(TweetRoutes.execute())
 
 app.listen(port, () => {
 	console.log(`Server running on port http://localhost:${port}`);

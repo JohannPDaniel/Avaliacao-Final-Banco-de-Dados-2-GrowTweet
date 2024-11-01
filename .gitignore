@@ -1,3 +1,8 @@
 node_modules
 dist
 .env
+
+# Para consultar as APIs por meio do .http, você tem que ter a extensão "httpBook - Rest Client"
+
+user.http
+tweet.http

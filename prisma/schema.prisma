@@ -10,12 +10,82 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid()) @db.Uuid
-  name     String @db.VarChar(255)
-  email    String @db.VarChar(150)
-  username String @db.VarChar(150)
-  password String @db.Text
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(255)
+  email     String   @db.VarChar(150)
+  username  String   @db.VarChar(150)
+  password  String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  Tweet     Tweet[]
+  Like      Like[]
+  Reply     Reply[]
+  followers Follower[] @relation("Following")
+  following Follower[] @relation("Followers")
 
   @@map("users")
+  @@schema("GrowTweet")
+}
+
+model Tweet {
+  id        String    @id @default(uuid()) @db.Uuid
+  content   String    @db.Text
+  type      TypeTweet @default(Tweet)
+  userId    String    @map("user_id") @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  Like      Like[]
+  Reply     Reply[]
+
+  @@map("tweets")
+  @@schema("GrowTweet")
+}
+
+model Like {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  tweetId   String   @map("tweet_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("likes")
+  @@schema("GrowTweet")
+}
+
+model Reply {
+  id        String    @id @default(uuid()) @db.Uuid
+  content   String    @db.Text
+  type      TypeTweet @default(Reply)
+  userId    String    @map("user_id") @db.Uuid
+  tweetId   String    @map("tweet_id") @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tweet     Tweet     @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@map("replies")
+  @@schema("GrowTweet")
+}
+
+model Follower {
+  id         String @id @default(uuid()) @db.Uuid
+  user       User   @relation("Followers", fields: [userId], references: [id], onDelete: Cascade)
+  follower   User   @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  userId     String @map("user_id") @db.Uuid
+  followerId String @map("follower_id") @db.Uuid
+
+  @@unique([userId, followerId])
+  @@map("followers")
+  @@schema("GrowTweet")
+}
+
+enum TypeTweet {
+  Tweet
+  Reply 
+
   @@schema("GrowTweet")
 }
