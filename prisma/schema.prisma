@@ -1,0 +1,21 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public", "GrowTweet"]
+}
+
+model User {
+  id       String @id @default(uuid()) @db.Uuid
+  name     String @db.VarChar(255)
+  email    String @db.VarChar(150)
+  username String @db.VarChar(150)
+  password String @db.Text
+
+  @@map("users")
+  @@schema("GrowTweet")
+}
