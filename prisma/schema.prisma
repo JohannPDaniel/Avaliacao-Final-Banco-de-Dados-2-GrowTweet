@@ -53,6 +53,7 @@ model Like {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("likes")
+  @@unique([userId, tweetId])
   @@schema("GrowTweet")
 }
 

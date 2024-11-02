@@ -45,7 +45,7 @@ export class TweetService {
 		return {
 			success: true,
 			code: 200,
-			message: 'Usuário buscado com sucesso !',
+			message: 'Tweets buscados com sucesso !',
 			data: tweets.map((tweet) => this.mapToDto(tweet)),
 		};
 	}
@@ -82,7 +82,7 @@ export class TweetService {
 			return {
 				success: false,
 				code: 404,
-				message: 'Usuário a ser atualizado não encontrado !',
+				message: 'Tweet a ser atualizado não encontrado !',
 			};
 		}
 
@@ -94,7 +94,7 @@ export class TweetService {
 		return {
 			success: true,
 			code: 200,
-			message: 'Usuário atualizado com sucesso !',
+			message: 'Tweet atualizado com sucesso !',
 			data: this.mapToDto(updateTweet),
 		};
 	}

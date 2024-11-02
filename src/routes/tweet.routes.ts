@@ -1,9 +1,9 @@
-import { Router } from "express";
-import { CreateTweetMiddleware } from "../middlewares/tweet/create-tweet.middleware";
-import { TweetController } from "../controllers/tweet.controller";
-import { FindAllTweetMiddleware } from "../middlewares/tweet/find-all-tweet.middleware";
-import { ValidateUuidMiddleware } from "../middlewares/validate-uuid.middleware";
-import { UpdateTweetMiddleware } from "../middlewares/tweet/update-tweet.middleware";
+import { Router } from 'express';
+import { TweetController } from '../controllers/tweet.controller';
+import { CreateTweetMiddleware } from '../middlewares/tweet/create-tweet.middleware';
+import { FindAllTweetMiddleware } from '../middlewares/tweet/find-all-tweet.middleware';
+import { UpdateTweetMiddleware } from '../middlewares/tweet/update-tweet.middleware';
+import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
 
 export class TweetRoutes {
 	public static execute(): Router {
