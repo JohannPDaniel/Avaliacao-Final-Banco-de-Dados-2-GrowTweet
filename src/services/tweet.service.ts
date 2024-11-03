@@ -1,5 +1,5 @@
 import { prisma } from '../database/prisma.database';
-import { CreateTweetDto, TweetDto, UpdateTweetDto } from '../dtos/tweet.dto';
+import { CreateTweetDto, TweetDto } from '../dtos/tweet.dto';
 import { TypeTweet, Tweet as TweetPrisma } from '@prisma/client';
 import { ResponseApi } from '../types';
 
@@ -73,7 +73,7 @@ export class TweetService {
 	
 	public async update(
 		id: string,
-		updateTweetDto: UpdateTweetDto
+		content?: string
 	): Promise<ResponseApi> {
 		const tweetFound = await prisma.tweet.findUnique({
 			where: { id },
@@ -89,7 +89,7 @@ export class TweetService {
 
 		const updateTweet = await prisma.tweet.update({
 			where: { id },
-			data: { ...updateTweetDto },
+			data: { content },
 		});
 
 		return {

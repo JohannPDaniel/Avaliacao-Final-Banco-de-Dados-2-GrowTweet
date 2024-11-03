@@ -1,26 +1,32 @@
+import cors from 'cors';
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
-import cors from 'cors';
-import { UserRoutes } from "./routes/user.routes";
-import { TweetRoutes } from "./routes/tweet.routes";
-import { LikeRoutes } from "./routes/like.routes";
+import {
+	UserRoutes,
+	TweetRoutes,
+	LikeRoutes,
+	ReplyRoutes,
+	FollowerRoutes,
+} from './routes';
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
 
 app.get('/', (_req: Request, res: Response) => {
-    res.status(200).json({
-        success: true,
-        message: "Bem-vindo a API GrowTweet 🚀"
-    })
-})
+	res.status(200).json({
+		success: true,
+		message: 'Bem-vindo a API GrowTweet 🚀',
+	});
+});
 
-app.use(UserRoutes.execute())
-app.use(TweetRoutes.execute())
-app.use(LikeRoutes.execute())
+app.use(UserRoutes.execute());
+app.use(TweetRoutes.execute());
+app.use(LikeRoutes.execute());
+app.use(ReplyRoutes.execute());
+app.use(FollowerRoutes.execute());
 
 app.listen(port, () => {
 	console.log(`Server running on port http://localhost:${port}`);

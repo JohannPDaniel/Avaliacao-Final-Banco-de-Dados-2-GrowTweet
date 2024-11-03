@@ -13,9 +13,3 @@ export interface TweetDto {
 	userId: string;
 }
 
-export interface UpdateTweetDto {
-	content?: string;
-	type?: TypeTweet;
-	userId?: string;
-}
-

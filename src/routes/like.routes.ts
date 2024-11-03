@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import { LikeController } from '../controllers/like.controller';
-import { CreateLikeMiddleware } from '../middlewares/like/create-like.middleware';
-import { FindAllLikeMiddleware } from '../middlewares/like/find-all-like.middleware';
+import {
+	CreateLikeMiddleware,
+	FindAllLikeMiddleware,
+} from '../middlewares/like';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
 
 export class LikeRoutes {

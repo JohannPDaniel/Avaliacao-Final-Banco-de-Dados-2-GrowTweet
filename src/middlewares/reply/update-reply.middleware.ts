@@ -1,7 +1,6 @@
-import { TypeTweet } from "@prisma/client";
 import { NextFunction, Request, Response } from 'express';
 
-export class UpdateTweetMiddleware {
+export class UpdateReplyMiddleware {
 	public static validateTypes(
 		req: Request,
 		res: Response,

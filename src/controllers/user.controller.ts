@@ -1,6 +1,5 @@
-import { Request, response, Response } from 'express';
-import { CreateUserDto } from '../dtos/user.dto';
-import { prisma } from '../database/prisma.database';
+import { Request, Response } from 'express';
+import { CreateUserDto } from '../dtos';
 import { UserService } from '../services/user.service';
 
 export class UserController {

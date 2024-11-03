@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { regexUuid } from "../types";
+import { regexUuid } from '../types';
 
 export class ValidateUuidMiddleware {
 	public static validate(
@@ -8,7 +8,7 @@ export class ValidateUuidMiddleware {
 		next: NextFunction
 	): void {
 		const { id } = req.params;
-		
+
 		if (!regexUuid.test(id)) {
 			res.status(400).json({
 				success: false,

@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { TweetController } from '../controllers/tweet.controller';
-import { CreateTweetMiddleware } from '../middlewares/tweet/create-tweet.middleware';
-import { FindAllTweetMiddleware } from '../middlewares/tweet/find-all-tweet.middleware';
-import { UpdateTweetMiddleware } from '../middlewares/tweet/update-tweet.middleware';
+import {
+	CreateTweetMiddleware,
+	FindAllTweetMiddleware,
+	UpdateTweetMiddleware,
+} from '../middlewares/tweet';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
 
 export class TweetRoutes {
