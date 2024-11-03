@@ -63,23 +63,6 @@ export class LikeController {
 			});
 		}
 	}
-	public static async update(req: Request, res: Response): Promise<void> {
-		try {
-			const { id } = req.params;
-			const { userId, tweetId } = req.body;
-
-			const service = new LikeService();
-			const result = await service.update(id, { userId, tweetId });
-
-			const { code, ...response } = result;
-			res.status(code).json(response);
-		} catch (error: any) {
-			res.status(500).json({
-				success: false,
-				message: `Erro no servidor: ${error.message}`,
-			});
-		}
-	}
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
