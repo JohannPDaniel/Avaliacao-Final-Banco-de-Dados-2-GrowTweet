@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { regexUuid } from "../../types";
 
 export class CreateLikeMiddleware {
 	public static validateRequired(
@@ -59,8 +60,6 @@ export class CreateLikeMiddleware {
 		next: NextFunction
 	): void {
 		const { userId, tweetId } = req.body;
-		const regexUuid =
-			/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 		if (!regexUuid.test(userId)) {
 			res.status(400).json({

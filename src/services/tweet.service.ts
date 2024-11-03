@@ -70,6 +70,7 @@ export class TweetService {
 			data: this.mapToDto(tweetId),
 		};
 	}
+	
 	public async update(
 		id: string,
 		updateTweetDto: UpdateTweetDto

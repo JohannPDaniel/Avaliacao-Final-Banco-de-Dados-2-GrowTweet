@@ -20,7 +20,7 @@ export class LikeRoutes {
 
 		router.get(
 			'/likes',
-			[ValidateUuidMiddleware.validate, FindAllLikeMiddleware.validateTypes],
+			[FindAllLikeMiddleware.validateTypes, FindAllLikeMiddleware.validateData],
 			LikeController.findAll
 		);
 
@@ -29,16 +29,6 @@ export class LikeRoutes {
 			ValidateUuidMiddleware.validate,
 			LikeController.findOneById
 		);
-
-		// router.put(
-		// 	'/likes/:id',
-		// 	[
-		// 		ValidateUuidMiddleware.validate,
-		// 		UpdateLikeMiddleware.validateTypes,
-		// 		UpdateLikeMiddleware.validateData,
-		// 	],
-		// 	LikeController.update
-		// );
 
 		router.delete(
 			'/likes/:id',

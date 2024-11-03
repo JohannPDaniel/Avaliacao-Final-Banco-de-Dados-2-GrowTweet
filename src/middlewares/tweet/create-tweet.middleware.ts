@@ -1,5 +1,6 @@
 import { TypeTweet } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
+import { regexUuid } from "../../types";
 
 export class CreateTweetMiddleware {
 	public static validateRequired(
@@ -75,8 +76,6 @@ export class CreateTweetMiddleware {
 		next: NextFunction
 	): void {
 		const { content, type, userId } = req.body;
-		const regexUuid =
-			/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
 		if (content.length < 5) {
 			res.status(400).json({

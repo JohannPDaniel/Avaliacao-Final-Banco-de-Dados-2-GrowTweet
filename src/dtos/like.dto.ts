@@ -13,8 +13,3 @@ export interface QueryLikeDto {
     userId: string;
     tweetId: string;
 }
-
-export interface UpdateLikeDto {
-    userId?: string;
-    tweetId?: string;
-}
