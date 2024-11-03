@@ -7,3 +7,5 @@ dist
 user.http
 tweet.http
 like.http
+reply.http
+follower.http
