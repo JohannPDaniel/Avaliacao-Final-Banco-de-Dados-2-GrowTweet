@@ -1,8 +1,15 @@
-import { User as UserPrisma } from '@prisma/client';
+import {
+	Follower as FollowerPrisma,
+	Like as LikePrisma,
+	Reply as ReplyPrisma,
+	Tweet as TweetPrisma,
+	User as UserPrisma,
+} from '@prisma/client';
 import { prisma } from '../database/prisma.database';
-import { CreateUserDto, UpdateUserDto, UserDto } from '../dtos';
+import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { ResponseApi } from '../types';
 import { Bcrypt } from '../utils/bcrypt';
+import { UserDto } from './../dtos/user.dto';
 
 export class UserService {
 	public async create(createUserDto: CreateUserDto): Promise<ResponseApi> {
@@ -56,20 +63,46 @@ export class UserService {
 	public async findOneById(id: string): Promise<ResponseApi> {
 		const userId = await prisma.user.findUnique({
 			where: { id },
+			include: {
+				Tweet: {
+					include: {
+						Like: {
+							include: {
+								user: true,
+							},
+						},
+						Reply: {
+							include: {
+								user: true,
+							},
+						},
+					},
+				},
+				followers: {
+					include: {
+						follower: true, 
+					},
+				},
+				following: {
+					include: {
+						follower: true, 
+					},
+				},
+			},
 		});
 
 		if (!userId) {
 			return {
 				success: false,
 				code: 404,
-				message: 'Usuário a ser buscado não encontrado !',
+				message: 'Usuário a ser buscado não encontrado!',
 			};
 		}
 
 		return {
 			success: true,
 			code: 200,
-			message: 'Usuário buscado pelo id com sucesso !',
+			message: 'Usuário buscado pelo id com sucesso!',
 			data: this.mapToDto(userId),
 		};
 	}
@@ -136,12 +169,57 @@ export class UserService {
 		};
 	}
 
-	private mapToDto(user: UserPrisma): UserDto {
+	private mapToDto(
+		users: UserPrisma & {
+			Tweet?: (TweetPrisma & {
+				Like?: (LikePrisma & { user: UserPrisma })[];
+				Reply?: (ReplyPrisma & { user: UserPrisma })[];
+			})[];
+			followers?: { follower: UserPrisma }[]; 
+			following?: { follower: UserPrisma }[]; 
+		}
+	): UserDto {
 		return {
-			id: user.id,
-			name: user.name,
-			email: user.email,
-			username: user.username,
+			id: users.id,
+			name: users.name,
+			email: users.email,
+			username: users.username,
+			tweet: users.Tweet?.map((tweet) => ({
+				content: tweet.content,
+				type: tweet.type,
+				like: tweet.Like?.map((like) => ({
+					userId: like.userId,
+					tweetId: like.tweetId,
+					user: {
+						name: like.user.name,
+						username: like.user.username,
+						email: like.user.email,
+					},
+				})),
+				reply: tweet.Reply?.map((reply) => ({
+					content: reply.content,
+					type: reply.type,
+					userId: reply.userId,
+					tweetId: reply.tweetId,
+					user: {
+						name: reply.user.name,
+						username: reply.user.username,
+						email: reply.user.email,
+					},
+				})),
+			})),
+			followers: users.followers?.map((follower) => ({
+				userId: follower.follower.id,
+				name: follower.follower.name,
+				username: follower.follower.username,
+				email: follower.follower.email,
+			})),
+			following: users.following?.map((followed) => ({
+				userId: followed.follower.id,
+				name: followed.follower.name,
+				username: followed.follower.username,
+				email: followed.follower.email,
+			})),
 		};
 	}
 }

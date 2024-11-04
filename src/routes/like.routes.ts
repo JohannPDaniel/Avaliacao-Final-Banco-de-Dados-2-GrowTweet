@@ -1,10 +1,7 @@
 import { Router } from 'express';
 import { LikeController } from '../controllers/like.controller';
-import {
-	CreateLikeMiddleware,
-	FindAllLikeMiddleware,
-} from '../middlewares/like';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
+import { CreateLikeMiddleware } from "../middlewares/like/create-like.middleware";
 
 export class LikeRoutes {
 	public static execute(): Router {
@@ -18,18 +15,6 @@ export class LikeRoutes {
 				CreateLikeMiddleware.validateData,
 			],
 			LikeController.create
-		);
-
-		router.get(
-			'/likes',
-			[FindAllLikeMiddleware.validateTypes, FindAllLikeMiddleware.validateData],
-			LikeController.findAll
-		);
-
-		router.get(
-			'/likes/:id',
-			ValidateUuidMiddleware.validate,
-			LikeController.findOneById
 		);
 
 		router.delete(

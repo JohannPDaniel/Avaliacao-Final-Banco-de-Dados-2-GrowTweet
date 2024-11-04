@@ -1,6 +1,6 @@
 import { Follower } from '@prisma/client';
 import { prisma } from '../database/prisma.database';
-import { CreateFollowerDto, FollowerDto, QueryFollowerDto } from '../dtos';
+import { CreateFollowerDto, FollowerDto } from '../dtos';
 import { ResponseApi } from '../types';
 
 export class FollowerService {
@@ -9,13 +9,11 @@ export class FollowerService {
 	): Promise<ResponseApi> {
 		const { userId, followerId } = createFollowerDto;
 
-		const userExist = await prisma.user.findUnique({
-			where: { id: userId },
-		});
-
-		const followerExist = await prisma.user.findUnique({
-			where: { id: followerId },
-		});
+		// Verificação de existência dos usuários
+		const [userExist, followerExist] = await Promise.all([
+			prisma.user.findUnique({ where: { id: userId } }),
+			prisma.user.findUnique({ where: { id: followerId } }),
+		]);
 
 		if (!userExist) {
 			return {
@@ -33,6 +31,7 @@ export class FollowerService {
 			};
 		}
 
+		// Verificação para impedir auto-seguimento
 		if (userId === followerId) {
 			return {
 				success: false,
@@ -41,6 +40,7 @@ export class FollowerService {
 			};
 		}
 
+		// Verificação de relação duplicada
 		const existingFollower = await prisma.follower.findFirst({
 			where: {
 				userId: userId,
@@ -56,6 +56,7 @@ export class FollowerService {
 			};
 		}
 
+		// Criação do relacionamento no banco de dados
 		const createFollower = await prisma.follower.create({
 			data: {
 				userId,
@@ -71,44 +72,6 @@ export class FollowerService {
 		};
 	}
 
-	public async findAll(query: QueryFollowerDto): Promise<ResponseApi> {
-		const { userId, followerId } = query;
-
-		const followers = await prisma.follower.findMany({
-			where: {
-				...(userId ? { userId: { equals: userId } } : {}),
-				...(followerId ? { followerId: { equals: followerId } } : {}),
-			},
-		});
-
-		return {
-			success: true,
-			code: 200,
-			message: 'Seguidores buscados com sucesso !',
-			data: followers.map((follower) => this.mapToDto(follower)),
-		};
-	}
-
-	public async findOneById(id: string): Promise<ResponseApi> {
-		const followerId = await prisma.follower.findUnique({
-			where: { id },
-		});
-
-		if (!followerId) {
-			return {
-				success: false,
-				code: 404,
-				message: 'Seguidores a serem buscados não encontrados !',
-			};
-		}
-
-		return {
-			success: true,
-			code: 200,
-			message: 'Seguidores buscados pelo id com sucesso !',
-			data: this.mapToDto(followerId),
-		};
-	}
 	public async remove(id: string): Promise<ResponseApi> {
 		const followerFound = await prisma.follower.findUnique({
 			where: { id },

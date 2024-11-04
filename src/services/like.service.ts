@@ -1,7 +1,7 @@
 import { prisma } from '../database/prisma.database';
 import { ResponseApi } from '../types';
-import { CreateLikeDto, LikeDto, QueryLikeDto } from '../dtos';
-import { Like as LikePrisma } from "@prisma/client";
+import { CreateLikeDto, LikeDto } from '../dtos';
+import { Like as LikePrisma, User as UserPrisma } from "@prisma/client";
 
 export class LikeService {
 	public async create(createLikeDto: CreateLikeDto): Promise<ResponseApi> {
@@ -13,7 +13,7 @@ export class LikeService {
 
 		const tweetExist = await prisma.tweet.findUnique({
 			where: { id: tweetId },
-			select: { userId: true }, 
+			select: { userId: true },
 		});
 
 		if (!userExist) {
@@ -60,6 +60,9 @@ export class LikeService {
 				userId,
 				tweetId,
 			},
+			include: {
+				user: true
+			}
 		});
 
 		return {
@@ -70,44 +73,6 @@ export class LikeService {
 		};
 	}
 
-	public async findAll(query: QueryLikeDto): Promise<ResponseApi> {
-		const { userId, tweetId } = query;
-
-		const likes = await prisma.like.findMany({
-			where: {
-				...(userId ? { userId: { equals: userId } } : {}),
-				...(tweetId ? { tweetId: { equals: tweetId } } : {}),
-			},
-		});
-
-		return {
-			success: true,
-			code: 200,
-			message: 'Likes buscados com sucesso !',
-			data: likes.map((like) => this.mapToDto(like)),
-		};
-	}
-
-	public async findOneById(id: string): Promise<ResponseApi> {
-		const likeId = await prisma.like.findUnique({
-			where: { id },
-		});
-
-		if (!likeId) {
-			return {
-				success: false,
-				code: 404,
-				message: 'Likes a serem buscados não encontrados !',
-			};
-		}
-
-		return {
-			success: true,
-			code: 200,
-			message: 'Likes buscados pelo id com sucesso !',
-			data: this.mapToDto(likeId),
-		};
-	}
 	public async remove(id: string): Promise<ResponseApi> {
 		const likeFound = await prisma.like.findUnique({
 			where: { id },

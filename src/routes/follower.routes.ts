@@ -1,10 +1,7 @@
 import { Router } from 'express';
 import { FollowerController } from '../controllers/follower.controller';
-import {
-	CreateFollowerMiddleware,
-	FindAllFollowerMiddleware,
-} from '../middlewares/follower';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
+import { CreateFollowerMiddleware } from "../middlewares/follower/create-follower.middleware";
 
 export class FollowerRoutes {
 	public static execute(): Router {
@@ -18,21 +15,6 @@ export class FollowerRoutes {
 				CreateFollowerMiddleware.validateData,
 			],
 			FollowerController.create
-		);
-
-		router.get(
-			'/followers',
-			[
-				FindAllFollowerMiddleware.validateTypes,
-				FindAllFollowerMiddleware.validateData,
-			],
-			FollowerController.findAll
-		);
-
-		router.get(
-			'/followers/:id',
-			ValidateUuidMiddleware.validate,
-			FollowerController.findOneById
 		);
 
 		router.delete(

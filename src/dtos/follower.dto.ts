@@ -9,7 +9,3 @@ export interface FollowerDto {
 	followerId: string;
 }
 
-export interface QueryFollowerDto {
-	userId: string;
-	followerId: string;
-}

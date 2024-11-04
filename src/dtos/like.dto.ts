@@ -4,12 +4,8 @@ export interface CreateLikeDto {
 }
 
 export interface LikeDto {
-    id: string;
-    userId: string;
-    tweetId: string;
+	id: string;
+	userId: string;
+	tweetId: string;
 }
 
-export interface QueryLikeDto {
-    userId: string;
-    tweetId: string;
-}

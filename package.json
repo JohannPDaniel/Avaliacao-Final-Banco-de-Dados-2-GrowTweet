@@ -10,7 +10,7 @@
     "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Johann Patricio Daniel",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.21.1",
