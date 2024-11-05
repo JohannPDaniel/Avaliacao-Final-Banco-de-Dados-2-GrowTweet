@@ -6,6 +6,7 @@ import {
 	UpdateTweetMiddleware,
 } from '../middlewares/tweet';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
+import { AuthMiddleware } from "../middlewares/auth/auth.middleware";
 
 export class TweetRoutes {
 	public static execute(): Router {
@@ -14,6 +15,7 @@ export class TweetRoutes {
 		router.post(
 			'/tweets',
 			[
+				AuthMiddleware.validate,
 				CreateTweetMiddleware.validateRequired,
 				CreateTweetMiddleware.validateTypes,
 				CreateTweetMiddleware.validateData,
@@ -23,19 +25,20 @@ export class TweetRoutes {
 
 		router.get(
 			'/tweets',
-			FindAllTweetMiddleware.validateTypes,
+			[AuthMiddleware.validate, FindAllTweetMiddleware.validateTypes],
 			TweetController.findAll
 		);
 
 		router.get(
 			'/tweets/:id',
-			ValidateUuidMiddleware.validate,
+			[AuthMiddleware.validate, ValidateUuidMiddleware.validate],
 			TweetController.findOneById
 		);
 
 		router.put(
 			'/tweets/:id',
 			[
+				AuthMiddleware.validate,
 				ValidateUuidMiddleware.validate,
 				UpdateTweetMiddleware.validateTypes,
 				UpdateTweetMiddleware.validateData,
@@ -45,7 +48,7 @@ export class TweetRoutes {
 
 		router.delete(
 			'/tweets/:id',
-			ValidateUuidMiddleware.validate,
+			[AuthMiddleware.validate, ValidateUuidMiddleware.validate],
 			TweetController.remove
 		);
 

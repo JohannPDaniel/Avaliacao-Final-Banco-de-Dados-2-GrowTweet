@@ -1,8 +1,11 @@
+-- CreateEnum
+CREATE TYPE "GrowTweet"."TypeTweet" AS ENUM ('Tweet', 'Reply');
+
 -- CreateTable
 CREATE TABLE "GrowTweet"."tweets" (
     "id" UUID NOT NULL,
     "content" TEXT NOT NULL,
-    "type" VARCHAR(100) NOT NULL,
+    "type" "GrowTweet"."TypeTweet" NOT NULL DEFAULT 'Tweet',
     "user_id" UUID NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

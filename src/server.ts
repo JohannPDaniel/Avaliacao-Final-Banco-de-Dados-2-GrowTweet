@@ -7,6 +7,7 @@ import {
 	LikeRoutes,
 	ReplyRoutes,
 	FollowerRoutes,
+	AuthRoutes,
 } from './routes';
 
 const app = express();
@@ -22,6 +23,7 @@ app.get('/', (_req: Request, res: Response) => {
 	});
 });
 
+app.use(AuthRoutes.execute());
 app.use(UserRoutes.execute());
 app.use(TweetRoutes.execute());
 app.use(LikeRoutes.execute());

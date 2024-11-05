@@ -3,3 +3,4 @@ export * from './tweet.dto';
 export * from './like.dto';
 export * from './reply.dto';
 export * from './follower.dto';
+export * from './auth.dto';

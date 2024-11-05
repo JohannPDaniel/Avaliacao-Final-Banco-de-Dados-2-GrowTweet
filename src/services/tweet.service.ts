@@ -1,6 +1,12 @@
 import { prisma } from '../database/prisma.database';
 import { CreateTweetDto, TweetDto } from '../dtos/tweet.dto';
-import { TypeTweet, Tweet as TweetPrisma } from '@prisma/client';
+import {
+	TypeTweet,
+	Tweet as TweetPrisma,
+	Like as LikePrisma,
+	Reply as ReplyPrisma,
+	User as UserPrisma,
+} from '@prisma/client';
 import { ResponseApi } from '../types';
 
 export class TweetService {
@@ -53,6 +59,18 @@ export class TweetService {
 	public async findOneById(id: string): Promise<ResponseApi> {
 		const tweetId = await prisma.tweet.findUnique({
 			where: { id },
+			include: {
+				Like: {
+					include: {
+						user: true,
+					},
+				},
+				Reply: {
+					include: {
+						user: true,
+					},
+				},
+			},
 		});
 
 		if (!tweetId) {
@@ -70,11 +88,8 @@ export class TweetService {
 			data: this.mapToDto(tweetId),
 		};
 	}
-	
-	public async update(
-		id: string,
-		content?: string
-	): Promise<ResponseApi> {
+
+	public async update(id: string, content?: string): Promise<ResponseApi> {
 		const tweetFound = await prisma.tweet.findUnique({
 			where: { id },
 		});
@@ -124,12 +139,37 @@ export class TweetService {
 		};
 	}
 
-	private mapToDto(tweet: TweetPrisma): TweetDto {
+	private mapToDto(
+		tweet: TweetPrisma & {
+			Like?: (LikePrisma & { user: UserPrisma })[];
+			Reply?: (ReplyPrisma & { user: UserPrisma })[];
+		}
+	): TweetDto {
 		return {
 			id: tweet.id,
 			content: tweet.content,
 			type: tweet.type,
 			userId: tweet.userId,
+			like: tweet.Like?.map((like) => ({
+				userId: like.userId,
+				tweetId: like.tweetId,
+				user: {
+					name: like.user.name,
+					username: like.user.username,
+					email: like.user.email,
+				},
+			})),
+			reply: tweet.Reply?.map((reply) => ({
+				content: reply.content,
+				type: reply.type,
+				userId: reply.userId,
+				tweetId: reply.tweetId,
+				user: {
+					name: reply.user.name,
+					username: reply.user.username,
+					email: reply.user.email,
+				},
+			})),
 		};
 	}
 }

@@ -31,6 +31,10 @@ export class UserController {
 		try {
 			const { email } = req.query;
 
+			const { user } = req.body
+
+			console.log('user no controller:', user)
+
 			const service = new UserService();
 			const result = await service.findAll(email as string);
 

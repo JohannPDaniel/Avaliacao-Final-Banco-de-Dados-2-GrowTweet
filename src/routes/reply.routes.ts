@@ -6,6 +6,7 @@ import {
 	UpdateReplyMiddleware,
 } from '../middlewares/reply';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
+import { AuthMiddleware } from '../middlewares/auth/auth.middleware';
 export class ReplyRoutes {
 	public static execute(): Router {
 		const router = Router();
@@ -13,6 +14,7 @@ export class ReplyRoutes {
 		router.post(
 			'/replies',
 			[
+				AuthMiddleware.validate,
 				CreateReplyMiddleware.validateRequired,
 				CreateReplyMiddleware.validateTypes,
 				CreateReplyMiddleware.validateData,
@@ -22,19 +24,20 @@ export class ReplyRoutes {
 
 		router.get(
 			'/replies',
-			FindAllReplyMiddleware.validateTypes,
+			[AuthMiddleware.validate, FindAllReplyMiddleware.validateTypes],
 			ReplyController.findAll
 		);
 
 		router.get(
 			'/replies/:id',
-			ValidateUuidMiddleware.validate,
+			[AuthMiddleware.validate, ValidateUuidMiddleware.validate],
 			ReplyController.findOneById
 		);
 
 		router.put(
 			'/replies/:id',
 			[
+				AuthMiddleware.validate,
 				ValidateUuidMiddleware.validate,
 				UpdateReplyMiddleware.validateTypes,
 				UpdateReplyMiddleware.validateData,
@@ -44,7 +47,7 @@ export class ReplyRoutes {
 
 		router.delete(
 			'/replies/:id',
-			ValidateUuidMiddleware.validate,
+			[AuthMiddleware.validate, ValidateUuidMiddleware.validate],
 			ReplyController.remove
 		);
 

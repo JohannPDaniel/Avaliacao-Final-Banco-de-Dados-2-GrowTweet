@@ -2,6 +2,7 @@
 CREATE TABLE "GrowTweet"."replies" (
     "id" UUID NOT NULL,
     "content" TEXT NOT NULL,
+    "type" "GrowTweet"."TypeTweet" NOT NULL DEFAULT 'Reply',
     "user_id" UUID NOT NULL,
     "tweet_id" UUID NOT NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

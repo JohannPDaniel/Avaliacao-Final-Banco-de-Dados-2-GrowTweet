@@ -60,15 +60,6 @@ export class FollowerService {
 			},
 		});
 
-		if (createFollower.userId === createFollower.followerId) {
-			await prisma.follower.delete({ where: { id: createFollower.id } });
-			return {
-				success: false,
-				code: 400,
-				message: 'Erro de integridade: usuário não pode seguir a si mesmo.',
-			};
-		}
-
 		return {
 			success: true,
 			code: 201,

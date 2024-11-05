@@ -6,6 +6,7 @@ import {
 } from '../middlewares/user';
 import { UserController } from '../controllers/user.controller';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
+import { AuthMiddleware } from './../middlewares/auth/auth.middleware';
 
 export class UserRoutes {
 	public static execute(): Router {
@@ -23,19 +24,20 @@ export class UserRoutes {
 
 		router.get(
 			'/users',
-			FindAllUserMiddleware.validateTypes,
+			[AuthMiddleware.validate, FindAllUserMiddleware.validateTypes],
 			UserController.findAll
 		);
 
 		router.get(
 			'/users/:id',
-			ValidateUuidMiddleware.validate,
+			[AuthMiddleware.validate, ValidateUuidMiddleware.validate],
 			UserController.findOneById
 		);
 
 		router.put(
 			'/users/:id',
 			[
+				AuthMiddleware.validate,
 				ValidateUuidMiddleware.validate,
 				UpdateUserMiddleware.validateTypes,
 				UpdateUserMiddleware.validateData,
@@ -45,7 +47,7 @@ export class UserRoutes {
 
 		router.delete(
 			'/users/:id',
-			ValidateUuidMiddleware.validate,
+			[AuthMiddleware.validate, ValidateUuidMiddleware.validate],
 			UserController.remove
 		);
 

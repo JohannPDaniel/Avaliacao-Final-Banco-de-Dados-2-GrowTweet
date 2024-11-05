@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { LikeController } from '../controllers/like.controller';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
-import { CreateLikeMiddleware } from "../middlewares/like/create-like.middleware";
+import { CreateLikeMiddleware } from '../middlewares/like/create-like.middleware';
+import { AuthMiddleware } from '../middlewares/auth/auth.middleware';
 
 export class LikeRoutes {
 	public static execute(): Router {
@@ -10,6 +11,7 @@ export class LikeRoutes {
 		router.post(
 			'/likes',
 			[
+				AuthMiddleware.validate,
 				CreateLikeMiddleware.validateRequired,
 				CreateLikeMiddleware.validateTypes,
 				CreateLikeMiddleware.validateData,
@@ -19,7 +21,7 @@ export class LikeRoutes {
 
 		router.delete(
 			'/likes/:id',
-			ValidateUuidMiddleware.validate,
+			[AuthMiddleware.validate, ValidateUuidMiddleware.validate],
 			LikeController.remove
 		);
 
