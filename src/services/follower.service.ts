@@ -9,7 +9,14 @@ export class FollowerService {
 	): Promise<ResponseApi> {
 		const { userId, followerId } = createFollowerDto;
 
-		// Verificação de existência dos usuários
+		if (userId === followerId) {
+			return {
+				success: false,
+				code: 400,
+				message: 'Você não pode seguir a si mesmo!',
+			};
+		}
+
 		const [userExist, followerExist] = await Promise.all([
 			prisma.user.findUnique({ where: { id: userId } }),
 			prisma.user.findUnique({ where: { id: followerId } }),
@@ -31,16 +38,6 @@ export class FollowerService {
 			};
 		}
 
-		// Verificação para impedir auto-seguimento
-		if (userId === followerId) {
-			return {
-				success: false,
-				code: 400,
-				message: 'Você não pode seguir a si mesmo!',
-			};
-		}
-
-		// Verificação de relação duplicada
 		const existingFollower = await prisma.follower.findFirst({
 			where: {
 				userId: userId,
@@ -56,13 +53,21 @@ export class FollowerService {
 			};
 		}
 
-		// Criação do relacionamento no banco de dados
 		const createFollower = await prisma.follower.create({
 			data: {
 				userId,
 				followerId,
 			},
 		});
+
+		if (createFollower.userId === createFollower.followerId) {
+			await prisma.follower.delete({ where: { id: createFollower.id } });
+			return {
+				success: false,
+				code: 400,
+				message: 'Erro de integridade: usuário não pode seguir a si mesmo.',
+			};
+		}
 
 		return {
 			success: true,

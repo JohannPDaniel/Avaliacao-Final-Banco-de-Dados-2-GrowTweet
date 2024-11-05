@@ -32,14 +32,6 @@ export class LikeService {
 			};
 		}
 
-		if (tweetExist.userId === userId) {
-			return {
-				success: false,
-				code: 400,
-				message: 'Você não pode curtir o próprio tweet!',
-			};
-		}
-
 		const existingLike = await prisma.like.findFirst({
 			where: {
 				userId: userId,

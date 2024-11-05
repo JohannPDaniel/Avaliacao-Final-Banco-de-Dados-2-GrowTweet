@@ -30,7 +30,7 @@ export class TweetService {
 		return {
 			success: true,
 			code: 201,
-			message: 'Usuário criado com sucesso !',
+			message: 'Tweet criado com sucesso !',
 			data: this.mapToDto(createTweet),
 		};
 	}

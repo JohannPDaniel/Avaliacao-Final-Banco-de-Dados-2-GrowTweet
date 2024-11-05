@@ -27,6 +27,8 @@ export interface UserDto {
 	email: string;
 	username: string;
 	tweet?: Array<Tweets>;
+	like?: Array<Like>;
+
 	followers?: Array<FollowerDetails>; // Detalhes dos seguidores
 	following?: Array<FollowingDetails>; // Detalhes dos seguidos
 }

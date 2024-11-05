@@ -9,7 +9,7 @@ import { prisma } from '../database/prisma.database';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { ResponseApi } from '../types';
 import { Bcrypt } from '../utils/bcrypt';
-import { UserDto } from './../dtos/user.dto';
+import { UserDto, Like } from './../dtos/user.dto';
 
 export class UserService {
 	public async create(createUserDto: CreateUserDto): Promise<ResponseApi> {
@@ -78,14 +78,23 @@ export class UserService {
 						},
 					},
 				},
-				followers: {
+				Like: {
 					include: {
-						follower: true, 
+						tweet: {
+							include: {
+								user: true,
+							},
+						},
 					},
 				},
 				following: {
 					include: {
-						follower: true, 
+						follower: true,
+					},
+				},
+				followers: {
+					include: {
+						user: true,
 					},
 				},
 			},
@@ -175,8 +184,9 @@ export class UserService {
 				Like?: (LikePrisma & { user: UserPrisma })[];
 				Reply?: (ReplyPrisma & { user: UserPrisma })[];
 			})[];
-			followers?: { follower: UserPrisma }[]; 
-			following?: { follower: UserPrisma }[]; 
+			Like?: (LikePrisma & { tweet: TweetPrisma & { user: UserPrisma } })[];
+			followers?: { user: UserPrisma }[];
+			following?: { follower: UserPrisma }[];
 		}
 	): UserDto {
 		return {
@@ -208,17 +218,30 @@ export class UserService {
 					},
 				})),
 			})),
-			followers: users.followers?.map((follower) => ({
-				userId: follower.follower.id,
-				name: follower.follower.name,
-				username: follower.follower.username,
-				email: follower.follower.email,
+			like: users.Like?.map((like) => ({
+				userId: like.userId,
+				tweetId: like.tweetId,
+				tweet: {
+					content: like.tweet.content,
+					type: like.tweet.type,
+					user: {
+						name: like.tweet.user.name,
+						username: like.tweet.user.username,
+						email: like.tweet.user.email,
+					},
+				},
 			})),
 			following: users.following?.map((followed) => ({
 				userId: followed.follower.id,
 				name: followed.follower.name,
 				username: followed.follower.username,
 				email: followed.follower.email,
+			})),
+			followers: users.followers?.map((follower) => ({
+				userId: follower.user.id,
+				name: follower.user.name,
+				username: follower.user.username,
+				email: follower.user.email,
 			})),
 		};
 	}

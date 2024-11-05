@@ -111,7 +111,6 @@ export class ReplyService {
 	}
 
 	public async remove(id: string): Promise<ResponseApi> {
-
 		const replyFound = await prisma.reply.findUnique({
 			where: { id },
 		});
