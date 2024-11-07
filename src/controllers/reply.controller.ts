@@ -7,6 +7,9 @@ export class ReplyController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
 			const { content, type, userId, tweetId } = req.body;
+			const { authUserId } = req.body as {
+				authUserId: { id: string; name: string };
+			};
 
 			const data: CreateReplyDto = {
 				content,
@@ -16,7 +19,7 @@ export class ReplyController {
 			};
 
 			const service = new ReplyService();
-			const result = await service.create(data);
+			const result = await service.create(authUserId.id, data);
 
 			const { code, ...response } = result;
 
@@ -32,9 +35,12 @@ export class ReplyController {
 	public static async findAll(req: Request, res: Response): Promise<void> {
 		try {
 			const type = req.query.type as string;
+			const { authUserId } = req.body as {
+				authUserId: { id: string; name: string };
+			};
 
 			const service = new ReplyService();
-			const result = await service.findAll(type as TypeTweet);
+			const result = await service.findAll(authUserId.id, type as TypeTweet);
 
 			const { code, ...response } = result;
 			res.status(code).json(response);
@@ -49,9 +55,12 @@ export class ReplyController {
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
+			const { authUserId } = req.body as {
+				authUserId: { id: string; name: string };
+			};
 
 			const service = new ReplyService();
-			const result = await service.findOneById(id);
+			const result = await service.findOneById(authUserId.id, id);
 
 			const { code, ...response } = result;
 
@@ -67,9 +76,12 @@ export class ReplyController {
 		try {
 			const { id } = req.params;
 			const { content } = req.body;
+			const { authUserId } = req.body as {
+				authUserId: { id: string; name: string };
+			};
 
 			const service = new ReplyService();
-			const result = await service.update(id, content);
+			const result = await service.update(id, authUserId.id, content);
 
 			const { code, ...response } = result;
 			res.status(code).json(response);
@@ -83,9 +95,12 @@ export class ReplyController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
+			const { authUserId } = req.body as {
+				authUserId: { id: string; name: string };
+			};
 
 			const service = new ReplyService();
-			const result = await service.remove(id);
+			const result = await service.remove(authUserId.id, id);
 
 			const { code, ...response } = result;
 

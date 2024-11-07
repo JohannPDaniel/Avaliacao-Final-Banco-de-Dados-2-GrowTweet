@@ -1,15 +1,14 @@
 import {
-	Follower as FollowerPrisma,
 	Like as LikePrisma,
 	Reply as ReplyPrisma,
 	Tweet as TweetPrisma,
-	User as UserPrisma,
+	User as UserPrisma
 } from '@prisma/client';
 import { prisma } from '../database/prisma.database';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { ResponseApi } from '../types';
 import { Bcrypt } from '../utils/bcrypt';
-import { UserDto, Like } from './../dtos/user.dto';
+import { UserDto } from './../dtos/user.dto';
 
 export class UserService {
 	public async create(createUserDto: CreateUserDto): Promise<ResponseApi> {
@@ -51,7 +50,6 @@ export class UserService {
 		const users = await prisma.user.findMany({
 			where: {
 				...(email && { email: { contains: email } }),
-				
 			},
 		});
 		return {
@@ -61,8 +59,12 @@ export class UserService {
 			data: users.map((user) => this.mapToDto(user)),
 		};
 	}
-	public async findOneById(id: string, userId: string): Promise<ResponseApi> {
-		if (id !== userId) {
+
+	public async findOneById(
+		id: string,
+		authUserId: string
+	): Promise<ResponseApi> {
+		if (id !== authUserId) {
 			return {
 				success: false,
 				code: 403,
@@ -125,12 +127,13 @@ export class UserService {
 			data: this.mapToDto(userIdUnique),
 		};
 	}
+
 	public async update(
 		id: string,
-		userId: string,
+		authUserId: string,
 		updateUserDto: UpdateUserDto
 	): Promise<ResponseApi> {
-		if (id !== userId) {
+		if (id !== authUserId) {
 			return {
 				success: false,
 				code: 403,
@@ -173,9 +176,9 @@ export class UserService {
 			data: this.mapToDto(updateUser),
 		};
 	}
-	public async remove(id: string, userId: string): Promise<ResponseApi> {
-
-		if (id !== userId) {
+	
+	public async remove(id: string, authUserId: string): Promise<ResponseApi> {
+		if (id !== authUserId) {
 			return {
 				success: false,
 				code: 403,

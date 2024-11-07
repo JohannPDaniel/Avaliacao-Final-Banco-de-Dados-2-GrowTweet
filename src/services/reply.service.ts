@@ -4,15 +4,23 @@ import { CreateReplyDto, ReplyDto } from '../dtos/reply.dto';
 import { ResponseApi } from '../types';
 
 export class ReplyService {
-	public async create(createReplyDto: CreateReplyDto): Promise<ResponseApi> {
+	public async create(
+		authUserId: string,
+		createReplyDto: CreateReplyDto
+	): Promise<ResponseApi> {
 		const { content, type, userId, tweetId } = createReplyDto;
+
+		if (authUserId !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para responder em nome de outro usuário.',
+			};
+		}
 
 		const userExist = await prisma.user.findUnique({
 			where: { id: userId },
-		});
-
-		const tweetExist = await prisma.tweet.findUnique({
-			where: { id: tweetId },
 		});
 
 		if (!userExist) {
@@ -23,6 +31,10 @@ export class ReplyService {
 			};
 		}
 
+		const tweetExist = await prisma.tweet.findUnique({
+			where: { id: tweetId },
+		});
+
 		if (!tweetExist) {
 			return {
 				success: false,
@@ -31,6 +43,7 @@ export class ReplyService {
 			};
 		}
 
+		// Cria a resposta
 		const createReply = await prisma.reply.create({
 			data: {
 				content,
@@ -43,15 +56,19 @@ export class ReplyService {
 		return {
 			success: true,
 			code: 201,
-			message: 'Reply criado com sucesso !',
+			message: 'Reply criado com sucesso!',
 			data: this.mapToDto(createReply),
 		};
 	}
 
-	public async findAll(type: TypeTweet): Promise<ResponseApi> {
+	public async findAll(
+		authUserId: string,
+		type: TypeTweet
+	): Promise<ResponseApi> {
 		const replies = await prisma.reply.findMany({
 			where: {
 				...(type ? { type: { equals: type } } : {}),
+				userId: authUserId,
 			},
 		});
 
@@ -63,37 +80,43 @@ export class ReplyService {
 		};
 	}
 
-	public async findOneById(id: string): Promise<ResponseApi> {
-		const replyId = await prisma.reply.findUnique({
-			where: { id },
+	public async findOneById(
+		authUserId: string,
+		id: string
+	): Promise<ResponseApi> {
+
+		const reply = await prisma.reply.findFirst({
+			where: { id, userId: authUserId },
 		});
 
-		if (!replyId) {
+		if (!reply) {
 			return {
 				success: false,
 				code: 404,
-				message: 'Reply a ser buscado não encontrado !',
+				message:
+					'Reply a ser buscado não encontrado ou não pertence ao usuário autenticado!',
 			};
 		}
 
 		return {
 			success: true,
 			code: 200,
-			message: 'Reply buscado pelo id com sucesso !',
-			data: this.mapToDto(replyId),
+			message: 'Reply buscada pelo id com sucesso!',
+			data: this.mapToDto(reply),
 		};
 	}
 
-	public async update(id: string, content?: string): Promise<ResponseApi> {
+	public async update(id: string, authUserId: string, content?: string): Promise<ResponseApi> {
 		const replyFound = await prisma.reply.findUnique({
-			where: { id },
+			where: { id, userId: authUserId },
 		});
 
 		if (!replyFound) {
 			return {
 				success: false,
 				code: 404,
-				message: 'Reply a ser atualizado não encontrado !',
+				message:
+					'Reply a ser atualizado não encontrado ou não pertence ao usuário autenticado!',
 			};
 		}
 
@@ -110,16 +133,17 @@ export class ReplyService {
 		};
 	}
 
-	public async remove(id: string): Promise<ResponseApi> {
-		const replyFound = await prisma.reply.findUnique({
-			where: { id },
+	public async remove(authUserId: string, id: string): Promise<ResponseApi> {
+		const replyFound = await prisma.reply.findFirst({
+			where: { id, userId: authUserId },
 		});
 
 		if (!replyFound) {
 			return {
 				success: false,
 				code: 404,
-				message: 'Reply a ser deletado não encontrado !',
+				message:
+					'Reply a ser deletada não encontrada ou não pertence ao usuário autenticado!',
 			};
 		}
 

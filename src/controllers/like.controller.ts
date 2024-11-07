@@ -6,6 +6,9 @@ export class LikeController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
 			const { userId, tweetId } = req.body;
+			const { authUserId } = req.body as {
+				authUserId: { id: string; name: string };
+			};
 
 			const data: CreateLikeDto = {
 				userId,
@@ -13,7 +16,7 @@ export class LikeController {
 			};
 
 			const service = new LikeService();
-			const result = await service.create(data);
+			const result = await service.create(authUserId.id, data);
 
 			const { code, ...response } = result;
 
@@ -29,9 +32,12 @@ export class LikeController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
+			const { authUserId } = req.body as {
+				authUserId: { id: string; name: string };
+			};
 
 			const service = new LikeService();
-			const result = await service.remove(id);
+			const result = await service.remove(authUserId.id, id);
 
 			const { code, ...response } = result;
 

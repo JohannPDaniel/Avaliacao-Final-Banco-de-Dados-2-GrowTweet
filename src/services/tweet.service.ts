@@ -69,57 +69,47 @@ export class TweetService {
 	}
 
 	public async findOneById(id: string, userId: string): Promise<ResponseApi> {
+		const tweet = await prisma.tweet.findFirst({
+			where: { id, userId }, // Verifica se o tweet pertence ao usuário
+			include: {
+				Like: { include: { user: true } },
+				Reply: { include: { user: true } },
+			},
+		});
 
-		if (id !== userId) {
+		if (!tweet) {
 			return {
 				success: false,
 				code: 403,
 				message:
-					'Acesso negado: você não tem permissão para acessar os tweets deste usuario.',
-			};
-		}
-		const tweetId = await prisma.tweet.findUnique({
-			where: { id },
-			include: {
-				Like: {
-					include: {
-						user: true,
-					},
-				},
-				Reply: {
-					include: {
-						user: true,
-					},
-				},
-			},
-		});
-
-		if (!tweetId) {
-			return {
-				success: false,
-				code: 404,
-				message: 'Tweet a ser buscado não encontrado !',
+					'Acesso negado: você não tem permissão para acessar este tweet.',
 			};
 		}
 
 		return {
 			success: true,
 			code: 200,
-			message: 'Tweet buscado pelo id com sucesso !',
-			data: this.mapToDto(tweetId),
+			message: 'Tweet buscado pelo id com sucesso!',
+			data: this.mapToDto(tweet),
 		};
 	}
 
-	public async update(id: string, content?: string): Promise<ResponseApi> {
-		const tweetFound = await prisma.tweet.findUnique({
-			where: { id },
+	public async update(
+		id: string,
+		userId: string,
+		content?: string
+	): Promise<ResponseApi> {
+		// Busca o tweet, garantindo que ele pertença ao userId autenticado
+		const tweetFound = await prisma.tweet.findFirst({
+			where: { id, userId }, // Verificação de propriedade embutida
 		});
 
 		if (!tweetFound) {
 			return {
 				success: false,
-				code: 404,
-				message: 'Tweet a ser atualizado não encontrado !',
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para atualizar este tweet.',
 			};
 		}
 
@@ -131,20 +121,22 @@ export class TweetService {
 		return {
 			success: true,
 			code: 200,
-			message: 'Tweet atualizado com sucesso !',
+			message: 'Tweet atualizado com sucesso!',
 			data: this.mapToDto(updateTweet),
 		};
 	}
-	public async remove(id: string): Promise<ResponseApi> {
-		const tweetFound = await prisma.tweet.findUnique({
-			where: { id },
+	public async remove(id: string, userId: string): Promise<ResponseApi> {
+		// Busca o tweet, garantindo que ele pertence ao userId autenticado
+		const tweetFound = await prisma.tweet.findFirst({
+			where: { id, userId },
 		});
 
 		if (!tweetFound) {
 			return {
 				success: false,
-				code: 404,
-				message: 'Tweet a ser deletado não encontrado !',
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para deletar este tweet.',
 			};
 		}
 
@@ -155,7 +147,7 @@ export class TweetService {
 		return {
 			success: true,
 			code: 200,
-			message: 'Tweet deletado com sucesso !',
+			message: 'Tweet deletado com sucesso!',
 			data: this.mapToDto(tweetDeleted),
 		};
 	}

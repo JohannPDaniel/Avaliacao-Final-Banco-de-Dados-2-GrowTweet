@@ -30,7 +30,7 @@ export class AuthMiddleware {
 			return;
 		}
 
-		req.body.user = {
+		req.body.authUserId = {
 			id: isValidUsers.id,
 			name: isValidUsers.name,
 		};

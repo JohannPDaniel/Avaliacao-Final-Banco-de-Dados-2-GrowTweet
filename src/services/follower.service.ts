@@ -5,9 +5,19 @@ import { ResponseApi } from '../types';
 
 export class FollowerService {
 	public async create(
+		authUserId: string,
 		createFollowerDto: CreateFollowerDto
 	): Promise<ResponseApi> {
 		const { userId, followerId } = createFollowerDto;
+
+		if (authUserId !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para realizar esta ação em nome de outro usuário.',
+			};
+		}
 
 		if (userId === followerId) {
 			return {
@@ -68,19 +78,25 @@ export class FollowerService {
 		};
 	}
 
-	public async remove(id: string): Promise<ResponseApi> {
-		const followerFound = await prisma.follower.findUnique({
-			where: { id },
+	public async remove(authUserId: string, id: string): Promise<ResponseApi> {
+		// Verifica se a relação de seguidor existe e pertence ao usuário autenticado
+		const followerFound = await prisma.follower.findFirst({
+			where: {
+				id: id,
+				userId: authUserId, // Certifica-se de que o seguidor é o usuário autenticado
+			},
 		});
 
 		if (!followerFound) {
 			return {
 				success: false,
 				code: 404,
-				message: 'Seguidor a ser deletado não encontrado !',
+				message:
+					'Relação de seguidor a ser deletada não encontrada ou não pertence ao usuário autenticado!',
 			};
 		}
 
+		// Deleta a relação de seguidor
 		const followerDeleted = await prisma.follower.delete({
 			where: { id },
 		});
@@ -88,7 +104,7 @@ export class FollowerService {
 		return {
 			success: true,
 			code: 200,
-			message: 'Seguidor deletado com sucesso !',
+			message: 'Seguidor deletado com sucesso!',
 			data: this.mapToDto(followerDeleted),
 		};
 	}

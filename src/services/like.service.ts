@@ -4,8 +4,20 @@ import { CreateLikeDto, LikeDto } from '../dtos';
 import { Like as LikePrisma, User as UserPrisma } from "@prisma/client";
 
 export class LikeService {
-	public async create(createLikeDto: CreateLikeDto): Promise<ResponseApi> {
+	public async create(
+		authUserId: string,
+		createLikeDto: CreateLikeDto
+	): Promise<ResponseApi> {
 		const { userId, tweetId } = createLikeDto;
+
+		if (authUserId !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para curtir este tweet em nome de outro usuário.',
+			};
+		}
 
 		const userExist = await prisma.user.findUnique({
 			where: { id: userId },
@@ -34,8 +46,8 @@ export class LikeService {
 
 		const existingLike = await prisma.like.findFirst({
 			where: {
-				userId: userId,
-				tweetId: tweetId,
+				userId,
+				tweetId,
 			},
 		});
 
@@ -53,8 +65,8 @@ export class LikeService {
 				tweetId,
 			},
 			include: {
-				user: true
-			}
+				user: true,
+			},
 		});
 
 		return {
@@ -65,16 +77,17 @@ export class LikeService {
 		};
 	}
 
-	public async remove(id: string): Promise<ResponseApi> {
-		const likeFound = await prisma.like.findUnique({
-			where: { id },
+	public async remove(authUserId: string, id: string): Promise<ResponseApi> {
+		const likeFound = await prisma.like.findFirst({
+			where: { id, userId: authUserId }, 
 		});
 
 		if (!likeFound) {
 			return {
 				success: false,
 				code: 404,
-				message: 'Like a ser deletado não encontrado !',
+				message:
+					'Like a ser deletado não encontrado ou não pertence ao usuário autenticado!',
 			};
 		}
 
@@ -85,7 +98,7 @@ export class LikeService {
 		return {
 			success: true,
 			code: 200,
-			message: 'Like deletado com sucesso !',
+			message: 'Like deletado com sucesso!',
 			data: this.mapToDto(likeDeleted),
 		};
 	}
