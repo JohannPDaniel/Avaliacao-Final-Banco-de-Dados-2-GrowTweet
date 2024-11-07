@@ -7,6 +7,9 @@ export class TweetController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
 			const { content, type, userId } = req.body;
+			const { user } = req.body as {
+				user: { id: string; name: string };
+			};
 
 			const data: CreateTweetDto = {
 				content,
@@ -15,7 +18,7 @@ export class TweetController {
 			};
 
 			const service = new TweetService();
-			const result = await service.create(data);
+			const result = await service.create(user.id, data);
 
 			const { code, ...response } = result;
 
@@ -31,9 +34,15 @@ export class TweetController {
 	public static async findAll(req: Request, res: Response): Promise<void> {
 		try {
 			const type = req.query.type as string;
+			const { user } = req.body as {
+				user: { id: string; name: string };
+			};
 
 			const service = new TweetService();
-			const result = await service.findAll(type as TypeTweet);
+			const result = await service.findAll(
+				user.id as string,
+				type as TypeTweet
+			);
 
 			const { code, ...response } = result;
 			res.status(code).json(response);
@@ -48,9 +57,12 @@ export class TweetController {
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
+			const { user } = req.body as {
+				user: { id: string; name: string };
+			};
 
 			const service = new TweetService();
-			const result = await service.findOneById(id);
+			const result = await service.findOneById(id, user.id);
 
 			const { code, ...response } = result;
 

@@ -31,10 +31,6 @@ export class UserController {
 		try {
 			const { email } = req.query;
 
-			const { user } = req.body
-
-			console.log('user no controller:', user)
-
 			const service = new UserService();
 			const result = await service.findAll(email as string);
 
@@ -50,9 +46,12 @@ export class UserController {
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
+			const { user } = req.body as {
+				user: { id: string; name: string };
+			};
 
 			const service = new UserService();
-			const result = await service.findOneById(id);
+			const result = await service.findOneById(id, user.id);
 
 			const { code, ...response } = result;
 
@@ -68,9 +67,16 @@ export class UserController {
 		try {
 			const { id } = req.params;
 			const { name, username, password } = req.body;
+			const { user } = req.body as {
+				user: { id: string; name: string };
+			};
 
 			const service = new UserService();
-			const result = await service.update(id, { name, username, password });
+			const result = await service.update(id, user.id, {
+				name,
+				username,
+				password,
+			});
 
 			const { code, ...response } = result;
 			res.status(code).json(response);
@@ -84,9 +90,12 @@ export class UserController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
+			const { user } = req.body as {
+				user: { id: string; name: string };
+			};
 
 			const service = new UserService();
-			const result = await service.remove(id);
+			const result = await service.remove(id, user.id);
 
 			const { code, ...response } = result;
 

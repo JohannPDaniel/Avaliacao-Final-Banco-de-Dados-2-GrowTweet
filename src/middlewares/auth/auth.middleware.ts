@@ -33,7 +33,6 @@ export class AuthMiddleware {
 		req.body.user = {
 			id: isValidUsers.id,
 			name: isValidUsers.name,
-			email: isValidUsers.email,
 		};
 
 		next();

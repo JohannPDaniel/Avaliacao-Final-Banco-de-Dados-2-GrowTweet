@@ -10,8 +10,19 @@ import {
 import { ResponseApi } from '../types';
 
 export class TweetService {
-	public async create(createTweetDto: CreateTweetDto): Promise<ResponseApi> {
+	public async create(
+		id: string,
+		createTweetDto: CreateTweetDto
+	): Promise<ResponseApi> {
 		const { content, type, userId } = createTweetDto;
+
+		if (id !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message: 'Acesso negado: você não tem permissão para criar um tweet.',
+			};
+		}
 
 		const userExist = await prisma.user.findUnique({
 			where: { id: userId },
@@ -41,10 +52,11 @@ export class TweetService {
 		};
 	}
 
-	public async findAll(type: TypeTweet): Promise<ResponseApi> {
+	public async findAll(id: string, type: TypeTweet): Promise<ResponseApi> {
 		const tweets = await prisma.tweet.findMany({
 			where: {
 				...(type ? { type: { equals: type } } : {}),
+				userId: id,
 			},
 		});
 
@@ -56,7 +68,16 @@ export class TweetService {
 		};
 	}
 
-	public async findOneById(id: string): Promise<ResponseApi> {
+	public async findOneById(id: string, userId: string): Promise<ResponseApi> {
+
+		if (id !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para acessar os tweets deste usuario.',
+			};
+		}
 		const tweetId = await prisma.tweet.findUnique({
 			where: { id },
 			include: {

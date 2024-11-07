@@ -51,6 +51,7 @@ export class UserService {
 		const users = await prisma.user.findMany({
 			where: {
 				...(email && { email: { contains: email } }),
+				
 			},
 		});
 		return {
@@ -60,8 +61,17 @@ export class UserService {
 			data: users.map((user) => this.mapToDto(user)),
 		};
 	}
-	public async findOneById(id: string): Promise<ResponseApi> {
-		const userId = await prisma.user.findUnique({
+	public async findOneById(id: string, userId: string): Promise<ResponseApi> {
+		if (id !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para acessar este usuario.',
+			};
+		}
+
+		const userIdUnique = await prisma.user.findUnique({
 			where: { id },
 			include: {
 				Tweet: {
@@ -100,7 +110,7 @@ export class UserService {
 			},
 		});
 
-		if (!userId) {
+		if (!userIdUnique) {
 			return {
 				success: false,
 				code: 404,
@@ -112,13 +122,23 @@ export class UserService {
 			success: true,
 			code: 200,
 			message: 'Usuário buscado pelo id com sucesso!',
-			data: this.mapToDto(userId),
+			data: this.mapToDto(userIdUnique),
 		};
 	}
 	public async update(
 		id: string,
+		userId: string,
 		updateUserDto: UpdateUserDto
 	): Promise<ResponseApi> {
+		if (id !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para atualizar este usuario.',
+			};
+		}
+
 		const userFound = await prisma.user.findUnique({
 			where: { id },
 		});
@@ -153,7 +173,17 @@ export class UserService {
 			data: this.mapToDto(updateUser),
 		};
 	}
-	public async remove(id: string): Promise<ResponseApi> {
+	public async remove(id: string, userId: string): Promise<ResponseApi> {
+
+		if (id !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para deletar este usuario.',
+			};
+		}
+
 		const userFound = await prisma.user.findUnique({
 			where: { id },
 		});
