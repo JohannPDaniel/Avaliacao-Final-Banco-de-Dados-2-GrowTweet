@@ -26,11 +26,12 @@ export interface UserDto {
 	name: string;
 	email: string;
 	username: string;
+	createdAt: Date;
 	tweet?: Array<Tweets>;
 	like?: Array<Like>;
 
-	followers?: Array<FollowerDetails>; // Detalhes dos seguidores
-	following?: Array<FollowingDetails>; // Detalhes dos seguidos
+	followers?: Array<FollowerDetails>; 
+	following?: Array<FollowingDetails>; 
 }
 
 export interface FollowerDetails {
@@ -38,6 +39,7 @@ export interface FollowerDetails {
 	name: string;
 	username: string;
 	email: string;
+	createdAt: Date;
 }
 
 export interface FollowingDetails {
@@ -45,6 +47,7 @@ export interface FollowingDetails {
 	name: string;
 	username: string;
 	email: string;
+	createdAt: Date;
 }
 
 export interface Tweets {
@@ -52,11 +55,14 @@ export interface Tweets {
 	type: string;
 	like?: Array<Like>;
 	reply?: Array<Reply>;
+	createdAt: Date;
 }
 
 export interface Like {
 	userId: string;
 	tweetId: string;
+	createdAt: Date;
+
 	user?: {
 		name: string;
 		username: string;
@@ -69,6 +75,8 @@ export interface Reply {
 	type: TypeTweet;
 	userId: string;
 	tweetId: string;
+	createdAt: Date;
+
 	user?: {
 		name: string;
 		username: string;

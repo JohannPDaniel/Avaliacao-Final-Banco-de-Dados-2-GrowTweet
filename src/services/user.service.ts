@@ -176,7 +176,7 @@ export class UserService {
 			data: this.mapToDto(updateUser),
 		};
 	}
-	
+
 	public async remove(id: string, authUserId: string): Promise<ResponseApi> {
 		if (id !== authUserId) {
 			return {
@@ -227,12 +227,15 @@ export class UserService {
 			name: users.name,
 			email: users.email,
 			username: users.username,
+			createdAt: users.createdAt,
 			tweet: users.Tweet?.map((tweet) => ({
 				content: tweet.content,
 				type: tweet.type,
+				createdAt: tweet.createdAt,
 				like: tweet.Like?.map((like) => ({
 					userId: like.userId,
 					tweetId: like.tweetId,
+					createdAt: like.createdAt, 
 					user: {
 						name: like.user.name,
 						username: like.user.username,
@@ -244,6 +247,7 @@ export class UserService {
 					type: reply.type,
 					userId: reply.userId,
 					tweetId: reply.tweetId,
+					createdAt: reply.createdAt, 
 					user: {
 						name: reply.user.name,
 						username: reply.user.username,
@@ -254,6 +258,7 @@ export class UserService {
 			like: users.Like?.map((like) => ({
 				userId: like.userId,
 				tweetId: like.tweetId,
+				createdAt: like.createdAt,
 				tweet: {
 					content: like.tweet.content,
 					type: like.tweet.type,
@@ -269,12 +274,14 @@ export class UserService {
 				name: followed.follower.name,
 				username: followed.follower.username,
 				email: followed.follower.email,
+				createdAt: followed.follower.createdAt,
 			})),
 			followers: users.followers?.map((follower) => ({
 				userId: follower.user.id,
 				name: follower.user.name,
 				username: follower.user.username,
 				email: follower.user.email,
+				createdAt: follower.user.createdAt,
 			})),
 		};
 	}

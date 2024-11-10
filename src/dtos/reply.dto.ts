@@ -13,5 +13,5 @@ export interface ReplyDto {
 	type: TypeTweet;
 	userId: string;
 	tweetId: string;
+	createdAt: Date;
 }
-

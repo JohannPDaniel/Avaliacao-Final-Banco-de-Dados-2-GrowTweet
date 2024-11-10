@@ -166,6 +166,7 @@ export class ReplyService {
 			type: reply.type,
 			userId: reply.userId,
 			tweetId: reply.tweetId,
+			createdAt: reply.createdAt
 		};
 	}
 }

@@ -11,6 +11,7 @@ export interface TweetDto {
 	content: string;
 	type: TypeTweet;
 	userId: string;
+	createdAt: Date;
 	like?: Array<LikeDtoInterface>;
 	reply?: Array<ReplyDtoInterface>;
 }
@@ -18,6 +19,7 @@ export interface TweetDto {
 export interface LikeDtoInterface {
 	userId: string;
 	tweetId: string;
+	createdAt: Date;
 }
 
 export interface ReplyDtoInterface {
@@ -25,4 +27,5 @@ export interface ReplyDtoInterface {
 	type: TypeTweet;
 	userId: string;
 	tweetId: string;
+	createdAt: Date;
 }

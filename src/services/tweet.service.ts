@@ -163,9 +163,11 @@ export class TweetService {
 			content: tweet.content,
 			type: tweet.type,
 			userId: tweet.userId,
+			createdAt: tweet.createdAt,
 			like: tweet.Like?.map((like) => ({
 				userId: like.userId,
 				tweetId: like.tweetId,
+				createdAt: like.createdAt,
 				user: {
 					name: like.user.name,
 					username: like.user.username,
@@ -177,6 +179,7 @@ export class TweetService {
 				type: reply.type,
 				userId: reply.userId,
 				tweetId: reply.tweetId,
+				createdAt: reply.createdAt,
 				user: {
 					name: reply.user.name,
 					username: reply.user.username,

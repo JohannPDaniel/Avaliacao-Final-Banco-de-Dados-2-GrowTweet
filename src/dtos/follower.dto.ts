@@ -7,5 +7,5 @@ export interface FollowerDto {
 	id: string;
 	userId: string;
 	followerId: string;
+	createdAt: Date;
 }
-

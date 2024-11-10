@@ -79,11 +79,10 @@ export class FollowerService {
 	}
 
 	public async remove(authUserId: string, id: string): Promise<ResponseApi> {
-		// Verifica se a relação de seguidor existe e pertence ao usuário autenticado
 		const followerFound = await prisma.follower.findFirst({
 			where: {
 				id: id,
-				userId: authUserId, // Certifica-se de que o seguidor é o usuário autenticado
+				userId: authUserId, 
 			},
 		});
 
@@ -96,7 +95,6 @@ export class FollowerService {
 			};
 		}
 
-		// Deleta a relação de seguidor
 		const followerDeleted = await prisma.follower.delete({
 			where: { id },
 		});
@@ -114,6 +112,7 @@ export class FollowerService {
 			id: follower.id,
 			userId: follower.userId,
 			followerId: follower.followerId,
+			createdAt: follower.createdAt
 		};
 	}
 }

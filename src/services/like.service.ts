@@ -108,6 +108,7 @@ export class LikeService {
 			id: like.id,
 			userId: like.userId,
 			tweetId: like.tweetId,
+			createdAt: like.createdAt
 		};
 	}
 }
