@@ -10,13 +10,10 @@ import {
 import { ResponseApi } from '../types';
 
 export class TweetService {
-	public async create(
-		id: string,
-		createTweetDto: CreateTweetDto
-	): Promise<ResponseApi> {
-		const { content, type, userId } = createTweetDto;
+	public async create(createTweetDto: CreateTweetDto): Promise<ResponseApi> {
+		const { content, type, userId, tokenUser } = createTweetDto;
 
-		if (id !== userId) {
+		if (userId !== tokenUser.id) {
 			return {
 				success: false,
 				code: 403,
@@ -52,11 +49,14 @@ export class TweetService {
 		};
 	}
 
-	public async findAll(id: string, type: TypeTweet): Promise<ResponseApi> {
+	public async findAll(
+		tokenUser: string,
+		type: TypeTweet
+	): Promise<ResponseApi> {
 		const tweets = await prisma.tweet.findMany({
 			where: {
 				...(type ? { type: { equals: type } } : {}),
-				userId: id,
+				userId: tokenUser,
 			},
 		});
 
@@ -68,9 +68,15 @@ export class TweetService {
 		};
 	}
 
-	public async findOneById(id: string, userId: string): Promise<ResponseApi> {
+	public async findOneById(
+		id: string,
+		tokenUser: { id: string; name: string; username: string }
+	): Promise<ResponseApi> {
 		const tweet = await prisma.tweet.findFirst({
-			where: { id, userId }, // Verifica se o tweet pertence ao usuário
+			where: {
+				id,
+				userId: tokenUser.id,
+			},
 			include: {
 				Like: { include: { user: true } },
 				Reply: { include: { user: true } },
@@ -96,12 +102,11 @@ export class TweetService {
 
 	public async update(
 		id: string,
-		userId: string,
+		tokenUserId: string,
 		content?: string
 	): Promise<ResponseApi> {
-		// Busca o tweet, garantindo que ele pertença ao userId autenticado
 		const tweetFound = await prisma.tweet.findFirst({
-			where: { id, userId }, // Verificação de propriedade embutida
+			where: { id, userId: tokenUserId },
 		});
 
 		if (!tweetFound) {
@@ -125,10 +130,16 @@ export class TweetService {
 			data: this.mapToDto(updateTweet),
 		};
 	}
-	public async remove(id: string, userId: string): Promise<ResponseApi> {
-		// Busca o tweet, garantindo que ele pertence ao userId autenticado
+
+	public async remove(
+		tweetId: string, 
+		tokenUser: string
+	): Promise<ResponseApi> {
 		const tweetFound = await prisma.tweet.findFirst({
-			where: { id, userId },
+			where: {
+				id: tweetId,
+				userId: tokenUser,
+			},
 		});
 
 		if (!tweetFound) {
@@ -141,7 +152,9 @@ export class TweetService {
 		}
 
 		const tweetDeleted = await prisma.tweet.delete({
-			where: { id },
+			where: {
+				id: tweetId, 
+			},
 		});
 
 		return {

@@ -1,9 +1,10 @@
-import { TypeTweet } from "@prisma/client";
+import { TypeTweet } from '@prisma/client';
 
 export interface CreateTweetDto {
 	content: string;
 	type: TypeTweet;
 	userId: string;
+	tokenUser: {id: string, name: string, username: string}
 }
 
 export interface TweetDto {

@@ -15,7 +15,7 @@ export class AuthRoutes {
 
 		router.post(
 			'/logout',
-			AuthMiddleware.validate, // Middleware de autenticação para verificar se o usuário está logado
+			AuthMiddleware.validate,
 			AuthController.logout
 		);
 

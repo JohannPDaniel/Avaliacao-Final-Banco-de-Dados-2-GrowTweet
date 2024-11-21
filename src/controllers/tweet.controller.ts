@@ -6,19 +6,22 @@ import { TweetService } from '../services/tweet.service';
 export class TweetController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
-			const { content, type, userId } = req.body;
-			const { user } = req.body as {
-				user: { id: string; name: string };
+			const { content, type } = req.body;
+			const userId = req.headers['x-user-id'] as string;
+
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string; username: string };
 			};
 
 			const data: CreateTweetDto = {
 				content,
 				type,
+				tokenUser,
 				userId,
 			};
 
 			const service = new TweetService();
-			const result = await service.create(user.id, data);
+			const result = await service.create(data);
 
 			const { code, ...response } = result;
 
@@ -34,13 +37,14 @@ export class TweetController {
 	public static async findAll(req: Request, res: Response): Promise<void> {
 		try {
 			const type = req.query.type as string;
-			const { user } = req.body as {
-				user: { id: string; name: string };
+
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string; username: string };
 			};
 
 			const service = new TweetService();
 			const result = await service.findAll(
-				user.id as string,
+				tokenUser.id as string,
 				type as TypeTweet
 			);
 
@@ -57,12 +61,12 @@ export class TweetController {
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { user } = req.body as {
-				user: { id: string; name: string };
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string; username: string };
 			};
 
 			const service = new TweetService();
-			const result = await service.findOneById(id, user.id);
+			const result = await service.findOneById(id, tokenUser);
 
 			const { code, ...response } = result;
 
@@ -79,12 +83,12 @@ export class TweetController {
 			const { id } = req.params;
 			const { content } = req.body;
 
-			const { user } = req.body as {
-				user: { id: string; name: string };
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string; username: string };
 			};
 
 			const service = new TweetService();
-			const result = await service.update(id, user.id, content);
+			const result = await service.update(id, tokenUser.id, content);
 
 			const { code, ...response } = result;
 			res.status(code).json(response);
@@ -98,12 +102,12 @@ export class TweetController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { user } = req.body as {
-				user: { id: string; name: string };
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string; username: string };
 			};
 
 			const service = new TweetService();
-			const result = await service.remove(id, user.id);
+			const result = await service.remove(id, tokenUser.id);
 
 			const { code, ...response } = result;
 

@@ -30,9 +30,10 @@ export class AuthMiddleware {
 			return;
 		}
 
-		req.body.authUserId = {
+		req.body.tokenUser = {
 			id: isValidUsers.id,
 			name: isValidUsers.name,
+			username: isValidUsers.username,
 		};
 
 		next();
