@@ -5,12 +5,12 @@ import { ResponseApi } from '../types';
 
 export class ReplyService {
 	public async create(
-		authUserId: string,
+		tokenUser: string,
 		createReplyDto: CreateReplyDto
 	): Promise<ResponseApi> {
 		const { content, type, userId, tweetId } = createReplyDto;
 
-		if (authUserId !== userId) {
+		if (tokenUser !== userId) {
 			return {
 				success: false,
 				code: 403,
@@ -43,7 +43,6 @@ export class ReplyService {
 			};
 		}
 
-		// Cria a resposta
 		const createReply = await prisma.reply.create({
 			data: {
 				content,
@@ -62,13 +61,13 @@ export class ReplyService {
 	}
 
 	public async findAll(
-		authUserId: string,
+		tokenUser: string,
 		type: TypeTweet
 	): Promise<ResponseApi> {
 		const replies = await prisma.reply.findMany({
 			where: {
 				...(type ? { type: { equals: type } } : {}),
-				userId: authUserId,
+				userId: tokenUser,
 			},
 		});
 
@@ -81,12 +80,12 @@ export class ReplyService {
 	}
 
 	public async findOneById(
-		authUserId: string,
+		tokenUser: string,
 		id: string
 	): Promise<ResponseApi> {
 
 		const reply = await prisma.reply.findFirst({
-			where: { id, userId: authUserId },
+			where: { id, userId: tokenUser },
 		});
 
 		if (!reply) {
@@ -106,9 +105,9 @@ export class ReplyService {
 		};
 	}
 
-	public async update(id: string, authUserId: string, content?: string): Promise<ResponseApi> {
+	public async update(id: string, tokenUser: string, content?: string): Promise<ResponseApi> {
 		const replyFound = await prisma.reply.findUnique({
-			where: { id, userId: authUserId },
+			where: { id, userId: tokenUser },
 		});
 
 		if (!replyFound) {
@@ -133,9 +132,9 @@ export class ReplyService {
 		};
 	}
 
-	public async remove(authUserId: string, id: string): Promise<ResponseApi> {
+	public async remove(tokenUser: string, id: string): Promise<ResponseApi> {
 		const replyFound = await prisma.reply.findFirst({
-			where: { id, userId: authUserId },
+			where: { id, userId: tokenUser },
 		});
 
 		if (!replyFound) {

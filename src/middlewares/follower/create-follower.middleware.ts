@@ -7,7 +7,8 @@ export class CreateFollowerMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { userId, followerId } = req.body;
+		const userId = req.headers['x-user-id'] as string;
+		const followerId = req.headers['x-follower-id'] as string;
 
 		if (!userId) {
 			res.status(400).json({
@@ -33,7 +34,8 @@ export class CreateFollowerMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { userId, followerId } = req.body;
+		const userId = req.headers['x-user-id'] as string;
+		const followerId = req.headers['x-follower-id'] as string;
 
 		if (typeof userId !== 'string') {
 			res.status(400).json({
@@ -59,7 +61,8 @@ export class CreateFollowerMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { userId, followerId } = req.body;
+		const userId = req.headers['x-user-id'] as string;
+		const followerId = req.headers['x-follower-id'] as string;
 
 		if (!regexUuid.test(userId)) {
 			res.status(400).json({

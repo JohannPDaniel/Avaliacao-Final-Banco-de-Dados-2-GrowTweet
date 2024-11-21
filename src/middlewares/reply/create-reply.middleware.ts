@@ -8,7 +8,9 @@ export class CreateReplyMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { content, type, userId, tweetId } = req.body;
+		const { content, type } = req.body;
+		const userId = req.headers['x-user-id'] as string;
+		const tweetId = req.headers['x-tweet-id'] as string;
 
 		if (!content) {
 			res.status(400).json({
@@ -50,7 +52,9 @@ export class CreateReplyMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { content, type, userId, tweetId } = req.body;
+		const { content, type } = req.body;
+		const userId = req.headers['x-user-id'] as string;
+		const tweetId = req.headers['x-tweet-id'] as string;
 
 		if (typeof content !== 'string') {
 			res.status(400).json({
@@ -86,13 +90,15 @@ export class CreateReplyMiddleware {
 
 		next();
 	}
-    
+
 	public static validateData(
 		req: Request,
 		res: Response,
 		next: NextFunction
 	): void {
-		const { content, type, userId, tweetId } = req.body;
+		const { content, type } = req.body;
+		const userId = req.headers['x-user-id'] as string;
+		const tweetId = req.headers['x-tweet-id'] as string;
 
 		if (content.length < 5) {
 			res.status(400).json({

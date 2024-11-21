@@ -5,12 +5,12 @@ import { ResponseApi } from '../types';
 
 export class FollowerService {
 	public async create(
-		authUserId: string,
+		tokenUser: string,
 		createFollowerDto: CreateFollowerDto
 	): Promise<ResponseApi> {
 		const { userId, followerId } = createFollowerDto;
 
-		if (authUserId !== userId) {
+		if (tokenUser !== userId) {
 			return {
 				success: false,
 				code: 403,
@@ -78,11 +78,11 @@ export class FollowerService {
 		};
 	}
 
-	public async remove(authUserId: string, id: string): Promise<ResponseApi> {
+	public async remove(tokenUser: string, id: string): Promise<ResponseApi> {
 		const followerFound = await prisma.follower.findFirst({
 			where: {
 				id: id,
-				userId: authUserId, 
+				userId: tokenUser, 
 			},
 		});
 

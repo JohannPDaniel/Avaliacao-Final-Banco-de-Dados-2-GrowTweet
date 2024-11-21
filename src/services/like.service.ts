@@ -5,12 +5,12 @@ import { Like as LikePrisma, User as UserPrisma } from "@prisma/client";
 
 export class LikeService {
 	public async create(
-		authUserId: string,
+		tokenUser: string, 
 		createLikeDto: CreateLikeDto
 	): Promise<ResponseApi> {
 		const { userId, tweetId } = createLikeDto;
 
-		if (authUserId !== userId) {
+		if (tokenUser !== userId) {
 			return {
 				success: false,
 				code: 403,
@@ -23,11 +23,6 @@ export class LikeService {
 			where: { id: userId },
 		});
 
-		const tweetExist = await prisma.tweet.findUnique({
-			where: { id: tweetId },
-			select: { userId: true },
-		});
-
 		if (!userExist) {
 			return {
 				success: false,
@@ -35,6 +30,12 @@ export class LikeService {
 				message: 'Usuário não encontrado!',
 			};
 		}
+
+		// Verifica se o tweet existe no banco de dados
+		const tweetExist = await prisma.tweet.findUnique({
+			where: { id: tweetId },
+			select: { userId: true }, // Busca apenas o userId relacionado ao tweet
+		});
 
 		if (!tweetExist) {
 			return {
@@ -44,6 +45,7 @@ export class LikeService {
 			};
 		}
 
+		// Verifica se o Like já existe
 		const existingLike = await prisma.like.findFirst({
 			where: {
 				userId,
@@ -59,13 +61,14 @@ export class LikeService {
 			};
 		}
 
+		// Cria o Like no banco de dados
 		const createLike = await prisma.like.create({
 			data: {
 				userId,
 				tweetId,
 			},
 			include: {
-				user: true,
+				user: true, // Inclui os dados do usuário no retorno
 			},
 		});
 
@@ -73,13 +76,13 @@ export class LikeService {
 			success: true,
 			code: 201,
 			message: 'Like criado com sucesso!',
-			data: this.mapToDto(createLike),
+			data: this.mapToDto(createLike), // Mapeia os dados para o DTO
 		};
 	}
 
-	public async remove(authUserId: string, id: string): Promise<ResponseApi> {
+	public async remove(tokenUser: string, id: string): Promise<ResponseApi> {
 		const likeFound = await prisma.like.findFirst({
-			where: { id, userId: authUserId }, 
+			where: { id, userId: tokenUser },
 		});
 
 		if (!likeFound) {
@@ -108,7 +111,7 @@ export class LikeService {
 			id: like.id,
 			userId: like.userId,
 			tweetId: like.tweetId,
-			createdAt: like.createdAt
+			createdAt: like.createdAt,
 		};
 	}
 }

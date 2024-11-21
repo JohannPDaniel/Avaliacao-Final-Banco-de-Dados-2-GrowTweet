@@ -7,7 +7,8 @@ export class CreateLikeMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { userId, tweetId } = req.body;
+		const userId = req.headers['x-user-id'];
+		const tweetId = req.headers['x-tweet-id'];
 
 		if (!userId) {
 			res.status(400).json({
@@ -33,7 +34,8 @@ export class CreateLikeMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { userId, tweetId } = req.body;
+		const userId = req.headers['x-user-id'];
+		const tweetId = req.headers['x-tweet-id'];
 
 		if (typeof userId !== 'string') {
 			res.status(400).json({
@@ -59,7 +61,8 @@ export class CreateLikeMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { userId, tweetId } = req.body;
+		const userId = req.headers['x-user-id'] as string;
+		const tweetId = req.headers['x-tweet-id'] as string;
 
 		if (!regexUuid.test(userId)) {
 			res.status(400).json({

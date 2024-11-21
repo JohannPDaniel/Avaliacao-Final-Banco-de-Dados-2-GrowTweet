@@ -62,9 +62,9 @@ export class UserService {
 
 	public async findOneById(
 		id: string,
-		authUserId: string
+		tokenUser: string
 	): Promise<ResponseApi> {
-		if (id !== authUserId) {
+		if (id !== tokenUser) {
 			return {
 				success: false,
 				code: 403,
@@ -130,10 +130,10 @@ export class UserService {
 
 	public async update(
 		id: string,
-		authUserId: string,
+		tokenUser: string,
 		updateUserDto: UpdateUserDto
 	): Promise<ResponseApi> {
-		if (id !== authUserId) {
+		if (id !== tokenUser) {
 			return {
 				success: false,
 				code: 403,
@@ -177,8 +177,8 @@ export class UserService {
 		};
 	}
 
-	public async remove(id: string, authUserId: string): Promise<ResponseApi> {
-		if (id !== authUserId) {
+	public async remove(id: string, tokenUser: string): Promise<ResponseApi> {
+		if (id !== tokenUser) {
 			return {
 				success: false,
 				code: 403,

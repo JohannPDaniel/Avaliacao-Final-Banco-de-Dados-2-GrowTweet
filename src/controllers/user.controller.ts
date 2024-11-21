@@ -27,6 +27,7 @@ export class UserController {
 			});
 		}
 	}
+
 	public static async findAll(req: Request, res: Response): Promise<void> {
 		try {
 			const { email } = req.query;
@@ -43,15 +44,16 @@ export class UserController {
 			});
 		}
 	}
+
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { authUserId } = req.body as {
-				authUserId: { id: string; name: string };
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string };
 			};
 
 			const service = new UserService();
-			const result = await service.findOneById(id, authUserId.id);
+			const result = await service.findOneById(id, tokenUser.id);
 
 			const { code, ...response } = result;
 
@@ -63,16 +65,17 @@ export class UserController {
 			});
 		}
 	}
+
 	public static async update(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
 			const { name, username, password } = req.body;
-			const { authUserId } = req.body as {
-				authUserId: { id: string; name: string };
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string };
 			};
 
 			const service = new UserService();
-			const result = await service.update(id, authUserId.id, {
+			const result = await service.update(id, tokenUser.id, {
 				name,
 				username,
 				password,
@@ -87,15 +90,16 @@ export class UserController {
 			});
 		}
 	}
+	
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { authUserId } = req.body as {
-				authUserId: { id: string; name: string };
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string };
 			};
 
 			const service = new UserService();
-			const result = await service.remove(id, authUserId.id);
+			const result = await service.remove(id, tokenUser.id);
 
 			const { code, ...response } = result;
 

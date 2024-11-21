@@ -9,7 +9,7 @@ export class CreateTweetMiddleware {
 		next: NextFunction
 	): void {
 		const { content, type } = req.body;
-		const authUserId = req.headers['x-user-id'];
+		const userId = req.headers['x-user-id'];
 
 		if (!content) {
 			res.status(400).json({
@@ -27,7 +27,7 @@ export class CreateTweetMiddleware {
 			return;
 		}
 
-		if (!authUserId) {
+		if (!userId) {
 			res.status(400).json({
 				success: false,
 				message: 'O atributo userId é obrigatório !',
@@ -44,7 +44,7 @@ export class CreateTweetMiddleware {
 		next: NextFunction
 	): void {
 		const { content, type } = req.body;
-		const authUserId = req.headers['x-user-id'];
+		const userId = req.headers['x-user-id'];
 
 		if (typeof content !== 'string') {
 			res.status(400).json({
@@ -62,10 +62,10 @@ export class CreateTweetMiddleware {
 			return;
 		}
 
-		if (typeof authUserId !== 'string') {
+		if (typeof userId !== 'string') {
 			res.status(400).json({
 				success: false,
-				message: 'O atributo AuthUserId deve vir em formato de texto !',
+				message: 'O atributo userId deve vir em formato de texto !',
 			});
 			return;
 		}
@@ -78,7 +78,7 @@ export class CreateTweetMiddleware {
 		next: NextFunction
 	): void {
 		const { content, type } = req.body;
-		const authUserId = req.headers['x-user-id'] as string;
+		const userId = req.headers['x-user-id'] as string;
 
 		if (content.length < 5) {
 			res.status(400).json({
@@ -96,7 +96,7 @@ export class CreateTweetMiddleware {
 			return;
 		}
 
-		if (!regexUuid.test(authUserId)) {
+		if (!regexUuid.test(userId)) {
 			res.status(400).json({
 				success: false,
 				message: 'Identificador precisa ser um UUID !',
