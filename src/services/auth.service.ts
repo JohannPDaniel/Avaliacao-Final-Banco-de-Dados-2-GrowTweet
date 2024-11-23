@@ -9,12 +9,11 @@ export class AuthService {
 	public async login(data: LoginDto): Promise<ResponseApi> {
 		const { email, password } = data;
 
-		// Busca o usuário no banco de dados
 		const user = await prisma.user.findUnique({
 			where: { email },
 			include: {
-				Tweet: true, // Relacionamento com os tweets
-				followers: true, // Relacionamento com os seguidores
+				Tweet: true,
+				followers: true, 
 			},
 		});
 
@@ -38,7 +37,6 @@ export class AuthService {
 			};
 		}
 
-		// Gera o token
 		const token = randomUUID();
 
 		await prisma.user.update({
@@ -48,7 +46,6 @@ export class AuthService {
 			},
 		});
 
-		// Retorna o token e os dados necessários para o frontend
 		return {
 			success: true,
 			code: 200,
