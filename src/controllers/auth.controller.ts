@@ -20,9 +20,9 @@ export class AuthController {
 
 	public static async logout(req: Request, res: Response): Promise<void> {
 		try {
-			const authUserId = req.body.authUserId.id; 
+			const tokenUser = req.body.tokenUser.id; 
 			const service = new AuthService();
-			const result = await service.logout(authUserId);
+			const result = await service.logout(tokenUser);
 
 			const { code, ...response } = result;
 

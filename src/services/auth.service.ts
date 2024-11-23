@@ -50,9 +50,9 @@ export class AuthService {
 		};
 	}
 
-	public async logout(userId: string): Promise<ResponseApi> {
+	public async logout(tokenUser: string): Promise<ResponseApi> {
 		await prisma.user.update({
-			where: { id: userId },
+			where: { id: tokenUser },
 			data: { authToken: null },
 		});
 
