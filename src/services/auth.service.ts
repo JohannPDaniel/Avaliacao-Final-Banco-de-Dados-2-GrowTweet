@@ -9,15 +9,20 @@ export class AuthService {
 	public async login(data: LoginDto): Promise<ResponseApi> {
 		const { email, password } = data;
 
+		// Busca o usuário no banco de dados
 		const user = await prisma.user.findUnique({
 			where: { email },
+			include: {
+				Tweet: true, // Relacionamento com os tweets
+				followers: true, // Relacionamento com os seguidores
+			},
 		});
 
 		if (!user) {
 			return {
 				success: false,
 				code: 404,
-				message: 'E-mail ou senha incorretos !',
+				message: 'E-mail ou senha incorretos!',
 			};
 		}
 
@@ -29,10 +34,11 @@ export class AuthService {
 			return {
 				success: false,
 				code: 404,
-				message: 'E-mail ou senha inválidos !',
+				message: 'E-mail ou senha inválidos!',
 			};
 		}
 
+		// Gera o token
 		const token = randomUUID();
 
 		await prisma.user.update({
@@ -42,11 +48,17 @@ export class AuthService {
 			},
 		});
 
+		// Retorna o token e os dados necessários para o frontend
 		return {
 			success: true,
 			code: 200,
 			message: 'Login efetuado com sucesso',
-			data: { token },
+			data: {
+				token,
+				userId: user.id,
+				tweetId: user.Tweet[0]?.id || null, 
+				followerId: user.followers[0]?.id || null, 
+			},
 		};
 	}
 

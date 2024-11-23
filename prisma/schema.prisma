@@ -19,14 +19,15 @@ model User {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp()
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  Tweet    Tweet[]
-  Like     Like[]
-  Reply    Reply[]
-  followers Follower[] @relation("Following")
-  following Follower[] @relation("Followers")
+  Tweet      Tweet[]
+  Like       Like[]
+  Reply      Reply[]
+  followers  Follower[] @relation("Following")
+  following  Follower[] @relation("Followers")
 
   @@map("users")
   @@schema("GrowTweet")
+  @@index([authToken])
 }
 
 model Tweet {
@@ -42,6 +43,7 @@ model Tweet {
 
   @@map("tweets")
   @@schema("GrowTweet")
+  @@index([createdAt])
 }
 
 model Like {
@@ -56,6 +58,24 @@ model Like {
   @@unique([userId, tweetId])
   @@map("likes")
   @@schema("GrowTweet")
+  @@index([userId])
+  @@index([tweetId])
+}
+
+model Follower {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  followerId String   @map("follower_id") @db.Uuid
+  user       User     @relation("Followers", fields: [userId], references: [id], onDelete: Cascade)
+  follower   User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([userId, followerId])
+  @@map("followers")
+  @@schema("GrowTweet")
+  @@index([userId])
+  @@index([followerId])
 }
 
 model Reply {
@@ -71,20 +91,9 @@ model Reply {
 
   @@map("replies")
   @@schema("GrowTweet")
-}
-
-model Follower {
-  id         String   @id @default(uuid()) @db.Uuid
-  userId     String   @map("user_id") @db.Uuid
-  followerId String   @map("follower_id") @db.Uuid
-  user       User     @relation("Followers", fields: [userId], references: [id], onDelete: Cascade)
-  follower   User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@unique([userId, followerId])
-  @@map("followers")
-  @@schema("GrowTweet")
+  @@index([tweetId])
+  @@index([userId])
+  @@index([createdAt])
 }
 
 enum TypeTweet {
