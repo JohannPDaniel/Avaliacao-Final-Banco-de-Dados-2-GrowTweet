@@ -61,9 +61,10 @@ export class TweetController {
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const {tokenUser} = req.body as {
-				tokenUser: {id: string, name: string, username: string}
-			}
+			const { tokenUser } = req.body as {
+				tokenUser: { id: string; name: string; username: string };
+			};
+
 
 			const service = new TweetService();
 			const result = await service.findOneById(id, tokenUser);

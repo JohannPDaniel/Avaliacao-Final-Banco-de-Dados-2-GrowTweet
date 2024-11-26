@@ -83,7 +83,8 @@ export class TweetService {
 			return {
 				success: false,
 				code: 404,
-				message: 'Acesso negado: você não tem permissão para acessar este tweet !',
+				message:
+					'Acesso negado: você não tem permissão para acessar este tweet !',
 			};
 		}
 
