@@ -68,14 +68,10 @@ export class TweetService {
 		};
 	}
 
-	public async findOneById(
-		id: string,
-		tokenUser: { id: string; name: string; username: string }
-	): Promise<ResponseApi> {
+	public async findOneById(id: string): Promise<ResponseApi> {
 		const tweet = await prisma.tweet.findFirst({
 			where: {
 				id,
-				userId: tokenUser.id,
 			},
 			include: {
 				Like: { include: { user: true } },
@@ -86,9 +82,8 @@ export class TweetService {
 		if (!tweet) {
 			return {
 				success: false,
-				code: 403,
-				message:
-					'Acesso negado: você não tem permissão para acessar este tweet.',
+				code: 404,
+				message: 'você não tweet cadastrado !',
 			};
 		}
 
@@ -132,7 +127,7 @@ export class TweetService {
 	}
 
 	public async remove(
-		tweetId: string, 
+		tweetId: string,
 		tokenUser: string
 	): Promise<ResponseApi> {
 		const tweetFound = await prisma.tweet.findFirst({
@@ -153,7 +148,7 @@ export class TweetService {
 
 		const tweetDeleted = await prisma.tweet.delete({
 			where: {
-				id: tweetId, 
+				id: tweetId,
 			},
 		});
 
