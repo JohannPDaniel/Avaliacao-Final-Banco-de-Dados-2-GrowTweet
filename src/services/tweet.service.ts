@@ -56,7 +56,6 @@ export class TweetService {
 		const tweets = await prisma.tweet.findMany({
 			where: {
 				...(type ? { type: { equals: type } } : {}),
-				userId: tokenUser,
 			},
 		});
 
@@ -68,11 +67,12 @@ export class TweetService {
 		};
 	}
 
-	public async findOneById(id: string): Promise<ResponseApi> {
-		const tweet = await prisma.tweet.findFirst({
-			where: {
-				id,
-			},
+	public async findOneById(
+		id: string,
+		tokenUser: { id: string; name: string; username: string }
+	): Promise<ResponseApi> {
+		const tweet = await prisma.tweet.findUnique({
+			where: { id, userId: tokenUser.id },
 			include: {
 				Like: { include: { user: true } },
 				Reply: { include: { user: true } },
@@ -83,14 +83,14 @@ export class TweetService {
 			return {
 				success: false,
 				code: 404,
-				message: 'você não tweet cadastrado !',
+				message: 'Acesso negado: você não tem permissão para acessar este tweet !',
 			};
 		}
 
 		return {
 			success: true,
 			code: 200,
-			message: 'Tweet buscado pelo id com sucesso!',
+			message: 'Tweets buscados pelo ID com sucesso!',
 			data: this.mapToDto(tweet),
 		};
 	}
