@@ -1,6 +1,4 @@
-import { User } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
-import { prisma } from '../../database/prisma.database';
 import { AuthService } from '../../services/auth.service';
 
 export class AuthMiddleware {
