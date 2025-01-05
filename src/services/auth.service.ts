@@ -53,8 +53,8 @@ export class AuthService {
 			data: {
 				token,
 				userId: user.id,
-				tweetId: user.Tweet[0]?.id || null, 
-				followerId: user.followers[0]?.id || null, 
+				tweets: user.Tweet.map((tweet) => tweet.id),
+				followers: user.followers.map((follower) => follower.id),
 			},
 		};
 	}
