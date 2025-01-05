@@ -3,7 +3,7 @@ import { prisma } from '../database/prisma.database';
 import { LoginDto } from '../dtos';
 import { ResponseApi } from '../types';
 import { Bcrypt } from '../utils/bcrypt';
-import { User } from "@prisma/client";
+import { User } from '@prisma/client';
 
 export class AuthService {
 	public async login(data: LoginDto): Promise<ResponseApi> {
@@ -13,7 +13,7 @@ export class AuthService {
 			where: { email },
 			include: {
 				Tweet: true,
-				followers: true, 
+				followers: true,
 			},
 		});
 
