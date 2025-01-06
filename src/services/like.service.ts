@@ -10,6 +10,7 @@ export class LikeService {
 	): Promise<ResponseApi> {
 		const { userId, tweetId } = createLikeDto;
 
+		// Verifica se o usuário autenticado é o mesmo do token
 		if (tokenUser !== userId) {
 			return {
 				success: false,
@@ -19,6 +20,7 @@ export class LikeService {
 			};
 		}
 
+		// Verifica se o usuário existe
 		const userExist = await prisma.user.findUnique({
 			where: { id: userId },
 		});
@@ -31,9 +33,9 @@ export class LikeService {
 			};
 		}
 
+		// Verifica se o tweet existe
 		const tweetExist = await prisma.tweet.findUnique({
 			where: { id: tweetId },
-			select: { userId: true },
 		});
 
 		if (!tweetExist) {
@@ -44,13 +46,33 @@ export class LikeService {
 			};
 		}
 
+		// **Adicione esta verificação para evitar conflitos**
+		const existingLike = await prisma.like.findFirst({
+			where: {
+				userId,
+				tweetId,
+			},
+		});
+
+		if (existingLike) {
+			const likeCount = await prisma.like.count({
+				where: { tweetId },
+			});
+
+			// Retorna o estado atual sem erro
+			return {
+				success: true,
+				code: 200,
+				message: 'Usuário já curtiu este tweet.',
+				data: this.mapToDto(existingLike, true, likeCount),
+			};
+		}
+
+		// Cria o like
 		const createLike = await prisma.like.create({
 			data: {
 				userId,
 				tweetId,
-			},
-			include: {
-				user: true,
 			},
 		});
 
@@ -106,7 +128,7 @@ export class LikeService {
 			userId: like.userId,
 			tweetId: like.tweetId,
 			createdAt: like.createdAt,
-			liked: liked ?? false, 
+			liked: liked ?? false,
 			likeCount: likeCount ?? 0,
 		};
 	}
