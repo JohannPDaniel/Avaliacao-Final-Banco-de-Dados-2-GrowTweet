@@ -8,4 +8,6 @@ export interface LikeDto {
 	userId: string;
 	tweetId: string;
 	createdAt: Date;
+	liked?: boolean; // Adicionado
+	likeCount?: number; // Adicionado
 }

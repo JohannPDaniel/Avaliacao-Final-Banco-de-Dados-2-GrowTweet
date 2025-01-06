@@ -1,11 +1,11 @@
 import { prisma } from '../database/prisma.database';
 import { ResponseApi } from '../types';
 import { CreateLikeDto, LikeDto } from '../dtos';
-import { Like as LikePrisma, User as UserPrisma } from "@prisma/client";
+import { Like as LikePrisma, User as UserPrisma } from '@prisma/client';
 
 export class LikeService {
 	public async create(
-		tokenUser: string, 
+		tokenUser: string,
 		createLikeDto: CreateLikeDto
 	): Promise<ResponseApi> {
 		const { userId, tweetId } = createLikeDto;
@@ -31,10 +31,9 @@ export class LikeService {
 			};
 		}
 
-		// Verifica se o tweet existe no banco de dados
 		const tweetExist = await prisma.tweet.findUnique({
 			where: { id: tweetId },
-			select: { userId: true }, // Busca apenas o userId relacionado ao tweet
+			select: { userId: true },
 		});
 
 		if (!tweetExist) {
@@ -45,7 +44,6 @@ export class LikeService {
 			};
 		}
 
-		// Verifica se o Like já existe
 		const existingLike = await prisma.like.findFirst({
 			where: {
 				userId,
@@ -61,22 +59,25 @@ export class LikeService {
 			};
 		}
 
-		// Cria o Like no banco de dados
 		const createLike = await prisma.like.create({
 			data: {
 				userId,
 				tweetId,
 			},
 			include: {
-				user: true, // Inclui os dados do usuário no retorno
+				user: true,
 			},
+		});
+
+		const likeCount = await prisma.like.count({
+			where: { tweetId },
 		});
 
 		return {
 			success: true,
 			code: 201,
 			message: 'Like criado com sucesso!',
-			data: this.mapToDto(createLike), // Mapeia os dados para o DTO
+			data: this.mapToDto(createLike, true, likeCount),
 		};
 	}
 
@@ -106,12 +107,18 @@ export class LikeService {
 		};
 	}
 
-	private mapToDto(like: LikePrisma): LikeDto {
+	private mapToDto(
+		like: LikePrisma,
+		liked?: boolean,
+		likeCount?: number
+	): LikeDto {
 		return {
 			id: like.id,
 			userId: like.userId,
 			tweetId: like.tweetId,
 			createdAt: like.createdAt,
+			liked,
+			likeCount, 
 		};
 	}
 }
