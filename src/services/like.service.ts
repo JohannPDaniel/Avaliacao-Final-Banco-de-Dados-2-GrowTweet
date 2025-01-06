@@ -44,21 +44,6 @@ export class LikeService {
 			};
 		}
 
-		const existingLike = await prisma.like.findFirst({
-			where: {
-				userId,
-				tweetId,
-			},
-		});
-
-		if (existingLike) {
-			return {
-				success: false,
-				code: 409,
-				message: 'Usuário já curtiu este tweet!',
-			};
-		}
-
 		const createLike = await prisma.like.create({
 			data: {
 				userId,
