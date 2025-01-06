@@ -57,13 +57,26 @@ export class TweetService {
 			where: {
 				...(type ? { type: { equals: type } } : {}),
 			},
+			include: {
+				Like: {
+					include: {
+						user: true, // Inclui o usuário relacionado ao like
+					},
+				},
+			},
 		});
 
 		return {
 			success: true,
 			code: 200,
-			message: 'Tweets buscados com sucesso !',
-			data: tweets.map((tweet) => this.mapToDto(tweet)),
+			message: 'Tweets buscados com sucesso!',
+			data: tweets.map((tweet) => ({
+				...this.mapToDto(tweet),
+				likeCount: tweet.Like.length,
+				likedByCurrentUser: tweet.Like.some(
+					(like) => like.userId === tokenUser
+				), 
+			})),
 		};
 	}
 

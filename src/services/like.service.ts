@@ -33,7 +33,6 @@ export class LikeService {
 			};
 		}
 
-		// Verifica se o tweet existe
 		const tweetExist = await prisma.tweet.findUnique({
 			where: { id: tweetId },
 		});
@@ -46,7 +45,6 @@ export class LikeService {
 			};
 		}
 
-		// **Adicione esta verificação para evitar conflitos**
 		const existingLike = await prisma.like.findFirst({
 			where: {
 				userId,
@@ -55,20 +53,13 @@ export class LikeService {
 		});
 
 		if (existingLike) {
-			const likeCount = await prisma.like.count({
-				where: { tweetId },
-			});
-
-			// Retorna o estado atual sem erro
 			return {
-				success: true,
-				code: 200,
-				message: 'Usuário já curtiu este tweet.',
-				data: this.mapToDto(existingLike, true, likeCount),
+				success: false,
+				code: 409, 
+				message: 'Like já existe. Use a função de descurtir para remover.',
 			};
 		}
 
-		// Cria o like
 		const createLike = await prisma.like.create({
 			data: {
 				userId,
