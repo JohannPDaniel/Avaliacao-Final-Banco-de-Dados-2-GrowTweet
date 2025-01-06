@@ -99,11 +99,15 @@ export class LikeService {
 			where: { id },
 		});
 
+		const likeCount = await prisma.like.count({
+			where: { tweetId: likeDeleted.tweetId },
+		});
+
 		return {
 			success: true,
 			code: 200,
 			message: 'Like deletado com sucesso!',
-			data: this.mapToDto(likeDeleted),
+			data: this.mapToDto(likeDeleted, false, likeCount),
 		};
 	}
 
@@ -117,8 +121,8 @@ export class LikeService {
 			userId: like.userId,
 			tweetId: like.tweetId,
 			createdAt: like.createdAt,
-			liked,
-			likeCount, 
+			liked: liked ?? false, 
+			likeCount: likeCount ?? 0,
 		};
 	}
 }
