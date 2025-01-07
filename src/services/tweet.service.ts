@@ -51,32 +51,32 @@ export class TweetService {
 
 	public async findAll(
 		tokenUser: string,
-		type: TypeTweet
+		type?: TypeTweet
 	): Promise<ResponseApi> {
 		const tweets = await prisma.tweet.findMany({
 			where: {
-				...(type ? { type: { equals: type } } : {}),
+				...(type ? { type } : {}),
 			},
 			include: {
 				Like: {
 					include: {
-						user: true, // Inclui o usuário relacionado ao like
+						user: true, // Inclui os dados do usuário associado a cada like
 					},
 				},
 			},
 		});
 
+		const tweetsWithLikes = tweets.map((tweet) => ({
+			...tweet,
+			likedByCurrentUser: tweet.Like.some((like) => like.userId === tokenUser),
+			likeCount: tweet.Like.length,
+		}));
+
 		return {
 			success: true,
 			code: 200,
 			message: 'Tweets buscados com sucesso!',
-			data: tweets.map((tweet) => ({
-				...this.mapToDto(tweet),
-				likeCount: tweet.Like.length,
-				likedByCurrentUser: tweet.Like.some(
-					(like) => like.userId === tokenUser
-				), 
-			})),
+			data: tweetsWithLikes.map((tweet) => this.mapToDto(tweet)),
 		};
 	}
 
@@ -178,6 +178,8 @@ export class TweetService {
 		tweet: TweetPrisma & {
 			Like?: (LikePrisma & { user: UserPrisma })[];
 			Reply?: (ReplyPrisma & { user: UserPrisma })[];
+			likedByCurrentUser?: boolean; // Adicionado
+			likeCount?: number; // Adicionado
 		}
 	): TweetDto {
 		return {
@@ -186,27 +188,21 @@ export class TweetService {
 			type: tweet.type,
 			userId: tweet.userId,
 			createdAt: tweet.createdAt,
+			likeCount: tweet.likeCount ?? 0, // Usa o campo adicional ou um valor padrão
+			likedByCurrentUser: tweet.likedByCurrentUser ?? false, // Usa o campo adicional ou um valor padrão
 			like: tweet.Like?.map((like) => ({
+				id: like.id,
 				userId: like.userId,
 				tweetId: like.tweetId,
 				createdAt: like.createdAt,
-				user: {
-					name: like.user.name,
-					username: like.user.username,
-					email: like.user.email,
-				},
 			})),
 			reply: tweet.Reply?.map((reply) => ({
+				id: reply.id,
 				content: reply.content,
 				type: reply.type,
 				userId: reply.userId,
 				tweetId: reply.tweetId,
 				createdAt: reply.createdAt,
-				user: {
-					name: reply.user.name,
-					username: reply.user.username,
-					email: reply.user.email,
-				},
 			})),
 		};
 	}
