@@ -60,7 +60,7 @@ export class TweetService {
 			include: {
 				Like: {
 					include: {
-						user: true, // Inclui os dados do usuário associado a cada like
+						user: true, 
 					},
 				},
 			},
@@ -178,8 +178,8 @@ export class TweetService {
 		tweet: TweetPrisma & {
 			Like?: (LikePrisma & { user: UserPrisma })[];
 			Reply?: (ReplyPrisma & { user: UserPrisma })[];
-			likedByCurrentUser?: boolean; // Adicionado
-			likeCount?: number; // Adicionado
+			likedByCurrentUser?: boolean; 
+			likeCount?: number; 
 		}
 	): TweetDto {
 		return {
@@ -188,8 +188,8 @@ export class TweetService {
 			type: tweet.type,
 			userId: tweet.userId,
 			createdAt: tweet.createdAt,
-			likeCount: tweet.likeCount ?? 0, // Usa o campo adicional ou um valor padrão
-			likedByCurrentUser: tweet.likedByCurrentUser ?? false, // Usa o campo adicional ou um valor padrão
+			likeCount: tweet.likeCount ?? 0, 
+			likedByCurrentUser: tweet.likedByCurrentUser ?? false, 
 			like: tweet.Like?.map((like) => ({
 				id: like.id,
 				userId: like.userId,

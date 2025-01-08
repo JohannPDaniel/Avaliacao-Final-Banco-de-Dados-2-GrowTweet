@@ -10,17 +10,15 @@ export class LikeService {
 	): Promise<ResponseApi> {
 		const { userId, tweetId } = createLikeDto;
 
-		// Verifica se o usuário autenticado é o mesmo do token
-		if (tokenUser !== userId) {
-			return {
-				success: false,
-				code: 403,
-				message:
-					'Acesso negado: você não tem permissão para curtir este tweet em nome de outro usuário.',
-			};
-		}
+		// if (tokenUser !== userId) {
+		// 	return {
+		// 		success: false,
+		// 		code: 403,
+		// 		message:
+		// 			'Acesso negado: você não tem permissão para curtir este tweet em nome de outro usuário.',
+		// 	};
+		// }
 
-		// Verifica se o usuário existe
 		const userExist = await prisma.user.findUnique({
 			where: { id: userId },
 		});
