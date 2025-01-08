@@ -10,6 +10,15 @@ export class LikeService {
 	): Promise<ResponseApi> {
 		const { userId, tweetId } = createLikeDto;
 
+		if (tokenUser !== userId) {
+			return {
+				success: false,
+				code: 403,
+				message:
+					'Acesso negado: você não tem permissão para curtir este tweet em nome de outro usuário.',
+			};
+		}
+
 		const userExist = await prisma.user.findUnique({
 			where: { id: userId },
 		});
@@ -31,6 +40,21 @@ export class LikeService {
 				success: false,
 				code: 404,
 				message: 'Tweet não encontrado!',
+			};
+		}
+
+		const existingLike = await prisma.like.findFirst({
+			where: {
+				userId,
+				tweetId,
+			},
+		});
+
+		if (existingLike) {
+			return {
+				success: false,
+				code: 409, 
+				message: 'Like já existe. Use a função de descurtir para remover.',
 			};
 		}
 
