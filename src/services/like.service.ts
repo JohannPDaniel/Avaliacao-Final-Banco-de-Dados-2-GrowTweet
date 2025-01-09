@@ -1,7 +1,7 @@
 import { prisma } from '../database/prisma.database';
 import { ResponseApi } from '../types';
 import { CreateLikeDto, LikeDto } from '../dtos';
-import { Like as LikePrisma, User as UserPrisma } from '@prisma/client';
+import { Like as LikePrisma } from '@prisma/client';
 
 export class LikeService {
 	public async create(
@@ -19,27 +19,18 @@ export class LikeService {
 			};
 		}
 
-		const userExist = await prisma.user.findUnique({
-			where: { id: userId },
-		});
+		const [userExist, tweetExist] = await Promise.all([
+			prisma.user.findUnique({ where: { id: userId } }),
+			prisma.tweet.findUnique({ where: { id: tweetId } }),
+		]);
 
-		if (!userExist) {
+		if (!userExist || !tweetExist) {
 			return {
 				success: false,
 				code: 404,
-				message: 'Usuário não encontrado!',
-			};
-		}
-
-		const tweetExist = await prisma.tweet.findUnique({
-			where: { id: tweetId },
-		});
-
-		if (!tweetExist) {
-			return {
-				success: false,
-				code: 404,
-				message: 'Tweet não encontrado!',
+				message: !userExist
+					? 'Usuário não encontrado!'
+					: 'Tweet não encontrado!',
 			};
 		}
 
@@ -53,7 +44,7 @@ export class LikeService {
 		if (existingLike) {
 			return {
 				success: false,
-				code: 409, 
+				code: 409,
 				message: 'Like já existe. Use a função de descurtir para remover.',
 			};
 		}
@@ -73,7 +64,7 @@ export class LikeService {
 			success: true,
 			code: 201,
 			message: 'Like criado com sucesso!',
-			data: this.mapToDto(createLike, true, likeCount),
+			data: this.mapToDto(createLike, { liked: true, likeCount }),
 		};
 	}
 
@@ -91,34 +82,30 @@ export class LikeService {
 			};
 		}
 
-		const likeDeleted = await prisma.like.delete({
-			where: { id },
-		});
-
-		const likeCount = await prisma.like.count({
-			where: { tweetId: likeDeleted.tweetId },
-		});
+		const [likeDeleted, likeCount] = await prisma.$transaction([
+			prisma.like.delete({ where: { id } }),
+			prisma.like.count({ where: { tweetId: likeFound.tweetId } }),
+		]);
 
 		return {
 			success: true,
 			code: 200,
 			message: 'Like deletado com sucesso!',
-			data: this.mapToDto(likeDeleted, false, likeCount),
+			data: this.mapToDto(likeDeleted, { liked: false, likeCount }),
 		};
 	}
 
 	private mapToDto(
 		like: LikePrisma,
-		liked?: boolean,
-		likeCount?: number
+		additionalData: { liked?: boolean; likeCount?: number } = {}
 	): LikeDto {
 		return {
 			id: like.id,
 			userId: like.userId,
 			tweetId: like.tweetId,
 			createdAt: like.createdAt,
-			liked: liked ?? false,
-			likeCount: likeCount ?? 0,
+			liked: additionalData.liked ?? false,
+			likeCount: additionalData.likeCount ?? 0,
 		};
 	}
 }
