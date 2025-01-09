@@ -53,9 +53,7 @@ export class AuthService {
 			data: {
 				token,
 				userId: user.id,
-				tweetId: Array.isArray(user.Tweet)
-					? user.Tweet.map((tweet) => tweet.id)
-					: [],
+				tweetId: user.Tweet.map((tweet) => tweet.id),
 				followerId: Array.isArray(user.followers)
 					? user.followers.map((follower) => follower.id)
 					: [],
