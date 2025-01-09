@@ -6,7 +6,10 @@ import { Bcrypt } from '../utils/bcrypt';
 import { User } from '@prisma/client';
 
 export class AuthService {
-	public async login(data: LoginDto): Promise<ResponseApi> {
+	public async login(
+		data: LoginDto,
+		likedTweetId?: string
+	): Promise<ResponseApi> {
 		const { email, password } = data;
 
 		const user = await prisma.user.findUnique({
@@ -46,6 +49,11 @@ export class AuthService {
 			},
 		});
 
+		// Seleciona o ID do tweet com base no `likedTweetId`
+		const selectedTweetId = likedTweetId
+			? user.Tweet.find((tweet) => tweet.id === likedTweetId)?.id
+			: user.Tweet[0]?.id;
+
 		return {
 			success: true,
 			code: 200,
@@ -53,7 +61,7 @@ export class AuthService {
 			data: {
 				token,
 				userId: user.id,
-				tweetId: user.Tweet.map((tweet) => tweet.id),
+				tweetId: selectedTweetId,
 				followerId: Array.isArray(user.followers)
 					? user.followers.map((follower) => follower.id)
 					: [],
