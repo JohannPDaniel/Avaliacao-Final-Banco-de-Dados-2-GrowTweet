@@ -4,6 +4,8 @@ import { LoginDto } from '../dtos';
 import { ResponseApi } from '../types';
 import { Bcrypt } from '../utils/bcrypt';
 import { User } from '@prisma/client';
+import { JWT } from "../utils/jwt";
+import { AuthUser } from "../types/authUser.types";
 
 export class AuthService {
 	public async login(
@@ -40,16 +42,16 @@ export class AuthService {
 			};
 		}
 
-		const token = randomUUID();
+		const jwt = new JWT();
+		const payload: AuthUser = {
+			id: user.id,
+			name: user.name,
+			password: user.password,
+			username: user.username
+		}
 
-		await prisma.user.update({
-			where: { id: user.id },
-			data: {
-				authToken: token,
-			},
-		});
+		const token = jwt.generateToken(payload);
 
-		// Seleciona o ID do tweet com base no `likedTweetId`
 		const selectedTweetId = likedTweetId
 			? user.Tweet.find((tweet) => tweet.id === likedTweetId)?.id
 			: user.Tweet[0]?.id;

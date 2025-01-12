@@ -22,7 +22,6 @@ export interface UserDto {
 	createdAt: Date;
 	tweet?: Array<Tweets>;
 	like?: Array<Like>;
-
 	followers?: Array<FollowerDetails>; 
 	following?: Array<FollowingDetails>; 
 }
@@ -69,7 +68,6 @@ export interface Reply {
 	userId: string;
 	tweetId: string;
 	createdAt: Date;
-
 	user?: {
 		name: string;
 		username: string;
