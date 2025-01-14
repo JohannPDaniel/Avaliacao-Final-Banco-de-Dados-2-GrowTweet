@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { prisma } from '../database/prisma.database';
 import { LoginDto } from '../dtos';
 import { ResponseApi } from '../types';
