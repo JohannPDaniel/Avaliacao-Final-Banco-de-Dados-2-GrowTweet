@@ -18,20 +18,20 @@ export class AuthController {
 		}
 	}
 
-	public static async logout(req: Request, res: Response): Promise<void> {
-		try {
-			const tokenUser = req.body.tokenUser.id; 
-			const service = new AuthService();
-			const result = await service.logout(tokenUser);
+	// public static async logout(req: Request, res: Response): Promise<void> {
+	// 	try {
+	// 		const tokenUser = req.body.tokenUser.id; 
+	// 		const service = new AuthService();
+	// 		const result = await service.logout(tokenUser);
 
-			const { code, ...response } = result;
+	// 		const { code, ...response } = result;
 
-			res.status(code).json(response);
-		} catch (error: any) {
-			res.status(500).json({
-				success: false,
-				message: `Erro no servidor: ${error.message}`,
-			});
-		}
-	}
+	// 		res.status(code).json(response);
+	// 	} catch (error: any) {
+	// 		res.status(500).json({
+	// 			success: false,
+	// 			message: `Erro no servidor: ${error.message}`,
+	// 		});
+	// 	}
+	// }
 }

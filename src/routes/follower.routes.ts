@@ -12,8 +12,6 @@ export class FollowerRoutes {
 			'/followers',
 			[
 				AuthMiddleware.validate,
-				CreateFollowerMiddleware.validateRequired,
-				CreateFollowerMiddleware.validateTypes,
 				CreateFollowerMiddleware.validateData,
 			],
 			FollowerController.create

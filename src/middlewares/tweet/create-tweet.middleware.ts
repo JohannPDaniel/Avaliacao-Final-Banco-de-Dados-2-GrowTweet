@@ -1,6 +1,6 @@
 import { TypeTweet } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
-import { regexUuid } from '../../types';
+import { regexUuid } from "../../types/uuid.types";
 
 export class CreateTweetMiddleware {
 	public static validateRequired(
@@ -9,7 +9,6 @@ export class CreateTweetMiddleware {
 		next: NextFunction
 	): void {
 		const { content, type } = req.body;
-		const userId = req.headers['x-user-id'];
 
 		if (!content) {
 			res.status(400).json({
@@ -27,14 +26,6 @@ export class CreateTweetMiddleware {
 			return;
 		}
 
-		if (!userId) {
-			res.status(400).json({
-				success: false,
-				message: 'O atributo userId é obrigatório !',
-			});
-			return;
-		}
-
 		next();
 	}
 
@@ -44,7 +35,6 @@ export class CreateTweetMiddleware {
 		next: NextFunction
 	): void {
 		const { content, type } = req.body;
-		const userId = req.headers['x-user-id'];
 
 		if (typeof content !== 'string') {
 			res.status(400).json({
@@ -62,14 +52,6 @@ export class CreateTweetMiddleware {
 			return;
 		}
 
-		if (typeof userId !== 'string') {
-			res.status(400).json({
-				success: false,
-				message: 'O atributo userId deve vir em formato de texto !',
-			});
-			return;
-		}
-
 		next();
 	}
 	public static validateData(
@@ -77,8 +59,7 @@ export class CreateTweetMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { content, type } = req.body;
-		const userId = req.headers['x-user-id'] as string;
+		const { content, type, userId } = req.body;
 
 		if (content.length < 5) {
 			res.status(400).json({
@@ -96,7 +77,7 @@ export class CreateTweetMiddleware {
 			return;
 		}
 
-		if (!regexUuid.test(userId)) {
+		if (userId && typeof userId !== "string" && !regexUuid.test(userId)) {
 			res.status(400).json({
 				success: false,
 				message: 'Identificador precisa ser um UUID !',

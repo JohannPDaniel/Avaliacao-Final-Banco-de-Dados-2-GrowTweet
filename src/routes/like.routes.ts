@@ -12,8 +12,6 @@ export class LikeRoutes {
 			'/likes',
 			[
 				AuthMiddleware.validate,
-				CreateLikeMiddleware.validateRequired,
-				CreateLikeMiddleware.validateTypes,
 				CreateLikeMiddleware.validateData,
 			],
 			LikeController.create

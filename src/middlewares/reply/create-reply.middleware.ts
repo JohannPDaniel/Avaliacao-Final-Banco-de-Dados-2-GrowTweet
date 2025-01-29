@@ -1,6 +1,6 @@
 import { TypeTweet } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
-import { regexUuid } from '../../types';
+import { regexUuid } from "../../types/uuid.types";
 
 export class CreateReplyMiddleware {
 	public static validateRequired(
@@ -9,8 +9,6 @@ export class CreateReplyMiddleware {
 		next: NextFunction
 	): void {
 		const { content, type } = req.body;
-		const userId = req.headers['x-user-id'] as string;
-		const tweetId = req.headers['x-tweet-id'] as string;
 
 		if (!content) {
 			res.status(400).json({
@@ -28,22 +26,6 @@ export class CreateReplyMiddleware {
 			return;
 		}
 
-		if (!userId) {
-			res.status(400).json({
-				success: false,
-				message: 'O atributo userId é obrigatório !',
-			});
-			return;
-		}
-
-		if (!tweetId) {
-			res.status(400).json({
-				success: false,
-				message: 'O atributo tweetId é obrigatório !',
-			});
-			return;
-		}
-
 		next();
 	}
 
@@ -53,8 +35,6 @@ export class CreateReplyMiddleware {
 		next: NextFunction
 	): void {
 		const { content, type } = req.body;
-		const userId = req.headers['x-user-id'] as string;
-		const tweetId = req.headers['x-tweet-id'] as string;
 
 		if (typeof content !== 'string') {
 			res.status(400).json({
@@ -72,22 +52,6 @@ export class CreateReplyMiddleware {
 			return;
 		}
 
-		if (typeof userId !== 'string') {
-			res.status(400).json({
-				success: false,
-				message: 'O atributo userId deve vir em formato de texto !',
-			});
-			return;
-		}
-
-		if (typeof tweetId !== 'string') {
-			res.status(400).json({
-				success: false,
-				message: 'O atributo tweetId deve vir em formato de texto !',
-			});
-			return;
-		}
-
 		next();
 	}
 
@@ -96,9 +60,7 @@ export class CreateReplyMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { content, type } = req.body;
-		const userId = req.headers['x-user-id'] as string;
-		const tweetId = req.headers['x-tweet-id'] as string;
+		const { content, type, userId, tweetId } = req.body;
 
 		if (content.length < 5) {
 			res.status(400).json({
@@ -116,15 +78,15 @@ export class CreateReplyMiddleware {
 			return;
 		}
 
-		if (!regexUuid.test(userId)) {
+		if (userId && typeof userId !== 'string' && !regexUuid.test(userId)) {
 			res.status(400).json({
 				success: false,
-				message: 'Identificador userId precisa ser um UUID !',
+				message: 'Identificador precisa ser um UUID !',
 			});
 			return;
 		}
 
-		if (!regexUuid.test(tweetId)) {
+		if (tweetId && typeof tweetId !== "string" && !regexUuid.test(tweetId)) {
 			res.status(400).json({
 				success: false,
 				message: 'Identificador tweetId precisa ser um UUID !',

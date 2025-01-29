@@ -15,7 +15,6 @@ model User {
   email     String   @unique @db.VarChar(150)
   username  String   @db.VarChar(150)
   password  String   @db.Text
-  authToken String?  @map("auth_token") @db.Text
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp()
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -27,7 +26,6 @@ model User {
 
   @@map("users")
   @@schema("GrowTweet")
-  @@index([authToken])
 }
 
 model Tweet {

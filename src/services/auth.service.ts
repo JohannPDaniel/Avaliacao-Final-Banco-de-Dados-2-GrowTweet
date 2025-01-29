@@ -70,26 +70,17 @@ export class AuthService {
 		};
 	}
 
-	public async logout(tokenUser: string): Promise<ResponseApi> {
-		await prisma.user.update({
-			where: { id: tokenUser },
-			data: { authToken: null },
-		});
+	// public async logout(tokenUser: string): Promise<ResponseApi> {
+	// 	await prisma.user.update({
+	// 		where: { id: tokenUser },
+	// 		data: { authToken: null },
+	// 	});
 
-		return {
-			success: true,
-			code: 200,
-			message: 'Logout efetuado com sucesso',
-		};
-	}
+	// 	return {
+	// 		success: true,
+	// 		code: 200,
+	// 		message: 'Logout efetuado com sucesso',
+	// 	};
+	// }
 
-	public async validateToken(token: string): Promise<User | null> {
-		const users = await prisma.user.findFirst({
-			where: {
-				authToken: token,
-			},
-		});
-
-		return users;
-	}
 }

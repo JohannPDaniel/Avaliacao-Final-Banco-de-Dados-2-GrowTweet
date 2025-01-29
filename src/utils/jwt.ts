@@ -12,7 +12,7 @@ export class JWT {
 		});
 		return token;
 	}
-	public validateToken(token: string): AuthUser | null {
+	public verifyToken(token: string): AuthUser | null {
 		try {
 			if (!process.env.JWT_SECRET) {
 				throw new Error('JWT_SECRET não definido');
