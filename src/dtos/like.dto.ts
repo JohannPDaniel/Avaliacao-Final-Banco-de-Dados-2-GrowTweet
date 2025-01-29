@@ -1,22 +1,16 @@
-import { User } from "./user.dto";
-
-export interface CreateLikeDto {
-    userId: string;
-    tweetId: string;
-}
+import { User } from './user.dto';
 
 export interface LikeDto {
 	id: string;
 	userId: string;
 	tweetId: string;
 	createdAt: Date;
-	liked?: boolean; 
-	likeCount?: number; 
+	liked?: boolean;
+	likeCount?: number;
 }
 
-export interface Like {
-	userId: string;
-	tweetId: string;
-	createdAt: Date;
+export type CreateLikeDto = Pick<LikeDto, 'userId' | 'tweetId'>;
+
+export type Like = Pick<LikeDto, 'userId' | 'tweetId' | 'createdAt'> & {
 	user?: User;
-}
+};

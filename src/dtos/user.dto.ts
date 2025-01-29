@@ -1,5 +1,5 @@
-import { Like, TypeTweet } from '@prisma/client';
 import { FollowerDetails, FollowingDetails } from './follower.dto';
+import { Like } from "./like.dto";
 import { Tweets } from './tweet.dto';
 
 export interface UserDto {
@@ -22,7 +22,4 @@ export type UpdateUserDto = Partial<CreateUserDto>;
 
 export type User = Omit<CreateUserDto, 'password'>;
 
-export type InfoUser = Pick<
-	Omit<CreateUserDto, 'password'>,
-	'name' | 'email' | 'username'
-> & { id: string };
+export type InfoUser = Pick<UserDto, "id" | "name" | "username">

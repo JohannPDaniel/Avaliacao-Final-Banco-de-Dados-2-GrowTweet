@@ -1,11 +1,7 @@
-import { Like, Reply, TypeTweet } from '@prisma/client';
-
-export interface CreateTweetDto {
-	content: string;
-	type: TypeTweet;
-	userId: string;
-	authUser: { id: string; name: string; username: string };
-}
+import { TypeTweet } from '@prisma/client';
+import { InfoUser } from './user.dto';
+import { Like, LikeDto } from "./like.dto";
+import { Reply, ReplyDto } from "./reply.dto";
 
 export interface TweetDto {
 	id: string;
@@ -16,29 +12,16 @@ export interface TweetDto {
 	likeCount: number;
 	likedByCurrentUser?: boolean;
 	like?: Array<LikeDtoInterface>;
-	reply?: Array<ReplyDtoInterface>;
+	reply?: Array<ReplyDto>;
 }
 
-export interface Tweets {
-	content: string;
-	type: string;
-	like?: Array<Like>;
-	reply?: Array<Reply>;
-	createdAt: Date;
-}
+export type CreateTweetDto = Pick<TweetDto, 'content' | 'type' | 'userId'> & {
+	authUser: InfoUser;
+};
 
-export interface LikeDtoInterface {
-	id: string;
-	userId: string;
-	tweetId: string;
-	createdAt: Date;
-}
+export type Tweets = Pick<TweetDto, "content" | "type" | "createdAt"> & { like?: Array<Like>, reply?: Array<Reply>};
 
-export interface ReplyDtoInterface {
-	id: string;
-	content: string;
-	type: TypeTweet;
-	userId: string;
-	tweetId: string;
-	createdAt: Date;
-}
+export type LikeDtoInterface = Pick<
+	LikeDto,
+	'id' | 'userId' | 'tweetId' | 'createdAt'
+>;
