@@ -1,10 +1,10 @@
-import { TypeTweet } from '@prisma/client';
+import { Like, Reply, TypeTweet } from '@prisma/client';
 
 export interface CreateTweetDto {
 	content: string;
 	type: TypeTweet;
 	userId: string;
-	tokenUser: {id: string, name: string, username: string}
+	authUser: { id: string; name: string; username: string };
 }
 
 export interface TweetDto {
@@ -17,6 +17,14 @@ export interface TweetDto {
 	likedByCurrentUser?: boolean;
 	like?: Array<LikeDtoInterface>;
 	reply?: Array<ReplyDtoInterface>;
+}
+
+export interface Tweets {
+	content: string;
+	type: string;
+	like?: Array<Like>;
+	reply?: Array<Reply>;
+	createdAt: Date;
 }
 
 export interface LikeDtoInterface {

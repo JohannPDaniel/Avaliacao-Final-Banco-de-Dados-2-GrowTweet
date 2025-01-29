@@ -16,7 +16,7 @@ export class TweetController {
 			const data: CreateTweetDto = {
 				content,
 				type,
-				tokenUser,
+				authUser: tokenUser,
 				userId,
 			};
 
@@ -64,7 +64,6 @@ export class TweetController {
 			const { tokenUser } = req.body as {
 				tokenUser: { id: string; name: string; username: string };
 			};
-
 
 			const service = new TweetService();
 			const result = await service.findOneById(id, tokenUser);

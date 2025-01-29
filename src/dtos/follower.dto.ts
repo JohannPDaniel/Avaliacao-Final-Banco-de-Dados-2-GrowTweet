@@ -9,3 +9,19 @@ export interface FollowerDto {
 	followerId: string;
 	createdAt: Date;
 }
+
+export interface FollowerDetails {
+	userId: string;
+	name: string;
+	username: string;
+	email: string;
+	createdAt: Date;
+}
+
+export interface FollowingDetails {
+	userId: string;
+	name: string;
+	username: string;
+	email: string;
+	createdAt: Date;
+}

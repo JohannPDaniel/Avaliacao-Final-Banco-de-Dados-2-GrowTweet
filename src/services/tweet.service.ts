@@ -1,17 +1,17 @@
-import { prisma } from '../database/prisma.database';
-import { CreateTweetDto, TweetDto } from '../dtos/tweet.dto';
 import {
-	TypeTweet,
-	Tweet as TweetPrisma,
 	Like as LikePrisma,
 	Reply as ReplyPrisma,
+	Tweet as TweetPrisma,
+	TypeTweet,
 	User as UserPrisma,
 } from '@prisma/client';
+import { prisma } from '../database/prisma.database';
+import { CreateTweetDto, TweetDto } from '../dtos/tweet.dto';
 import { ResponseApi } from '../types';
 
 export class TweetService {
 	public async create(createTweetDto: CreateTweetDto): Promise<ResponseApi> {
-		const { content, type, userId, tokenUser } = createTweetDto;
+		const { content, type, userId, authUser: tokenUser } = createTweetDto;
 
 		if (userId !== tokenUser.id) {
 			return {
@@ -60,7 +60,7 @@ export class TweetService {
 			include: {
 				Like: {
 					include: {
-						user: true, 
+						user: true,
 					},
 				},
 			},
@@ -178,8 +178,8 @@ export class TweetService {
 		tweet: TweetPrisma & {
 			Like?: (LikePrisma & { user: UserPrisma })[];
 			Reply?: (ReplyPrisma & { user: UserPrisma })[];
-			likedByCurrentUser?: boolean; 
-			likeCount?: number; 
+			likedByCurrentUser?: boolean;
+			likeCount?: number;
 		}
 	): TweetDto {
 		return {
@@ -188,8 +188,8 @@ export class TweetService {
 			type: tweet.type,
 			userId: tweet.userId,
 			createdAt: tweet.createdAt,
-			likeCount: tweet.likeCount ?? 0, 
-			likedByCurrentUser: tweet.likedByCurrentUser ?? false, 
+			likeCount: tweet.likeCount ?? 0,
+			likedByCurrentUser: tweet.likedByCurrentUser ?? false,
 			like: tweet.Like?.map((like) => ({
 				id: like.id,
 				userId: like.userId,
