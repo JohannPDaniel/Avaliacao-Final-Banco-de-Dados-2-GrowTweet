@@ -48,9 +48,7 @@ export class UserController {
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new UserService();
 			const result = await service.findOneById(id, tokenUser.id);
@@ -70,9 +68,7 @@ export class UserController {
 		try {
 			const { id } = req.params;
 			const { name, username, password } = req.body;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new UserService();
 			const result = await service.update(id, tokenUser.id, {
@@ -94,9 +90,7 @@ export class UserController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new UserService();
 			const result = await service.remove(id, tokenUser.id);

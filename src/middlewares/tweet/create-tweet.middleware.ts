@@ -1,6 +1,6 @@
 import { TypeTweet } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
-import { regexUuid } from "../../types/uuid.types";
+import { regexUuid } from '../../types/uuid.types';
 
 export class CreateTweetMiddleware {
 	public static validateRequired(
@@ -77,7 +77,7 @@ export class CreateTweetMiddleware {
 			return;
 		}
 
-		if (userId && typeof userId !== "string" && !regexUuid.test(userId)) {
+		if (userId && (typeof userId !== 'string' || !regexUuid.test(userId))) {
 			res.status(400).json({
 				success: false,
 				message: 'Identificador precisa ser um UUID !',

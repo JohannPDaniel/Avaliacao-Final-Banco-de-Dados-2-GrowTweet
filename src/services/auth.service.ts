@@ -2,7 +2,6 @@ import { prisma } from '../database/prisma.database';
 import { LoginDto } from '../dtos';
 import { ResponseApi } from '../types';
 import { Bcrypt } from '../utils/bcrypt';
-import { User } from '@prisma/client';
 import { JWT } from "../utils/jwt";
 import { AuthUser } from "../types/authUser.types";
 
@@ -46,8 +45,8 @@ export class AuthService {
 			id: user.id,
 			name: user.name,
 			password: user.password,
-			username: user.username
-		}
+			username: user.username,
+		};
 
 		const token = jwt.generateToken(payload);
 
@@ -70,17 +69,30 @@ export class AuthService {
 		};
 	}
 
-	// public async logout(tokenUser: string): Promise<ResponseApi> {
-	// 	await prisma.user.update({
-	// 		where: { id: tokenUser },
-	// 		data: { authToken: null },
-	// 	});
+	public async logout(token: string): Promise<ResponseApi> {
+		const jwt = new JWT();
+		const decoded = jwt.verifyToken(token);
 
-	// 	return {
-	// 		success: true,
-	// 		code: 200,
-	// 		message: 'Logout efetuado com sucesso',
-	// 	};
-	// }
+		if (!decoded) {
+			return {
+				success: false,
+				code: 400,
+				message: 'Token inválido!',
+			};
+		}
 
+		// Salvar o token na blacklist
+		await prisma.revokedToken.create({
+			data: {
+				token,
+				expiresAt: new Date(decoded.exp * 1000), // Armazena o tempo de expiração do token
+			},
+		});
+
+		return {
+			success: true,
+			code: 200,
+			message: 'Logout efetuado com sucesso!',
+		};
+	}
 }

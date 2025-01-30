@@ -10,10 +10,7 @@ export class LikeRoutes {
 
 		router.post(
 			'/likes',
-			[
-				AuthMiddleware.validate,
-				CreateLikeMiddleware.validateData,
-			],
+			[AuthMiddleware.validate, CreateLikeMiddleware.validateData],
 			LikeController.create
 		);
 

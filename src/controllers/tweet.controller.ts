@@ -6,18 +6,15 @@ import { TweetService } from '../services/tweet.service';
 export class TweetController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
-			const { content, type } = req.body;
-			const userId = req.headers['x-user-id'] as string;
+			const { content, type, userId } = req.body;
 
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string; username: string };
-			};
+			const tokenUser = req.authUser;
 
 			const data: CreateTweetDto = {
 				content,
 				type,
 				authUser: tokenUser,
-				userId,
+				userId: userId ? userId : tokenUser.id,
 			};
 
 			const service = new TweetService();
@@ -38,9 +35,7 @@ export class TweetController {
 		try {
 			const type = req.query.type as string;
 
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string; username: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new TweetService();
 			const result = await service.findAll(
@@ -61,9 +56,7 @@ export class TweetController {
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string; username: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new TweetService();
 			const result = await service.findOneById(id, tokenUser);
@@ -83,9 +76,7 @@ export class TweetController {
 			const { id } = req.params;
 			const { content } = req.body;
 
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string; username: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new TweetService();
 			const result = await service.update(id, tokenUser.id, content);
@@ -102,9 +93,7 @@ export class TweetController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string; username: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new TweetService();
 			const result = await service.remove(id, tokenUser.id);

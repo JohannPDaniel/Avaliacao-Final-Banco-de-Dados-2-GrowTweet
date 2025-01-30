@@ -1,6 +1,6 @@
 import { TypeTweet } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
-import { regexUuid } from "../../types/uuid.types";
+import { regexUuid } from '../../types/uuid.types';
 
 export class CreateReplyMiddleware {
 	public static validateRequired(
@@ -78,18 +78,18 @@ export class CreateReplyMiddleware {
 			return;
 		}
 
-		if (userId && typeof userId !== 'string' && !regexUuid.test(userId)) {
+		if (userId && (typeof userId !== 'string' || !regexUuid.test(userId))) {
 			res.status(400).json({
 				success: false,
-				message: 'Identificador precisa ser um UUID !',
+				message: 'Identificador precisa ser um UUID válido!',
 			});
 			return;
 		}
 
-		if (tweetId && typeof tweetId !== "string" && !regexUuid.test(tweetId)) {
+		if (tweetId && (typeof tweetId !== 'string' || !regexUuid.test(tweetId))) {
 			res.status(400).json({
 				success: false,
-				message: 'Identificador tweetId precisa ser um UUID !',
+				message: 'Identificador tweetId precisa ser um UUID válido!',
 			});
 			return;
 		}

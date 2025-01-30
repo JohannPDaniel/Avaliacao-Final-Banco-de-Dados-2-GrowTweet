@@ -5,15 +5,12 @@ import { FollowerService } from '../services/follower.service';
 export class FollowerController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
-			const userId = req.headers['x-user-id'] as string;
-			const followerId = req.headers['x-follower-id'] as string;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const { userId, followerId } = req.body;
+			const tokenUser = req.authUser;
 
 			const data: CreateFollowerDto = {
-				userId,
-				followerId,
+				userId: userId ? userId : tokenUser.id,
+				followerId: followerId ?? undefined,
 			};
 
 			const service = new FollowerService();

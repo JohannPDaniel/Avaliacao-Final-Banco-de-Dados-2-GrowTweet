@@ -13,11 +13,11 @@ export class AuthRoutes {
 			AuthController.login
 		);
 
-		// router.post(
-		// 	'/logout',
-		// 	AuthMiddleware.validate,
-		// 	AuthController.logout
-		// );
+		router.post(
+			'/logout',
+			AuthMiddleware.validate,
+			AuthController.logout
+		);
 
 		return router;
 	}

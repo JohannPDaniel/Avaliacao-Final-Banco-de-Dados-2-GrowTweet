@@ -10,10 +10,7 @@ export class FollowerRoutes {
 
 		router.post(
 			'/followers',
-			[
-				AuthMiddleware.validate,
-				CreateFollowerMiddleware.validateData,
-			],
+			[AuthMiddleware.validate, CreateFollowerMiddleware.validateData],
 			FollowerController.create
 		);
 

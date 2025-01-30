@@ -9,7 +9,7 @@ export class CreateLikeMiddleware {
 	): void {
 		const { userId, tweetId } = req.body;
 
-		if (userId && typeof userId !== 'string' && !regexUuid.test(userId)) {
+		if (userId && (typeof userId !== 'string' || !regexUuid.test(userId))) {
 			res.status(400).json({
 				success: false,
 				message: 'Identificador precisa ser um UUID !',
@@ -17,7 +17,7 @@ export class CreateLikeMiddleware {
 			return;
 		}
 
-		if (tweetId && typeof tweetId !== 'string' && !regexUuid.test(tweetId)) {
+		if (tweetId && (typeof tweetId !== 'string' || !regexUuid.test(tweetId))) {
 			res.status(400).json({
 				success: false,
 				message: 'Identificador tweetId precisa ser um UUID !',

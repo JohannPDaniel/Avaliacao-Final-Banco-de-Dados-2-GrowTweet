@@ -9,6 +9,7 @@ import {
 	FollowerRoutes,
 	AuthRoutes,
 } from './routes';
+import { TokenCleanup } from "./utils/TokenCleanup";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,6 +31,18 @@ app.use(LikeRoutes.execute());
 app.use(ReplyRoutes.execute());
 app.use(FollowerRoutes.execute());
 
+(async () => {
+	await TokenCleanup.removeExpiredTokens();
+	console.log(
+		'🔄 Tokens expirados removidos da blacklist ao iniciar o servidor.'
+	);
+})();
+
+setInterval(async () => {
+	await TokenCleanup.removeExpiredTokens();
+	console.log('Tokens expirados removidos da blacklist.');
+}, 60 * 60 * 1000);
+
 app.listen(port, () => {
-	console.log(`Server running on port http://localhost:${port}`);
+	console.log(`🚀 Server running on port http://localhost:${port}`);
 });

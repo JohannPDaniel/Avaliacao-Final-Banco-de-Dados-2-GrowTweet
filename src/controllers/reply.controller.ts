@@ -6,19 +6,15 @@ import { ReplyService } from '../services/reply.service';
 export class ReplyController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
-			const { content, type } = req.body;
-			const userId = req.headers['x-user-id'] as string;
-			const tweetId = req.headers['x-tweet-id'] as string;
+			const { content, type, userId, tweetId } = req.body;
 
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const data: CreateReplyDto = {
 				content,
 				type,
-				userId,
-				tweetId,
+				userId: userId ? userId : tokenUser.id,
+				tweetId: tweetId ?? undefined,
 			};
 
 			const service = new ReplyService();
