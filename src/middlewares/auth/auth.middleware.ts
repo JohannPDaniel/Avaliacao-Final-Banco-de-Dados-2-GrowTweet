@@ -13,13 +13,32 @@ export class AuthMiddleware {
 		if (!authorization) {
 			res.status(401).json({
 				success: false,
-				message: 'Token não autenticado!',
+				message: 'Token não fornecido!',
 			});
 			return;
 		}
 
-		const token = authorization.split(' ')[1];
+		const parts = authorization.split(' ');
 
+		if (parts.length !== 2 || parts[0] !== 'Bearer') {
+			res.status(401).json({
+				success: false,
+				message: 'Formato do token inválido! Use (Bearer <token>).',
+			});
+			return;
+		}
+
+		const token = parts[1];
+
+		if (!token) {
+			res.status(401).json({
+				success: false,
+				message: 'Token inválido!',
+			});
+			return;
+		}
+
+		// Verifica se o token foi revogado
 		const revokedToken = await prisma.revokedToken.findUnique({
 			where: { token },
 		});
@@ -32,9 +51,9 @@ export class AuthMiddleware {
 			return;
 		}
 
-		// Decodifica o token
 		const jwt = new JWT();
 		const studentDecode = jwt.verifyToken(token);
+		console.log('studentDecode:', studentDecode)
 
 		if (!studentDecode) {
 			res.status(401).json({

@@ -101,11 +101,16 @@ export class TweetService {
 			};
 		}
 
+		// 🔥 Contar o número de likes para incluir `likeCount`
+		const likeCount = await prisma.like.count({
+			where: { tweetId: id },
+		});
+
 		return {
 			success: true,
 			code: 200,
 			message: 'Tweets buscados pelo ID com sucesso!',
-			data: this.mapToDto(tweet),
+			data: this.mapToDto({ ...tweet, likeCount }), // 🔥 Adiciona `likeCount` antes de mapear
 		};
 	}
 

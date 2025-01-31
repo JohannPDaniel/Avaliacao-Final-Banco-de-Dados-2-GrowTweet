@@ -6,19 +6,19 @@ export class JWT {
 		if (!process.env.JWT_SECRET) {
 			throw new Error('JWT_SECRET não definido');
 		}
-		const token = jwt.sign(data, process.env.JWT_SECRET, {
+
+		return jwt.sign(data, process.env.JWT_SECRET, {
 			algorithm: 'HS256',
-			expiresIn: '1h',
+			expiresIn: "1h",
 		});
-		return token;
 	}
+
 	public verifyToken(token: string): DecodedToken | null {
 		try {
 			if (!process.env.JWT_SECRET) {
 				throw new Error('JWT_SECRET não definido');
 			}
 
-			// Agora o retorno inclui `exp` e `iat`
 			const data = jwt.verify(token, process.env.JWT_SECRET) as DecodedToken;
 
 			return data;

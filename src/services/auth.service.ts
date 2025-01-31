@@ -81,11 +81,10 @@ export class AuthService {
 			};
 		}
 
-		// Salvar o token na blacklist
 		await prisma.revokedToken.create({
 			data: {
 				token,
-				expiresAt: new Date(decoded.exp * 1000), // Armazena o tempo de expiração do token
+				expiresAt: new Date(decoded.exp * 1000), 
 			},
 		});
 

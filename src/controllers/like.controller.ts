@@ -5,12 +5,14 @@ import { LikeService } from '../services/like.service';
 export class LikeController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
-			const { userId, tweetId } = req.body;
+			const { userId } = req.body;
+			const tweetId = req.headers['x-tweet-id'] as string;
+
 			const tokenUser = req.authUser;
 
 			const data: CreateLikeDto = {
 				userId: userId ? userId : tokenUser.id,
-				tweetId: tweetId ?? undefined,
+				tweetId,
 			};
 
 			const service = new LikeService();
@@ -30,7 +32,9 @@ export class LikeController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
+			console.log('id:', id)
 			const tokenUser = req.authUser;
+			console.log('tokenUser:', tokenUser)
 
 			const service = new LikeService();
 			const result = await service.remove(tokenUser.id, id);
