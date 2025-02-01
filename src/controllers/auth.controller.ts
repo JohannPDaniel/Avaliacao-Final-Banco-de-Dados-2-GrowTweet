@@ -20,15 +20,7 @@ export class AuthController {
 
 	public static async logout(req: Request, res: Response): Promise<void> {
 		try {
-			const token = req.headers.authorization?.split(' ')[1];
-
-			if (!token) {
-				res.status(400).json({
-					success: false,
-					message: 'Token ausente!',
-				});
-				return;
-			}
+			const token = req.headers.authorization?.split(' ')[1] as string;
 
 			const service = new AuthService();
 			const result = await service.logout(token);

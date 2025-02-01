@@ -3,7 +3,7 @@ import { LoginDto } from '../dtos';
 import { ResponseApi } from '../types';
 import { Bcrypt } from '../utils/bcrypt';
 import { JWT } from "../utils/jwt";
-import { AuthUser } from "../types/authUser.types";
+import { AuthUser, DecodedToken } from "../types/authUser.types";
 
 export class AuthService {
 	public async login(
@@ -70,15 +70,7 @@ export class AuthService {
 
 	public async logout(token: string): Promise<ResponseApi> {
 		const jwt = new JWT();
-		const decoded = jwt.verifyToken(token);
-
-		if (!decoded) {
-			return {
-				success: false,
-				code: 400,
-				message: 'Token inválido!',
-			};
-		}
+		const decoded = jwt.verifyToken(token) as DecodedToken;
 
 		await prisma.revokedToken.create({
 			data: {

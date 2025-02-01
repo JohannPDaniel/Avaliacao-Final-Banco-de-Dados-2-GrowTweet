@@ -200,7 +200,81 @@
 		},
 		"/logout": {
 			"post": {
-				"tags": ["Logout"]
+				"tags": ["Logout"],
+				"summary": "Encerrar sessão do usuário",
+				"description": "Este endpoint permite que o usuário faça logout do sistema, invalidando o token de autenticação.",
+				"responses": {
+					"200": {
+						"description": "Logout efetuado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResponseLogout"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/users": {
@@ -795,6 +869,19 @@
 					"message": {
 						"type": "object",
 						"example": "Login efetuado com sucesso"
+					}
+				}
+			},
+			"APIResponseLogout": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "object",
+						"example": "Logout efetuado com sucesso!"
 					}
 				}
 			},
