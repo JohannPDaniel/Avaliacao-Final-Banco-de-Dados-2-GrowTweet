@@ -55,7 +55,7 @@ export class UserService {
 		return {
 			success: true,
 			code: 200,
-			message: 'Usuário buscado com sucesso !',
+			message: 'Usuários buscado com sucesso !',
 			data: users.map((user) => this.mapToDto(user)),
 		};
 	}

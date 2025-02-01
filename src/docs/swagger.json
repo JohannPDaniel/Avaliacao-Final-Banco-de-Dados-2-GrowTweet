@@ -48,15 +48,15 @@
 		"/login": {
 			"post": {
 				"tags": ["Login"],
-				"summary": "",
-				"description": "",
+				"summary": "Autenticação do usuário",
+				"description": "Este endpoint permite que um usuário faça login no sistema utilizando seu e-mail e senha.",
 				"requestBody": {
 					"required": true,
-					"description": "",
+					"description": "Credenciais do usuário para login",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": ""
+								"$ref": "#/components/schemas/InfoLogin"
 							}
 						}
 					}
@@ -68,16 +68,129 @@
 							"application/json": {
 								"schema": {
 									"allOf": [
-										{ "$ref": "" },
+										{ "$ref": "#/components/schemas/APIResponseLogin" },
 										{
 											"type": "object",
 											"properties": {
 												"data": {
-													"$ref": ""
+													"$ref": "#/components/schemas/DataLogin"
 												}
 											}
 										}
 									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação de entrada",
+						"content": {
+							"aplication/json": {
+								"examples": {
+									"Email Obrigatório": {
+										"summary": "O campo e-mail não foi fornecido.",
+										"value": {
+											"success": false,
+											"message": "O atributo e-mail é obrigatório!"
+										}
+									},
+									"Senha Obrigatória": {
+										"summary": "O campo senha não foi fornecido.",
+										"value": {
+											"success": false,
+											"message": "O atributo senha é obrigatório!"
+										}
+									},
+									"Email Formato Inválido": {
+										"summary": "O campo e-mail deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo email deve vir em formato de texto!"
+										}
+									},
+									"Senha Formato Inválido": {
+										"summary": "O campo senha deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo senha deve vir em formato de texto!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"aplication/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Recurso não encontrado",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Credenciais Inválidas": {
+										"summary": "E-mail ou senha incorretos",
+										"value": {
+											"success": false,
+											"message": "E-mail ou senha incorretos!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
 								}
 							}
 						}
@@ -93,15 +206,78 @@
 		"/users": {
 			"post": {
 				"tags": ["Users"],
-				"summary": "",
-				"description": "",
+				"summary": "Criação de um novo usuário",
+				"description": "Este endpoint permite cadastrar um novo usuário no sistema.",
 				"requestBody": {
 					"required": true,
-					"description": "",
+					"description": "Dados do usuário a serem cadastrados.",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": ""
+								"$ref": "#/components/schemas/InfoCreateUser"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Usuário criado com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseUserCreate"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/CreateUser"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação dos dados enviados.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Dados Inválidos": {
+										"summary": "Os dados fornecidos estão incorretos",
+										"value": {
+											"success": false,
+											"message": "Os campos obrigatórios não foram preenchidos corretamente!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflito ao criar usuário.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Email Já Cadastrado": {
+										"summary": "O e-mail já está sendo utilizado",
+										"value": {
+											"success": false,
+											"message": "O e-mail informado já está cadastrado!"
+										}
+									},
+									"Username Já Cadastrado": {
+										"summary": "O nome de usuário já está sendo utilizado",
+										"value": {
+											"success": false,
+											"message": "O nome de usuário informado já está cadastrado!"
+										}
+									}
+								}
 							}
 						}
 					}
@@ -109,44 +285,115 @@
 			},
 			"get": {
 				"tags": ["Users"],
+				"summary": "Busca usuários com a opção de filtrar pelo e-mail",
+				"description": "Este endpoint permite buscar usuários cadastrados. O e-mail pode ser passado como parâmetro de consulta.",
 				"parameters": [
 					{
 						"name": "email",
 						"in": "query",
-						"description": "",
+						"description": "Endereço de e-mail do usuário a ser buscado.",
 						"schema": {
 							"type": "string"
 						}
 					}
-				]
+				],
+				"responses": {
+					"200": {
+						"description": "Usuários encontrados com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseUserFindAll"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"type": "array",
+													"items": {
+														"$ref": "#/components/schemas/CreateUser"
+													}
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário Não Encontrado": {
+										"summary": "Nenhum usuário corresponde ao e-mail fornecido",
+										"value": {
+											"success": false,
+											"message": "Usuário não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/users/{id}": {
 			"get": {
 				"tags": ["Users"],
+				"summary": "Busca usuário pelo ID",
+				"description": "Este endpoint permite buscar um usuário cadastrado através do seu ID único.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O ID do usuário a ser buscado. Deve estar no formato UUID.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
 						}
 					}
-				]
+				],
+				"responses": {
+					"200": {
+						"description": "Usuário encontrado com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseUserFindOneById"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/CreateUser"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					}
+				}
 			},
 			"put": {
 				"tags": ["Users"],
-				"summary": "",
-				"description": "",
+				"summary": "Atualiza um usuário",
+				"description": "Este endpoint permite atualizar um usuário existente pelo seu ID.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O ID do usuário a ser atualizado. Deve estar no formato UUID.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
@@ -154,12 +401,68 @@
 					}
 				],
 				"requestBody": {
-					"required": true,
-					"description": "",
+					"required": false,
+					"description": "Dados do usuário a serem atualizados.",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": ""
+								"$ref": "#/components/schemas/InfoUpdateUser"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Usuário atualizado com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseUserUpdate"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/UpdateUser"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na validação dos dados enviados.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Dados Inválidos": {
+										"summary": "Os dados fornecidos estão incorretos",
+										"value": {
+											"success": false,
+											"message": "Os campos fornecidos são inválidos!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário Não Encontrado": {
+										"summary": "O ID do usuário não existe no banco de dados",
+										"value": {
+											"success": false,
+											"message": "Usuário não encontrado!"
+										}
+									}
+								}
 							}
 						}
 					}
@@ -167,18 +470,76 @@
 			},
 			"delete": {
 				"tags": ["Users"],
+				"summary": "Deleta um usuário",
+				"description": "Este endpoint permite deletar um usuário pelo seu ID. Retorna os dados do usuário que foi removido.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O ID do usuário a ser deletado. Deve estar no formato UUID.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
 						}
 					}
-				]
+				],
+				"responses": {
+					"200": {
+						"description": "Usuário deletado com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseUserRemove"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/UpdateUser"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na requisição.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"ID Inválido": {
+										"summary": "O ID fornecido não está no formato correto",
+										"value": {
+											"success": false,
+											"message": "O ID fornecido não é um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário Não Encontrado": {
+										"summary": "O ID do usuário não existe no banco de dados",
+										"value": {
+											"success": false,
+											"message": "Usuário não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/tweets": {
@@ -405,6 +766,212 @@
 						}
 					}
 				]
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"InfoLogin": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"example": "joao.silva@email.com"
+					},
+					"password": {
+						"type": "string",
+						"example": "senha123"
+					}
+				},
+				"required": ["email", "password"]
+			},
+			"APIResponseLogin": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "object",
+						"example": "Login efetuado com sucesso"
+					}
+				}
+			},
+			"DataLogin": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string",
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ..."
+					},
+					"userId": {
+						"type": "string",
+						"format": "uuid",
+						"example": "653ae26b-7fe6-4312-9a94-cea7aeae4079"
+					},
+					"tweetId": {
+						"type": "string",
+						"format": "uuid",
+						"example": "550e8400-e29b-41d4-a716-446655440000"
+					},
+					"followerId": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"format": "uuid"
+						},
+						"example": [
+							"550e8400-e29b-41d4-a716-446655440000",
+							"653ae26b-7fe6-4312-9a94-cea7aeae4079"
+						]
+					}
+				},
+				"required": ["token", "userId"]
+			},
+			"InfoCreateUser": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "João Silva"
+					},
+					"email": {
+						"type": "string",
+						"format": "email",
+						"example": "joao.silva@email.com"
+					},
+					"username": {
+						"type": "string",
+						"example": "joaosilva"
+					},
+					"password": {
+						"type": "string",
+						"example": "senha123"
+					}
+				},
+				"required": ["name", "email", "username", "password"]
+			},
+			"InfoUpdateUser": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "Maria Paula da Silva"
+					},
+					"username": {
+						"type": "string",
+						"example": "maria123"
+					},
+					"password": {
+						"type": "string",
+						"example": "senha321"
+					}
+				}
+			},
+			"APIResponseUserCreate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Usuário criado com sucesso !"
+					}
+				}
+			},
+			"APIResponseUserFindAll": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Usuários buscado com sucesso !"
+					}
+				}
+			},
+			"APIResponseUserFindOneById": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Usuário buscado pelo id com sucesso!"
+					}
+				}
+			},
+			"APIResponseUserUpdate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Usuário atualizado com sucesso !"
+					}
+				}
+			},
+			"APIResponseUserRemove": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Usuário deletado com sucesso !"
+					}
+				}
+			},
+			"CreateUser": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "João Silva"
+					},
+					"email": {
+						"type": "string",
+						"format": "email",
+						"example": "joao.silva@email.com"
+					},
+					"username": {
+						"type": "string",
+						"example": "joaosilva"
+					},
+					"createdAt": {
+						"type": "string",
+						"example": "2024-02-01T12:30:45Z"
+					}
+				}
+			},
+			"UpdateUser": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "Maria Paula da Silva"
+					},
+					"username": {
+						"type": "string",
+						"example": "maria123"
+					},
+					"createdAt": {
+						"type": "string",
+						"example": "2024-02-01T12:30:45Z"
+					}
+				}
 			}
 		}
 	}

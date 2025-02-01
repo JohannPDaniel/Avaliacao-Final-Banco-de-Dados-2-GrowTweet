@@ -51,21 +51,21 @@ export class AuthMiddleware {
 		}
 
 		const jwt = new JWT();
-		const studentDecode = jwt.verifyToken(token);
-		console.log('studentDecode:', studentDecode)
+		const userDecode = jwt.verifyToken(token);
+		console.log('userDecode:', userDecode)
 
-		if (!studentDecode) {
+		if (!userDecode) {
 			res.status(401).json({
 				success: false,
-				message: 'Estudante não autenticado!',
+				message: 'Usuário não autenticado!',
 			});
 			return;
 		}
 
 		req.authUser = {
-			id: studentDecode.id,
-			name: studentDecode.name,
-			username: studentDecode.username,
+			id: userDecode.id,
+			name: userDecode.name,
+			username: userDecode.username,
 		};
 
 		next();
