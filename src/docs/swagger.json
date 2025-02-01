@@ -1,0 +1,411 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Growtweet",
+		"description": "Bem-vindo ao Growtweet, a plataforma inovadora para compartilhar suas ideias e conectar-se com o mundo.",
+		"contact": {
+			"name": "Linkedin",
+			"url": "https://www.linkedin.com/in/johann-patr%C3%ADcio-daniel-112425196/"
+		},
+		"version": "1.0.1"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:1807"
+		}
+	],
+	"tags": [
+		{
+			"name": "Login",
+			"description": "Autentique-se de forma segura e acesse sua conta com facilidade."
+		},
+		{
+			"name": "Logout",
+			"description": "Encerre sua sessão de maneira rápida e prática."
+		},
+		{
+			"name": "Users",
+			"description": "Gerencie suas informações e interaja com a comunidade de forma única."
+		},
+		{
+			"name": "Tweets",
+			"description": "Compartilhe seus pensamentos e atualizações em tempo real."
+		},
+		{
+			"name": "Likes",
+			"description": "Expresse seu apreço e curta os conteúdos que te inspiram."
+		},
+		{
+			"name": "Replies",
+			"description": "Converse e conecte-se através de respostas envolventes."
+		},
+		{
+			"name": "Followers",
+			"description": "Acompanhe e seja acompanhado por pessoas que compartilham dos mesmos interesses."
+		}
+	],
+	"paths": {
+		"/login": {
+			"post": {
+				"tags": ["Login"],
+				"summary": "",
+				"description": "",
+				"requestBody": {
+					"required": true,
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": ""
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Login efetuado com sucesso",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{ "$ref": "" },
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": ""
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/logout": {
+			"post": {
+				"tags": ["Logout"]
+			}
+		},
+		"/users": {
+			"post": {
+				"tags": ["Users"],
+				"summary": "",
+				"description": "",
+				"requestBody": {
+					"required": true,
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": ""
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"tags": ["Users"],
+				"parameters": [
+					{
+						"name": "email",
+						"in": "query",
+						"description": "",
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/users/{id}": {
+			"get": {
+				"tags": ["Users"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				]
+			},
+			"put": {
+				"tags": ["Users"],
+				"summary": "",
+				"description": "",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": ""
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Users"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				]
+			}
+		},
+		"/tweets": {
+			"post": {
+				"tags": ["Tweets"],
+				"summary": "",
+				"description": "",
+				"requestBody": {
+					"required": true,
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": ""
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"tags": ["Tweets"],
+				"parameters": [
+					{
+						"name": "type",
+						"in": "query",
+						"description": "",
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"tweets/{id}": {
+			"get": {
+				"tags": ["Tweets"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				]
+			},
+			"put": {
+				"tags": ["Tweets"],
+				"summary": "",
+				"description": "",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": ""
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Tweets"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				]
+			}
+		},
+		"/likes": {
+			"post": {
+				"tags": ["Likes"]
+			}
+		},
+		"/likes/{id}": {
+			"delete": {
+				"tags": ["Likes"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				]
+			}
+		},
+		"/replies": {
+			"post": {
+				"tags": ["Replies"],
+				"summary": "",
+				"description": "",
+				"requestBody": {
+					"required": true,
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": ""
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"tags": ["Replies"],
+				"parameters": [
+					{
+						"name": "type",
+						"in": "query",
+						"description": "",
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/replies/{id}": {
+			"get": {
+				"tags": ["Replies"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				]
+			},
+			"put": {
+				"tags": ["Replies"],
+				"summary": "",
+				"description": "",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": ""
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Replies"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				]
+			}
+		},
+		"/followers": {
+			"post": {
+				"tags": ["Followers"]
+			}
+		},
+		"/followers/{id}": {
+			"delete": {
+				"tags": ["Followers"],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				]
+			}
+		}
+	}
+}

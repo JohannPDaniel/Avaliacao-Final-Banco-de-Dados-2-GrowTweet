@@ -38,7 +38,6 @@ export class AuthMiddleware {
 			return;
 		}
 
-		// Verifica se o token foi revogado
 		const revokedToken = await prisma.revokedToken.findUnique({
 			where: { token },
 		});
