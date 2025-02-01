@@ -6,15 +6,15 @@ import { ReplyService } from '../services/reply.service';
 export class ReplyController {
 	public static async create(req: Request, res: Response): Promise<void> {
 		try {
-			const { content, type, userId, tweetId } = req.body;
-
+			const { content, type, userId } = req.body;
+			const tweetId = req.headers["x-tweet-id"] as string
 			const tokenUser = req.authUser;
 
 			const data: CreateReplyDto = {
 				content,
 				type,
 				userId: userId ? userId : tokenUser.id,
-				tweetId: tweetId ?? undefined,
+				tweetId,
 			};
 
 			const service = new ReplyService();
@@ -34,9 +34,7 @@ export class ReplyController {
 	public static async findAll(req: Request, res: Response): Promise<void> {
 		try {
 			const type = req.query.type as string;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new ReplyService();
 			const result = await service.findAll(tokenUser.id, type as TypeTweet);
@@ -54,9 +52,7 @@ export class ReplyController {
 	public static async findOneById(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new ReplyService();
 			const result = await service.findOneById(tokenUser.id, id);
@@ -75,9 +71,7 @@ export class ReplyController {
 		try {
 			const { id } = req.params;
 			const { content } = req.body;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new ReplyService();
 			const result = await service.update(id, tokenUser.id, content);
@@ -94,9 +88,7 @@ export class ReplyController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new ReplyService();
 			const result = await service.remove(tokenUser.id, id);

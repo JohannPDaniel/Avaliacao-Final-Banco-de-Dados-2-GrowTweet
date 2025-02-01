@@ -30,9 +30,7 @@ export class FollowerController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			const { tokenUser } = req.body as {
-				tokenUser: { id: string; name: string };
-			};
+			const tokenUser = req.authUser;
 
 			const service = new FollowerService();
 			const result = await service.remove(tokenUser.id, id);

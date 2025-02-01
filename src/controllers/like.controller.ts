@@ -32,7 +32,6 @@ export class LikeController {
 	public static async remove(req: Request, res: Response): Promise<void> {
 		try {
 			const { id } = req.params;
-			console.log('id:', id)
 			const tokenUser = req.authUser;
 			console.log('tokenUser:', tokenUser)
 

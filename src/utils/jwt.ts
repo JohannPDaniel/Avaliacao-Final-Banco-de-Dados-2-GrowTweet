@@ -25,15 +25,14 @@ export class JWT {
 				throw new Error('JWT_SECRET não definido');
 			}
 
-			console.log('Verificando token:', token); // Log do token recebido
-			console.log('Usando segredo:', process.env.JWT_SECRET); // Log do segredo
+			console.log('Verificando token:', token);
+			console.log('Usando segredo:', process.env.JWT_SECRET); 
 
 			const data = jwt.verify(token, process.env.JWT_SECRET) as DecodedToken;
 
-			console.log('Token decodificado:', data); // Log do token decodificado
+			console.log('Token decodificado:', data); 
 			return data;
-		} catch (error) {
-			console.error('Erro ao verificar token:', error); // Log de erro
+		} catch  {
 			return null;
 		}
 	}
