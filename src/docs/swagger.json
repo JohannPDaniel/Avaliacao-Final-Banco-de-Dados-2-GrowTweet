@@ -317,7 +317,7 @@
 						}
 					},
 					"400": {
-						"description": "Erro de validação de entrada",
+						"description": "Solicitação Ruim",
 						"content": {
 							"aplication/json": {
 								"examples": {
@@ -830,7 +830,23 @@
 										"summary": "O ID fornecido não está no formato correto",
 										"value": {
 											"success": false,
-											"message": "O ID fornecido não é um UUID válido!"
+											"message": "Identificador precisa ser um UUID !"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Acesso negado": {
+										"summary": "Acesso negado: você não tem permissão para deletar este usuario.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para deletar este usuario."
 										}
 									}
 								}
@@ -846,7 +862,23 @@
 										"summary": "O ID do usuário não existe no banco de dados",
 										"value": {
 											"success": false,
-											"message": "Usuário não encontrado!"
+											"message": "Usuario a ser deletado não encontrado !"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
 										}
 									}
 								}
@@ -859,15 +891,138 @@
 		"/tweets": {
 			"post": {
 				"tags": ["Tweets"],
-				"summary": "",
-				"description": "",
+				"summary": "Cria um novo tweet",
+				"description": "Este endpoint permite criar um novo tweet no sistema.",
 				"requestBody": {
 					"required": true,
-					"description": "",
+					"description": "Dados necessários para criar um tweet.",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": ""
+								"$ref": "#/components/schemas/InfoCreateTweet"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Tweet criado com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseTweetCreate"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/CreateTweet"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na requisição devido a dados inválidos.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Conteúdo Obrigatório": {
+										"summary": "O campo conteúdo é obrigatório.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' é obrigatório!"
+										}
+									},
+									"Conteúdo Formato Errado": {
+										"summary": "O campo conteúdo deve ser uma string.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' deve vir em formato de texto!"
+										}
+									},
+									"Type Formato Errado": {
+										"summary": "O campo 'type' deve ser uma string.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'type' deve vir em formato de texto!"
+										}
+									},
+									"Conteúdo Tamanho Inválido": {
+										"summary": "O campo conteúdo deve ter pelo menos 5 caracteres.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' deve ter pelo menos 5 caracteres!"
+										}
+									},
+									"Type Inválido": {
+										"summary": "O campo 'type' só aceita 'Tweet'.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'type' deve ser 'Tweet'!"
+										}
+									},
+									"UserId Formato Inválido": {
+										"summary": "O campo userId deve ser um UUID válido.",
+										"value": {
+											"success": false,
+											"message": "Identificador 'userId' precisa ser um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Usuário sem permissão para criar um tweet.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Acesso Negado": {
+										"summary": "O usuário não tem permissão.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para criar um tweet."
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário Não Encontrado": {
+										"summary": "Nenhum usuário corresponde ao ID fornecido.",
+										"value": {
+											"success": false,
+											"message": "Usuário não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor.",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
 							}
 						}
 					}
@@ -875,44 +1030,240 @@
 			},
 			"get": {
 				"tags": ["Tweets"],
+				"summary": "Obtém todos os tweets",
+				"description": "Retorna uma lista de tweets, podendo ser filtrada pelo tipo. Se nenhum tipo for especificado, retorna todos os tweets.",
 				"parameters": [
 					{
 						"name": "type",
 						"in": "query",
-						"description": "",
+						"description": "Filtra os tweets pelo tipo. Valores aceitos: 'Tweet'.",
 						"schema": {
-							"type": "string"
+							"type": "string",
+							"enum": ["Tweet"]
 						}
 					}
-				]
+				],
+				"responses": {
+					"200": {
+						"description": "Lista de tweets recuperada com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseTweetFindAll"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"type": "array",
+													"items": {
+														"$ref": "#/components/schemas/CreateTweet"
+													}
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação no parâmetro 'type'.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Tipo inválido": {
+										"summary": "Tipo informado não é válido.",
+										"value": {
+											"success": false,
+											"message": "Tipo inválido fornecido: 'Reply'. Os tipos válidos são: 'Tweet'."
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"tweets/{id}": {
 			"get": {
 				"tags": ["Tweets"],
+				"summary": "Busca um tweet pelo ID",
+				"description": "Este endpoint retorna os detalhes de um tweet específico com base no ID fornecido na URL.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O UUID do tweet a ser recuperado.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
 						}
 					}
-				]
+				],
+				"responses": {
+					"200": {
+						"description": "Tweet recuperado com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/CreateTweet"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/CreateTweet"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação nos dados enviados.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"UUID Formato Inválido": {
+										"summary": "O parâmetro fornecido deve ser um UUID.",
+										"value": {
+											"success": false,
+											"message": "Identificador precisa ser um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Acesso negado": {
+										"summary": "O usuário não tem permissão para acessar este tweet.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para acessar este tweet."
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Tweet não encontrado",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Tweet Não Encontrado": {
+										"summary": "Nenhum tweet encontrado com este ID.",
+										"value": {
+											"success": false,
+											"message": "Tweet não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			"put": {
 				"tags": ["Tweets"],
-				"summary": "",
-				"description": "",
+				"summary": "Atualiza um tweet existente",
+				"description": "Este endpoint permite a atualização de um tweet existente com base no ID fornecido.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O UUID do tweet que será atualizado.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
@@ -921,11 +1272,134 @@
 				],
 				"requestBody": {
 					"required": true,
-					"description": "",
+					"description": "Dados atualizados do tweet.",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": ""
+								"$ref": "#/components/schemas/InfoCreateTweet"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Tweet atualizado com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseTweetUpdate"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/UpdateTweet"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação nos dados enviados.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Conteúdo Formato Errado": {
+										"summary": "O campo conteúdo deve ser do tipo string.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' deve ser uma string!"
+										}
+									},
+									"Conteúdo Tamanho Inválido": {
+										"summary": "O campo conteúdo deve ter pelo menos 5 caracteres.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' deve ter pelo menos 5 caracteres!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Acesso negado": {
+										"summary": "O usuário não tem permissão para atualizar este tweet.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para modificar este tweet."
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
 							}
 						}
 					}
@@ -933,18 +1407,137 @@
 			},
 			"delete": {
 				"tags": ["Tweets"],
+				"summary": "Remove um tweet pelo ID",
+				"description": "Este endpoint permite deletar um tweet específico pelo seu identificador único (UUID). Apenas o autor do tweet pode removê-lo.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O UUID do tweet a ser removido.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
 						}
 					}
-				]
+				],
+				"responses": {
+					"200": {
+						"description": "Tweet removido com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseTweetRemove"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"message": {
+													"type": "string",
+													"example": "Tweet removido com sucesso."
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação no parâmetro 'id'.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"UUID Formato Inválido": {
+										"summary": "O parâmetro fornecido deve ser um UUID válido.",
+										"value": {
+											"success": false,
+											"message": "Identificador precisa ser um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho.",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto.",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido.",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado.",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido.",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Acesso Negado": {
+										"summary": "O usuário não tem permissão para deletar este tweet.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para deletar este tweet."
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor.",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/likes": {
@@ -1099,6 +1692,60 @@
 				},
 				"required": ["email", "password"]
 			},
+			"InfoCreateUser": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "João Silva"
+					},
+					"email": {
+						"type": "string",
+						"format": "email",
+						"example": "joao.silva@email.com"
+					},
+					"username": {
+						"type": "string",
+						"example": "joaosilva"
+					},
+					"password": {
+						"type": "string",
+						"example": "senha123"
+					}
+				},
+				"required": ["name", "email", "username", "password"]
+			},
+			"InfoUpdateUser": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "Maria Paula da Silva"
+					},
+					"username": {
+						"type": "string",
+						"example": "maria123"
+					},
+					"password": {
+						"type": "string",
+						"example": "senha321"
+					}
+				}
+			},
+			"InfoCreateTweet": {
+				"type": "object",
+				"properties": {
+					"content": {
+						"type": "string",
+						"example": "Mensagem 1"
+					},
+					"type": {
+						"type": "string",
+						"example": "Tweet"
+					}
+				},
+				"required": ["content", "type"]
+			},
 			"APIResponseLogin": {
 				"type": "object",
 				"properties": {
@@ -1155,46 +1802,6 @@
 					}
 				},
 				"required": ["token", "userId"]
-			},
-			"InfoCreateUser": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string",
-						"example": "João Silva"
-					},
-					"email": {
-						"type": "string",
-						"format": "email",
-						"example": "joao.silva@email.com"
-					},
-					"username": {
-						"type": "string",
-						"example": "joaosilva"
-					},
-					"password": {
-						"type": "string",
-						"example": "senha123"
-					}
-				},
-				"required": ["name", "email", "username", "password"]
-			},
-			"InfoUpdateUser": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string",
-						"example": "Maria Paula da Silva"
-					},
-					"username": {
-						"type": "string",
-						"example": "maria123"
-					},
-					"password": {
-						"type": "string",
-						"example": "senha321"
-					}
-				}
 			},
 			"APIResponseUserCreate": {
 				"type": "object",
@@ -1261,6 +1868,58 @@
 					}
 				}
 			},
+			"APIResponseTweetCreate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Tweet criado com sucesso !"
+					}
+				}
+			},
+			"APIResponseTweetFindAll": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Tweets buscados com sucesso!"
+					}
+				}
+			},
+			"APIResponseTweetUpdate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Tweet atualizado com sucesso!"
+					}
+				}
+			},
+			"APIResponseTweetRemove": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Tweet deletado com sucesso!"
+					}
+				}
+			},
 			"CreateUser": {
 				"type": "object",
 				"properties": {
@@ -1299,6 +1958,60 @@
 						"example": "2024-02-01T12:30:45Z"
 					}
 				}
+			},
+			"CreateTweet": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Identificador único do tweet"
+					},
+					"content": {
+						"type": "string",
+						"example": "Essa é uma mensagem de exemplo",
+						"description": "Conteúdo do tweet"
+					},
+					"type": {
+						"type": "string",
+						"example": "Tweet",
+						"description": "Tipo da publicação (ex: Tweet, Reply, etc.)"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"example": "2024-02-02T12:34:56Z",
+						"description": "Data e hora de criação do tweet no formato ISO 8601"
+					}
+				},
+				"required": ["id", "content", "type", "createdAt"]
+			},
+			"UpdateTweet": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Identificador único do tweet"
+					},
+					"content": {
+						"type": "string",
+						"example": "Essa é uma mensagem de exemplo atualizada",
+						"description": "Conteúdo do tweet"
+					},
+					"type": {
+						"type": "string",
+						"example": "Tweet",
+						"description": "Tipo da publicação (ex: Tweet, Reply, etc.)"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"example": "2024-02-02T12:34:56Z",
+						"description": "Data e hora de criação do tweet no formato ISO 8601"
+					}
+				},
+				"required": ["id", "createdAt"]
 			}
 		}
 	}

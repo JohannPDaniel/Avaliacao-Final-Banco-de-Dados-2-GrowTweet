@@ -95,7 +95,7 @@ export class TweetService {
 		if (!tweet) {
 			return {
 				success: false,
-				code: 404,
+				code: 403,
 				message:
 					'Acesso negado: você não tem permissão para acessar este tweet !',
 			};
