@@ -732,8 +732,24 @@
 							}
 						}
 					},
+					"403": {
+						"description": "Acesso negado",
+						"content": {
+							"aplication/json": {
+								"examples": {
+									"Acesso negado": {
+										"summary": "O usuário não tem permissão.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para acessar este usuario."
+										}
+									}
+								}
+							}
+						}
+					},
 					"404": {
-						"description": "Usuário não encontrado.",
+						"description": "Usuário a ser atualizado não encontrado.",
 						"content": {
 							"application/json": {
 								"examples": {
@@ -741,7 +757,23 @@
 										"summary": "O ID do usuário não existe no banco de dados",
 										"value": {
 											"success": false,
-											"message": "Usuário não encontrado!"
+											"message": "Usuário a ser atualizado não encontrado !"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
 										}
 									}
 								}
