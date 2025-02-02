@@ -85,7 +85,7 @@
 					"400": {
 						"description": "Erro de validação de entrada",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"Email Obrigatório": {
 										"summary": "O campo e-mail não foi fornecido.",
@@ -122,7 +122,7 @@
 					"401": {
 						"description": "Erro de autenticação",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"Token Não Fornecido": {
 										"summary": "Nenhum token foi enviado no cabeçalho",
@@ -157,22 +157,6 @@
 										"value": {
 											"success": false,
 											"message": "Usuário não autenticado!"
-										}
-									}
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "Recurso não encontrado",
-						"content": {
-							"application/json": {
-								"examples": {
-									"Credenciais Inválidas": {
-										"summary": "E-mail ou senha incorretos",
-										"value": {
-											"success": false,
-											"message": "E-mail ou senha incorretos!"
 										}
 									}
 								}
@@ -319,7 +303,7 @@
 					"400": {
 						"description": "Solicitação Ruim",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"Nome é Obrigatório": {
 										"summary": "O campo nome não foi fornecido.",
@@ -486,7 +470,7 @@
 					"400": {
 						"description": "Erro de validação de entrada",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"Email Formato Inválido": {
 										"summary": "O campo e-mail deve ser uma string válida.",
@@ -561,7 +545,7 @@
 					"400": {
 						"description": "Erro de validação de entrada",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"UUID Formato Inválido": {
 										"summary": "O parâmetro fornecido deve ser um UUID.",
@@ -574,10 +558,54 @@
 							}
 						}
 					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
 					"403": {
 						"description": "Acesso negado",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"Acesso negado": {
 										"summary": "O usuário não tem permissão.",
@@ -593,7 +621,7 @@
 					"404": {
 						"description": "Usuário não encontrado",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"Acesso negado": {
 										"summary": "O usuário não foi encontrado.",
@@ -677,7 +705,7 @@
 					"400": {
 						"description": "Erro de validação de entrada",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"Nome Formato Inválido": {
 										"summary": "O campo nome deve ser uma string válida.",
@@ -732,10 +760,54 @@
 							}
 						}
 					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
 					"403": {
 						"description": "Acesso negado",
 						"content": {
-							"aplication/json": {
+							"application/json": {
 								"examples": {
 									"Acesso negado": {
 										"summary": "O usuário não tem permissão.",
@@ -831,6 +903,50 @@
 										"value": {
 											"success": false,
 											"message": "Identificador precisa ser um UUID !"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
 										}
 									}
 								}
@@ -978,6 +1094,50 @@
 							}
 						}
 					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
 					"403": {
 						"description": "Usuário sem permissão para criar um tweet.",
 						"content": {
@@ -1085,6 +1245,50 @@
 							}
 						}
 					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
 					"500": {
 						"description": "Erro interno no servidor",
 						"content": {
@@ -1129,7 +1333,7 @@
 								"schema": {
 									"allOf": [
 										{
-											"$ref": "#/components/schemas/CreateTweet"
+											"$ref": "#/components/schemas/APIResponseTweetFindAll"
 										},
 										{
 											"type": "object",
@@ -1276,7 +1480,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/InfoCreateTweet"
+								"$ref": "#/components/schemas/InfoUpdateTweet"
 							}
 						}
 					}
@@ -1434,9 +1638,8 @@
 										{
 											"type": "object",
 											"properties": {
-												"message": {
-													"type": "string",
-													"example": "Tweet removido com sucesso."
+												"data": {
+													"$ref": "#/components/schemas/UpdateTweet"
 												}
 											}
 										}
@@ -1542,38 +1745,504 @@
 		},
 		"/likes": {
 			"post": {
-				"tags": ["Likes"]
-			}
-		},
-		"/likes/{id}": {
-			"delete": {
 				"tags": ["Likes"],
+				"summary": "Adiciona um like a um tweet",
+				"description": "Este endpoint permite que um usuário curta um tweet.",
 				"parameters": [
 					{
-						"name": "id",
-						"in": "path",
+						"name": "x-tweet-id",
+						"in": "header",
 						"required": true,
-						"description": "",
+						"description": "O UUID do tweet que será curtido.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
 						}
 					}
-				]
+				],
+				"requestBody": {
+					"required": false,
+					"description": "O usuário pode ser identificado pelo token ou passado no corpo da requisição.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"format": "uuid",
+										"example": "123e4567-e89b-12d3-a456-426614174000",
+										"description": "UUID do usuário que está curtindo o tweet. Se não for enviado, será assumido o usuário autenticado."
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Like criado com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseLikeCreate"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/CreateLike"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"TweetId obrigatório": {
+										"summary": "O cabeçalho 'x-tweet-id' não foi enviado.",
+										"value": {
+											"success": false,
+											"message": "TweetId é obrigatório"
+										}
+									},
+									"UUID inválido": {
+										"summary": "O identificador do usuário ou do tweet não é válido.",
+										"value": {
+											"success": false,
+											"message": "Identificador precisa ser um UUID!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário sem permissão": {
+										"summary": "Usuário tentou curtir um tweet em nome de outro usuário.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para curtir este tweet em nome de outro usuário."
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário ou Tweet não encontrado",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário não encontrado": {
+										"summary": "O usuário informado não existe no sistema.",
+										"value": {
+											"success": false,
+											"message": "Usuário não encontrado!"
+										}
+									},
+									"Tweet não encontrado": {
+										"summary": "O tweet informado não existe.",
+										"value": {
+											"success": false,
+											"message": "Tweet não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Like já existente",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Like duplicado": {
+										"summary": "O usuário já curtiu este tweet anteriormente.",
+										"value": {
+											"success": false,
+											"message": "Like já existe. Use a função de descurtir para remover."
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/likes/{id}": {
+			"delete": {
+				"tags": ["Likes"],
+				"summary": "Remove um like",
+				"description": "Este endpoint permite remover um like de um tweet.",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "O UUID do like que será removido.",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Like removido com sucesso!",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseLikeRemove"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"$ref": "#/components/schemas/CreateLike"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Like não encontrado",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Like não encontrado": {
+										"summary": "O like informado não existe ou não pertence ao usuário autenticado.",
+										"value": {
+											"success": false,
+											"message": "Like a ser deletado não encontrado ou não pertence ao usuário autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/replies": {
 			"post": {
 				"tags": ["Replies"],
-				"summary": "",
-				"description": "",
+				"summary": "Cria uma nova reply",
+				"description": "Este endpoint permite criar uma nova reply em resposta a um tweet existente.",
 				"requestBody": {
 					"required": true,
-					"description": "",
+					"description": "Dados necessários para criar uma reply.",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": ""
+								"$ref": "#/components/schemas/InfoCreateReply"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Reply criada com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResponseReplyCreate"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro na requisição devido a dados inválidos.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Conteúdo Obrigatório": {
+										"summary": "O campo 'content' é obrigatório.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' é obrigatório!"
+										}
+									},
+									"Conteúdo Formato Errado": {
+										"summary": "O campo 'content' deve ser uma string.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' deve vir em formato de texto!"
+										}
+									},
+									"Type Formato Errado": {
+										"summary": "O campo 'type' deve ser uma string.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'type' deve vir em formato de texto!"
+										}
+									},
+									"Conteúdo Tamanho Inválido": {
+										"summary": "O campo 'content' deve ter pelo menos 5 caracteres.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' deve ter pelo menos 5 caracteres!"
+										}
+									},
+									"Type Inválido": {
+										"summary": "O campo 'type' só aceita 'Reply'.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'type' deve ser 'Reply'!"
+										}
+									},
+									"UserId Formato Inválido": {
+										"summary": "O campo 'userId' deve ser um UUID válido.",
+										"value": {
+											"success": false,
+											"message": "Identificador 'userId' precisa ser um UUID válido!"
+										}
+									},
+									"TweetId Formato Inválido": {
+										"summary": "O campo 'tweetId' deve ser um UUID válido.",
+										"value": {
+											"success": false,
+											"message": "Identificador 'tweetId' precisa ser um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Usuário sem permissão para criar uma reply.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Acesso Negado": {
+										"summary": "O usuário não tem permissão.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para criar uma reply."
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário ou tweet não encontrado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário Não Encontrado": {
+										"summary": "Nenhum usuário corresponde ao ID fornecido.",
+										"value": {
+											"success": false,
+											"message": "Usuário não encontrado!"
+										}
+									},
+									"Tweet Não Encontrado": {
+										"summary": "Nenhum tweet encontrado com o ID fornecido.",
+										"value": {
+											"success": false,
+											"message": "Tweet não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor.",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
 							}
 						}
 					}
@@ -1581,44 +2250,256 @@
 			},
 			"get": {
 				"tags": ["Replies"],
+				"summary": "Obtém todas as replies",
+				"description": "Retorna uma lista de replies, podendo ser filtrada pelo tipo. Se nenhum tipo for especificado, retorna todas as replies.",
 				"parameters": [
 					{
 						"name": "type",
 						"in": "query",
-						"description": "",
+						"description": "Filtra as replies pelo tipo. Valores aceitos: 'Reply'.",
 						"schema": {
-							"type": "string"
+							"type": "string",
+							"enum": ["Reply"]
 						}
 					}
-				]
+				],
+				"responses": {
+					"200": {
+						"description": "Lista de replies recuperada com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/APIResponseReplyFindAll"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"data": {
+													"type": "array",
+													"items": {
+														"$ref": "#/components/schemas/CreateReply"
+													}
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação no parâmetro 'type'.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Tipo inválido": {
+										"summary": "Tipo informado não é válido.",
+										"value": {
+											"success": false,
+											"message": "Tipo inválido fornecido: 'Tweet'. Os tipos válidos são: 'Reply'."
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/replies/{id}": {
 			"get": {
 				"tags": ["Replies"],
+				"summary": "Buscar uma reply pelo ID",
+				"description": "Obtém os detalhes de uma reply específica com base no ID fornecido.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O UUID da reply a ser recuperada.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
 						}
 					}
-				]
+				],
+				"responses": {
+					"200": {
+						"description": "Reply recuperada com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResponseReplyFindOne"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação nos dados enviados.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"UUID Formato Inválido": {
+										"summary": "O parâmetro fornecido deve ser um UUID válido.",
+										"value": {
+											"success": false,
+											"message": "Identificador precisa ser um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Reply não encontrada.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Reply Não Encontrada": {
+										"summary": "Nenhuma reply encontrada com este ID.",
+										"value": {
+											"success": false,
+											"message": "Reply não encontrada!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor.",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			"put": {
 				"tags": ["Replies"],
-				"summary": "",
-				"description": "",
+				"summary": "Atualizar uma reply",
+				"description": "Atualiza o conteúdo de uma reply existente.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O UUID da reply a ser atualizada.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
@@ -1627,11 +2508,138 @@
 				],
 				"requestBody": {
 					"required": true,
-					"description": "",
+					"description": "Dados para atualizar a reply.",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": ""
+								"$ref": "#/components/schemas/InfoUpdateReply"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Reply atualizada com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResponseReplyUpdate"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação nos dados enviados.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Conteúdo Formato Errado": {
+										"summary": "O campo 'content' deve ser do tipo string.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' deve ser uma string!"
+										}
+									},
+									"Conteúdo Tamanho Inválido": {
+										"summary": "O campo 'content' deve ter pelo menos 5 caracteres.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'content' deve ter pelo menos 5 caracteres!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Acesso Negado": {
+										"summary": "O usuário não tem permissão para modificar esta reply.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para modificar esta reply."
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Reply não encontrada.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Reply Não Encontrada": {
+										"summary": "Nenhuma reply encontrada com este ID.",
+										"value": {
+											"success": false,
+											"message": "Reply não encontrada!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor.",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
 							}
 						}
 					}
@@ -1639,43 +2647,339 @@
 			},
 			"delete": {
 				"tags": ["Replies"],
+				"summary": "Remover uma reply",
+				"description": "Remove uma reply existente com base no ID fornecido.",
 				"parameters": [
 					{
 						"name": "id",
 						"in": "path",
 						"required": true,
-						"description": "",
+						"description": "O UUID da reply a ser removida.",
 						"schema": {
 							"type": "string",
 							"format": "uuid"
 						}
 					}
-				]
-			}
-		},
-		"/followers": {
-			"post": {
-				"tags": ["Followers"]
-			}
-		},
-		"/followers/{id}": {
-			"delete": {
-				"tags": ["Followers"],
-				"parameters": [
-					{
-						"name": "id",
-						"in": "path",
-						"required": true,
-						"description": "",
-						"schema": {
-							"type": "string",
-							"format": "uuid"
+				],
+				"responses": {
+					"200": {
+						"description": "Reply removida com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResponseReplyRemove"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação no parâmetro 'id'.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"UUID Formato Inválido": {
+										"summary": "O parâmetro fornecido deve ser um UUID válido.",
+										"value": {
+											"success": false,
+											"message": "Identificador precisa ser um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Acesso Negado": {
+										"summary": "O usuário não tem permissão para deletar esta reply.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para deletar esta reply."
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Reply não encontrada.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Reply Não Encontrada": {
+										"summary": "Nenhuma reply encontrada com este ID.",
+										"value": {
+											"success": false,
+											"message": "Reply não encontrada!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor.",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
 						}
 					}
-				]
+				}
 			}
-		}
-	},
+		},
+
+  "/followers": {
+    "post": {
+      "tags": ["Followers"],
+      "summary": "Seguir um usuário",
+      "description": "Este endpoint permite seguir um usuário específico.",
+      "requestBody": {
+        "required": true,
+        "description": "Dados necessários para seguir um usuário.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/InfoFollowUser"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Usuário seguido com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/APIResponseFollowCreate"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Erro de validação nos dados enviados.",
+          "content": {
+            "application/json": {
+              "examples": {
+                "ID do Usuário Obrigatório": {
+                  "summary": "O campo 'userId' é obrigatório.",
+                  "value": {
+                    "success": false,
+                    "message": "O atributo 'userId' é obrigatório!"
+                  }
+                },
+                "Formato Inválido": {
+                  "summary": "O campo 'userId' deve ser um UUID válido.",
+                  "value": {
+                    "success": false,
+                    "message": "O atributo 'userId' deve ser um UUID válido!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Acesso negado.",
+          "content": {
+            "application/json": {
+              "examples": {
+                "Seguir a Si Mesmo": {
+                  "summary": "O usuário não pode seguir a si mesmo.",
+                  "value": {
+                    "success": false,
+                    "message": "Você não pode seguir a si mesmo!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuário não encontrado.",
+          "content": {
+            "application/json": {
+              "examples": {
+                "Usuário Não Encontrado": {
+                  "summary": "Nenhum usuário corresponde ao ID fornecido.",
+                  "value": {
+                    "success": false,
+                    "message": "Usuário não encontrado!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erro interno no servidor.",
+          "content": {
+            "application/json": {
+              "examples": {
+                "Erro no Servidor": {
+                  "summary": "Ocorreu um erro inesperado no servidor.",
+                  "value": {
+                    "success": false,
+                    "message": "Erro no servidor: descrição do erro."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/followers/{id}": {
+    "delete": {
+      "tags": ["Followers"],
+      "summary": "Deixar de seguir um usuário",
+      "description": "Este endpoint permite deixar de seguir um usuário específico.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "O UUID do usuário a ser removido dos seguidores.",
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Usuário deixado de seguir com sucesso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/APIResponseFollowRemove"
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Erro de validação no parâmetro 'id'.",
+          "content": {
+            "application/json": {
+              "examples": {
+                "UUID Formato Inválido": {
+                  "summary": "O parâmetro fornecido deve ser um UUID válido.",
+                  "value": {
+                    "success": false,
+                    "message": "Identificador precisa ser um UUID válido!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Acesso negado.",
+          "content": {
+            "application/json": {
+              "examples": {
+                "Não Segue o Usuário": {
+                  "summary": "O usuário não está sendo seguido.",
+                  "value": {
+                    "success": false,
+                    "message": "Você não está seguindo este usuário!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuário não encontrado.",
+          "content": {
+            "application/json": {
+              "examples": {
+                "Usuário Não Encontrado": {
+                  "summary": "Nenhum usuário encontrado com este ID.",
+                  "value": {
+                    "success": false,
+                    "message": "Usuário não encontrado!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erro interno no servidor.",
+          "content": {
+            "application/json": {
+              "examples": {
+                "Erro no Servidor": {
+                  "summary": "Ocorreu um erro inesperado no servidor.",
+                  "value": {
+                    "success": false,
+                    "message": "Erro no servidor: descrição do erro."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
 	"components": {
 		"schemas": {
 			"InfoLogin": {
@@ -1745,6 +3049,38 @@
 					}
 				},
 				"required": ["content", "type"]
+			},
+			"InfoUpdateTweet": {
+				"type": "object",
+				"properties": {
+					"content": {
+						"type": "string",
+						"example": "Mensagem atualizada"
+					}
+				}
+			},
+			"InfoCreateReply": {
+				"type": "object",
+				"properties": {
+					"content": {
+						"type": "string",
+						"example": "Mensagem 1 respondida"
+					},
+					"type": {
+						"type": "string",
+						"example": "Reply"
+					}
+				},
+				"required": ["content", "type"]
+			},
+			"InfoUpdateReply": {
+				"type": "object",
+				"properties": {
+					"content": {
+						"type": "string",
+						"example": "Mensagem 1 respondida e atualizada"
+					}
+				}
 			},
 			"APIResponseLogin": {
 				"type": "object",
@@ -1920,6 +3256,115 @@
 					}
 				}
 			},
+			"APIResponseLikeCreate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Like criado com sucesso !"
+					}
+				}
+			},
+			"APIResponseLikeRemove": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Like deletado com sucesso!"
+					}
+				}
+			},
+			"APIResponseReplyCreate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Reply criado com sucesso!"
+					},
+					"data": {
+						"$ref": "#/components/schemas/CreateReply"
+					}
+				}
+			},
+			"APIResponseReplyFindAll": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Lista de replies recuperada com sucesso!"
+					},
+					"data": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/CreateReply"
+						}
+					}
+				}
+			},
+			"APIResponseReplyFindOne": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Reply recuperada com sucesso!"
+					},
+					"data": {
+						"$ref": "#/components/schemas/CreateReply"
+					}
+				}
+			},
+			"APIResponseReplyUpdate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Reply atualizada com sucesso!"
+					},
+					"data": {
+						"$ref": "#/components/schemas/UpdateReply"
+					}
+				}
+			},
+			"APIResponseReplyRemove": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Reply removida com sucesso!"
+					},
+					"data": {
+						"$ref": "#/components/schemas/UpdateReply"
+					}
+				}
+			},
 			"CreateUser": {
 				"type": "object",
 				"properties": {
@@ -2012,6 +3457,118 @@
 					}
 				},
 				"required": ["id", "createdAt"]
+			},
+			"CreateLike": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"example": "123e4567-e89b-12d3-a456-426614174000"
+					},
+					"userId": {
+						"type": "string",
+						"format": "uuid",
+						"example": "123e4567-e89b-12d3-a456-426614174001"
+					},
+					"tweetId": {
+						"type": "string",
+						"format": "uuid",
+						"example": "123e4567-e89b-12d3-a456-426614174002"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"example": "2025-02-02T12:34:56Z"
+					},
+					"liked": {
+						"type": "boolean",
+						"example": true
+					},
+					"likeCount": {
+						"type": "integer",
+						"example": 1
+					}
+				}
+			},
+			"CreateReply": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Identificador único do tweet"
+					},
+					"content": {
+						"type": "string",
+						"example": "Essa é uma mensagem de exemplo",
+						"description": "Conteúdo do tweet"
+					},
+					"type": {
+						"type": "string",
+						"example": "Reply",
+						"description": "Tipo da publicação (ex: Tweet, Reply, etc.)"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"example": "2024-02-02T12:34:56Z",
+						"description": "Data e hora de criação do tweet no formato ISO 8601"
+					}
+				},
+				"required": ["id", "content", "type", "createdAt"]
+			},
+			"UpdateReply": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Identificador único do tweet"
+					},
+					"content": {
+						"type": "string",
+						"example": "Essa é uma mensagem de exemplo",
+						"description": "Conteúdo do tweet"
+					},
+					"type": {
+						"type": "string",
+						"example": "Reply",
+						"description": "Tipo da publicação (ex: Tweet, Reply, etc.)"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"example": "2024-02-02T12:34:56Z",
+						"description": "Data e hora de criação do tweet no formato ISO 8601"
+					}
+				},
+				"required": ["id", "content", "type", "createdAt"]
+			},
+			"CreateFollower": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"example": "123e4567-e89b-12d3-a456-426614174000"
+					},
+					"userId": {
+						"type": "string",
+						"format": "uuid",
+						"example": "123e4567-e89b-12d3-a456-426614174001"
+					},
+					"tweetId": {
+						"type": "string",
+						"format": "uuid",
+						"example": "123e4567-e89b-12d3-a456-426614174002"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"example": "2025-02-02T12:34:56Z"
+					},
+				}
 			}
 		}
 	}
