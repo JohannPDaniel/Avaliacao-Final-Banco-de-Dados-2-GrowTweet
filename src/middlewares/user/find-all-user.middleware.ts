@@ -7,7 +7,7 @@ export class FindAllUserMiddleware {
 		if (email && typeof email !== 'string') {
 			res.status(400).json({
 				success: false,
-				message: 'O atributo nome deve vir em formato de texto !',
+				message: 'O atributo e-mail deve vir em formato de texto !',
 			});
 		}
 		next();

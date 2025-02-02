@@ -317,15 +317,92 @@
 						}
 					},
 					"400": {
-						"description": "Erro de validação dos dados enviados.",
+						"description": "Erro de validação de entrada",
 						"content": {
-							"application/json": {
+							"aplication/json": {
 								"examples": {
-									"Dados Inválidos": {
-										"summary": "Os dados fornecidos estão incorretos",
+									"Nome é Obrigatório": {
+										"summary": "O campo nome não foi fornecido.",
 										"value": {
 											"success": false,
-											"message": "Os campos obrigatórios não foram preenchidos corretamente!"
+											"message": "O atributo nome é obrigatório !"
+										}
+									},
+									"E-mail é Obrigatório": {
+										"summary": "O campo e-mail não foi fornecido.",
+										"value": {
+											"success": false,
+											"message": "O atributo email é obrigatório !"
+										}
+									},
+									"Username é Obrigatório": {
+										"summary": "O campo username não foi fornecido.",
+										"value": {
+											"success": false,
+											"message": "O atributo username é obrigatório !"
+										}
+									},
+									"Senha é Obrigatório": {
+										"summary": "O campo senha não foi fornecido.",
+										"value": {
+											"success": false,
+											"message": "O atributo username é obrigatório !"
+										}
+									},
+									"Nome Formato Inválido": {
+										"summary": "O campo nome deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo nome deve vir em formato de texto !"
+										}
+									},
+									"Email Formato Inválido": {
+										"summary": "O campo e-mail deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo email deve vir em formato de texto !"
+										}
+									},
+									"Username Formato Inválido": {
+										"summary": "O campo username deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo username deve vir em formato de texto !"
+										}
+									},
+									"Password Formato Inválido": {
+										"summary": "O campo password deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo senha deve vir em formato de texto !"
+										}
+									},
+									"Nome Formato Data Inválido": {
+										"summary": "O campo nome deve ter no minimo 3 caracteres.",
+										"value": {
+											"success": false,
+											"message": "O atributo nome deve ter pelo menos 3 caracteres !"
+										}
+									},
+									"E-mail Formato Data Inválido": {
+										"summary": "O campo e-mail deve ter (@) e (.com)",
+										"value": {
+											"success": false,
+											"message": "O e-mail deve conter (@) e (.com)"
+										}
+									},
+									"Username Formato Data Inválido": {
+										"summary": "O campo username deve ter no minimo 5 caracteres",
+										"value": {
+											"success": false,
+											"message": "O atributo username deve ter pelo menos 5 caracteres !"
+										}
+									},
+									"Password Formato Data Inválido": {
+										"summary": "O campo password deve ter no minimo 5 caracteres",
+										"value": {
+											"success": false,
+											"message": "O atributo senha deve ter pelo menos 5 caracteres !"
 										}
 									}
 								}
@@ -333,22 +410,31 @@
 						}
 					},
 					"409": {
-						"description": "Conflito ao criar usuário.",
+						"description": "Conflito",
 						"content": {
 							"application/json": {
 								"examples": {
-									"Email Já Cadastrado": {
-										"summary": "O e-mail já está sendo utilizado",
+									"Credenciais Inválidas": {
+										"summary": "O e-mail já está em uso !",
 										"value": {
 											"success": false,
-											"message": "O e-mail informado já está cadastrado!"
+											"message": "O e-mail já está em uso !"
 										}
-									},
-									"Username Já Cadastrado": {
-										"summary": "O nome de usuário já está sendo utilizado",
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
 										"value": {
 											"success": false,
-											"message": "O nome de usuário informado já está cadastrado!"
+											"message": "Erro no servidor: descrição do erro."
 										}
 									}
 								}
@@ -397,16 +483,32 @@
 							}
 						}
 					},
-					"404": {
-						"description": "Usuário não encontrado.",
+					"400": {
+						"description": "Erro de validação de entrada",
+						"content": {
+							"aplication/json": {
+								"examples": {
+									"Email Formato Inválido": {
+										"summary": "O campo e-mail deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo email deve vir em formato de texto !"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
 						"content": {
 							"application/json": {
 								"examples": {
-									"Usuário Não Encontrado": {
-										"summary": "Nenhum usuário corresponde ao e-mail fornecido",
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
 										"value": {
 											"success": false,
-											"message": "Usuário não encontrado!"
+											"message": "Erro no servidor: descrição do erro."
 										}
 									}
 								}
@@ -452,6 +554,70 @@
 											}
 										}
 									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação de entrada",
+						"content": {
+							"aplication/json": {
+								"examples": {
+									"UUID Formato Inválido": {
+										"summary": "O parâmetro fornecido deve ser um UUID.",
+										"value": {
+											"success": false,
+											"message": "Identificador precisa ser um UUID !"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado",
+						"content": {
+							"aplication/json": {
+								"examples": {
+									"Acesso negado": {
+										"summary": "O usuário não tem permissão.",
+										"value": {
+											"success": false,
+											"message": "Acesso negado: você não tem permissão para acessar este usuario."
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado",
+						"content": {
+							"aplication/json": {
+								"examples": {
+									"Acesso negado": {
+										"summary": "O usuário não foi encontrado.",
+										"value": {
+											"success": false,
+											"message": "Usuário a ser buscado não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
 								}
 							}
 						}
@@ -509,15 +675,57 @@
 						}
 					},
 					"400": {
-						"description": "Erro na validação dos dados enviados.",
+						"description": "Erro de validação de entrada",
 						"content": {
-							"application/json": {
+							"aplication/json": {
 								"examples": {
-									"Dados Inválidos": {
-										"summary": "Os dados fornecidos estão incorretos",
+									"Nome Formato Inválido": {
+										"summary": "O campo nome deve ser uma string válida.",
 										"value": {
 											"success": false,
-											"message": "Os campos fornecidos são inválidos!"
+											"message": "O atributo nome deve vir em formato de texto !"
+										}
+									},
+									"Username Formato Inválido": {
+										"summary": "O campo username deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo username deve vir em formato de texto !"
+										}
+									},
+									"Password Formato Inválido": {
+										"summary": "O campo password deve ser uma string válida.",
+										"value": {
+											"success": false,
+											"message": "O atributo senha deve vir em formato de texto !"
+										}
+									},
+									"Nome Formato Data Inválido": {
+										"summary": "O campo nome deve ter no minimo 3 caracteres.",
+										"value": {
+											"success": false,
+											"message": "O atributo nome deve ter pelo menos 3 caracteres !"
+										}
+									},
+									"Username Formato Data Inválido": {
+										"summary": "O campo username deve ter no minimo 5 caracteres",
+										"value": {
+											"success": false,
+											"message": "O atributo username deve ter pelo menos 5 caracteres !"
+										}
+									},
+									"Password Formato Data Inválido": {
+										"summary": "O campo password deve ter no minimo 5 caracteres",
+										"value": {
+											"success": false,
+											"message": "O atributo senha deve ter pelo menos 5 caracteres !"
+										}
+									},
+									"UUID Formato Inválido": {
+										"summary": "O parâmetro fornecido deve ser um UUID.",
+										"value": {
+											"success": false,
+											"message": "Identificador precisa ser um UUID !"
 										}
 									}
 								}
