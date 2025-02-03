@@ -11,7 +11,7 @@
 	},
 	"servers": [
 		{
-			"url": "http://localhost:1807"
+			"url": "https://avaliacao-final-banco-de-dados-2.onrender.com"
 		}
 	],
 	"tags": [
