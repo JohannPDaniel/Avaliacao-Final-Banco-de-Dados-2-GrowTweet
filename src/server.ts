@@ -10,6 +10,8 @@ import {
 	AuthRoutes,
 } from './routes';
 import { TokenCleanup } from "./utils/TokenCleanup";
+import swaggerUI from 'swagger-ui-express';
+import swaggerDOC from './docs/swagger.json';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,6 +25,9 @@ app.get('/', (_req: Request, res: Response) => {
 		message: 'Bem-vindo a API GrowTweet 🚀',
 	});
 });
+
+app.use('/docs', swaggerUI.serve);
+app.get('/docs', swaggerUI.setup(swaggerDOC));
 
 app.use(AuthRoutes.execute());
 app.use(UserRoutes.execute());
