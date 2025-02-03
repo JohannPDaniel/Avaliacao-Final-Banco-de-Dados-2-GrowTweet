@@ -258,7 +258,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
 		"/users": {
@@ -425,7 +430,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"get": {
 				"tags": ["Users"],
@@ -499,7 +509,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
 		"/users/{id}": {
@@ -650,7 +665,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"put": {
 				"tags": ["Users"],
@@ -852,7 +872,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"delete": {
 				"tags": ["Users"],
@@ -1001,7 +1026,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
 		"/tweets": {
@@ -1186,7 +1216,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"get": {
 				"tags": ["Tweets"],
@@ -1305,7 +1340,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
 		"tweets/{id}": {
@@ -1456,7 +1496,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"put": {
 				"tags": ["Tweets"],
@@ -1607,7 +1652,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"delete": {
 				"tags": ["Tweets"],
@@ -1740,7 +1790,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
 		"/likes": {
@@ -1940,7 +1995,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
 		"/likes/{id}": {
@@ -2059,7 +2119,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
 		"/replies": {
@@ -2246,7 +2311,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"get": {
 				"tags": ["Replies"],
@@ -2365,7 +2435,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
 		"/replies/{id}": {
@@ -2488,7 +2563,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"put": {
 				"tags": ["Replies"],
@@ -2643,7 +2723,12 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			},
 			"delete": {
 				"tags": ["Replies"],
@@ -2780,206 +2865,309 @@
 							}
 						}
 					}
-				}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
 			}
 		},
-
-  "/followers": {
-    "post": {
-      "tags": ["Followers"],
-      "summary": "Seguir um usuário",
-      "description": "Este endpoint permite seguir um usuário específico.",
-      "requestBody": {
-        "required": true,
-        "description": "Dados necessários para seguir um usuário.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/InfoFollowUser"
-            }
-          }
-        }
-      },
-      "responses": {
-        "201": {
-          "description": "Usuário seguido com sucesso.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/APIResponseFollowCreate"
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "Erro de validação nos dados enviados.",
-          "content": {
-            "application/json": {
-              "examples": {
-                "ID do Usuário Obrigatório": {
-                  "summary": "O campo 'userId' é obrigatório.",
-                  "value": {
-                    "success": false,
-                    "message": "O atributo 'userId' é obrigatório!"
-                  }
-                },
-                "Formato Inválido": {
-                  "summary": "O campo 'userId' deve ser um UUID válido.",
-                  "value": {
-                    "success": false,
-                    "message": "O atributo 'userId' deve ser um UUID válido!"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Acesso negado.",
-          "content": {
-            "application/json": {
-              "examples": {
-                "Seguir a Si Mesmo": {
-                  "summary": "O usuário não pode seguir a si mesmo.",
-                  "value": {
-                    "success": false,
-                    "message": "Você não pode seguir a si mesmo!"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "Usuário não encontrado.",
-          "content": {
-            "application/json": {
-              "examples": {
-                "Usuário Não Encontrado": {
-                  "summary": "Nenhum usuário corresponde ao ID fornecido.",
-                  "value": {
-                    "success": false,
-                    "message": "Usuário não encontrado!"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Erro interno no servidor.",
-          "content": {
-            "application/json": {
-              "examples": {
-                "Erro no Servidor": {
-                  "summary": "Ocorreu um erro inesperado no servidor.",
-                  "value": {
-                    "success": false,
-                    "message": "Erro no servidor: descrição do erro."
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/followers/{id}": {
-    "delete": {
-      "tags": ["Followers"],
-      "summary": "Deixar de seguir um usuário",
-      "description": "Este endpoint permite deixar de seguir um usuário específico.",
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "description": "O UUID do usuário a ser removido dos seguidores.",
-          "schema": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Usuário deixado de seguir com sucesso.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/APIResponseFollowRemove"
-              }
-            }
-          }
-        },
-        "400": {
-          "description": "Erro de validação no parâmetro 'id'.",
-          "content": {
-            "application/json": {
-              "examples": {
-                "UUID Formato Inválido": {
-                  "summary": "O parâmetro fornecido deve ser um UUID válido.",
-                  "value": {
-                    "success": false,
-                    "message": "Identificador precisa ser um UUID válido!"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "403": {
-          "description": "Acesso negado.",
-          "content": {
-            "application/json": {
-              "examples": {
-                "Não Segue o Usuário": {
-                  "summary": "O usuário não está sendo seguido.",
-                  "value": {
-                    "success": false,
-                    "message": "Você não está seguindo este usuário!"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "Usuário não encontrado.",
-          "content": {
-            "application/json": {
-              "examples": {
-                "Usuário Não Encontrado": {
-                  "summary": "Nenhum usuário encontrado com este ID.",
-                  "value": {
-                    "success": false,
-                    "message": "Usuário não encontrado!"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Erro interno no servidor.",
-          "content": {
-            "application/json": {
-              "examples": {
-                "Erro no Servidor": {
-                  "summary": "Ocorreu um erro inesperado no servidor.",
-                  "value": {
-                    "success": false,
-                    "message": "Erro no servidor: descrição do erro."
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
+		"/followers": {
+			"post": {
+				"tags": ["Followers"],
+				"summary": "Seguir um usuário",
+				"description": "Este endpoint permite seguir um usuário específico.",
+				"requestBody": {
+					"required": true,
+					"description": "Dados necessários para seguir um usuário.",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InfoFollowUser"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Usuário seguido com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResponseFollowCreate"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação nos dados enviados.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"ID do Usuário Obrigatório": {
+										"summary": "O campo 'userId' é obrigatório.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'userId' é obrigatório!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "O campo 'userId' deve ser um UUID válido.",
+										"value": {
+											"success": false,
+											"message": "O atributo 'userId' deve ser um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Seguir a Si Mesmo": {
+										"summary": "O usuário não pode seguir a si mesmo.",
+										"value": {
+											"success": false,
+											"message": "Você não pode seguir a si mesmo!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário Não Encontrado": {
+										"summary": "Nenhum usuário corresponde ao ID fornecido.",
+										"value": {
+											"success": false,
+											"message": "Usuário não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor.",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
+			}
+		},
+		"/followers/{id}": {
+			"delete": {
+				"tags": ["Followers"],
+				"summary": "Deixar de seguir um usuário",
+				"description": "Este endpoint permite deixar de seguir um usuário específico.",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"description": "O UUID do usuário a ser removido dos seguidores.",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Usuário deixado de seguir com sucesso.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIResponseFollowRemove"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Erro de validação no parâmetro 'id'.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"UUID Formato Inválido": {
+										"summary": "O parâmetro fornecido deve ser um UUID válido.",
+										"value": {
+											"success": false,
+											"message": "Identificador precisa ser um UUID válido!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Erro de autenticação",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Token Não Fornecido": {
+										"summary": "Nenhum token foi enviado no cabeçalho",
+										"value": {
+											"success": false,
+											"message": "Token não fornecido!"
+										}
+									},
+									"Formato Inválido": {
+										"summary": "Token enviado no formato incorreto",
+										"value": {
+											"success": false,
+											"message": "Formato do token inválido! Use (Bearer <token>)."
+										}
+									},
+									"Token Inválido": {
+										"summary": "O token está ausente ou inválido",
+										"value": {
+											"success": false,
+											"message": "Token inválido!"
+										}
+									},
+									"Token Revogado": {
+										"summary": "O token foi revogado e não pode ser usado",
+										"value": {
+											"success": false,
+											"message": "Token inválido! Faça login novamente."
+										}
+									},
+									"Usuário Não Autenticado": {
+										"summary": "O token não corresponde a um usuário válido",
+										"value": {
+											"success": false,
+											"message": "Usuário não autenticado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Acesso negado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Não Segue o Usuário": {
+										"summary": "O usuário não está sendo seguido.",
+										"value": {
+											"success": false,
+											"message": "Você não está seguindo este usuário!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuário não encontrado.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Usuário Não Encontrado": {
+										"summary": "Nenhum usuário encontrado com este ID.",
+										"value": {
+											"success": false,
+											"message": "Usuário não encontrado!"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Erro interno no servidor.",
+						"content": {
+							"application/json": {
+								"examples": {
+									"Erro no Servidor": {
+										"summary": "Ocorreu um erro inesperado no servidor.",
+										"value": {
+											"success": false,
+											"message": "Erro no servidor: descrição do erro."
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"BearerAuth": []
+					}
+				]
+			}
+		}
+	},
 	"components": {
 		"schemas": {
 			"InfoLogin": {
@@ -3079,6 +3267,18 @@
 					"content": {
 						"type": "string",
 						"example": "Mensagem 1 respondida e atualizada"
+					}
+				}
+			},
+			"InfoFollowUser": {
+				"type": "object",
+				"required": ["userId"],
+				"properties": {
+					"userId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "O UUID do usuário que será seguido.",
+						"example": "987e6543-e21b-45d3-b678-123456789abc"
 					}
 				}
 			},
@@ -3365,6 +3565,35 @@
 					}
 				}
 			},
+			"APIResponseFollowCreate": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Usuário seguido com sucesso!"
+					},
+					"data": {
+						"$ref": "#/components/schemas/CreateFollower"
+					}
+				}
+			},
+			"APIResponseFollowRemove": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"message": {
+						"type": "string",
+						"example": "Usuário deixado de seguir com sucesso!"
+					}
+				}
+			},
 			"CreateUser": {
 				"type": "object",
 				"properties": {
@@ -3551,24 +3780,32 @@
 					"id": {
 						"type": "string",
 						"format": "uuid",
+						"example": "550e8400-e29b-41d4-a716-446655440000"
+					},
+					"followerId": {
+						"type": "string",
+						"format": "uuid",
 						"example": "123e4567-e89b-12d3-a456-426614174000"
 					},
 					"userId": {
 						"type": "string",
 						"format": "uuid",
-						"example": "123e4567-e89b-12d3-a456-426614174001"
-					},
-					"tweetId": {
-						"type": "string",
-						"format": "uuid",
-						"example": "123e4567-e89b-12d3-a456-426614174002"
+						"example": "987e6543-e21b-45d3-b678-123456789abc"
 					},
 					"createdAt": {
 						"type": "string",
 						"format": "date-time",
-						"example": "2025-02-02T12:34:56Z"
-					},
+						"example": "2024-02-01T12:34:56.789Z"
+					}
 				}
+			}
+		},
+		"securitySchemes": {
+			"BearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT",
+				"description": "Insira o token JWT no formato 'Bearer {token}'."
 			}
 		}
 	}
