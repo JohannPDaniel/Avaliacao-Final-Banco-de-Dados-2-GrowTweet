@@ -52,7 +52,6 @@ export class AuthMiddleware {
 
 		const jwt = new JWT();
 		const userDecode = jwt.verifyToken(token);
-		console.log('userDecode:', userDecode)
 
 		if (!userDecode) {
 			res.status(401).json({

@@ -33,7 +33,6 @@ export class LikeController {
 		try {
 			const { id } = req.params;
 			const tokenUser = req.authUser;
-			console.log('tokenUser:', tokenUser)
 
 			const service = new LikeService();
 			const result = await service.remove(tokenUser.id, id);
