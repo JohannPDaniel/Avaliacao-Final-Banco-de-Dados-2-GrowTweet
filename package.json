@@ -10,7 +10,8 @@
     "test": "jest --silent --noStackTrace --runInBand",
     "test:verbose": "jest --verbose --runInBand --detectOpenHandles",
     "test:coverage": "jest --runInBand --coverage",
-    "test:watch": "jest --silent --noStackTrace --runInBand --watchAll"
+    "test:watch": "jest --silent --noStackTrace --runInBand --watchAll",
+    "test:unit": "jest -c jest.unit.config.ts --silent --noStackTrace"
   },
   "keywords": [],
   "author": "Johann Patricio Daniel",
@@ -22,6 +23,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jest": "^29.7.0",
+    "jest-mock-extended": "^3.0.7",
     "jsonwebtoken": "^9.0.2",
     "swagger-ui-express": "^5.0.1"
   },

@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 export class Bcrypt {
 	public async generateHash(password: string): Promise<string> {
 		const hash = await bcrypt.hash(password, Number(process.env.BCRYPT_SALT));
