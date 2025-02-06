@@ -1,4 +1,4 @@
-import { User } from './user.dto';
+import { InfoUser } from './user.dto';
 
 export interface LikeDto {
 	id: string;
@@ -12,5 +12,5 @@ export interface LikeDto {
 export type CreateLikeDto = Pick<LikeDto, 'userId' | 'tweetId'>;
 
 export type Like = Pick<LikeDto, 'userId' | 'tweetId' | 'createdAt'> & {
-	user?: User;
+	user?: InfoUser;
 };

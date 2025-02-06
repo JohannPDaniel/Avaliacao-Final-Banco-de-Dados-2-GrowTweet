@@ -14,6 +14,8 @@ export interface UserDto {
 	following?: Array<FollowingDetails>;
 }
 
+export type UserMockType = Pick<UserDto, "id" | "name" | "username" | "email" | "createdAt"> & { password: string, updatedAt: Date};
+
 export type CreateUserDto = Pick<UserDto, 'name' | 'email' | 'username'> & {
 	password: string;
 };

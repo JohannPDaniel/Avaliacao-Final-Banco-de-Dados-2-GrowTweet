@@ -18,7 +18,7 @@ export class UserService {
 			where: { email },
 		});
 
-		if (user && user.email === email) {
+		if (user) {
 			return {
 				success: false,
 				code: 409,
@@ -229,14 +229,17 @@ export class UserService {
 			username: users.username,
 			createdAt: users.createdAt,
 			tweet: users.Tweet?.map((tweet) => ({
+				id: tweet.id,
 				content: tweet.content,
 				type: tweet.type,
 				createdAt: tweet.createdAt,
 				like: tweet.Like?.map((like) => ({
+					id: like.id,
 					userId: like.userId,
 					tweetId: like.tweetId,
 					createdAt: like.createdAt, 
 					user: {
+						id: like.user.id,
 						name: like.user.name,
 						username: like.user.username,
 						email: like.user.email,
@@ -249,6 +252,7 @@ export class UserService {
 					tweetId: reply.tweetId,
 					createdAt: reply.createdAt, 
 					user: {
+						id: reply.user.id,
 						name: reply.user.name,
 						username: reply.user.username,
 						email: reply.user.email,
@@ -256,6 +260,7 @@ export class UserService {
 				})),
 			})),
 			like: users.Like?.map((like) => ({
+				id: like.id,
 				userId: like.userId,
 				tweetId: like.tweetId,
 				createdAt: like.createdAt,

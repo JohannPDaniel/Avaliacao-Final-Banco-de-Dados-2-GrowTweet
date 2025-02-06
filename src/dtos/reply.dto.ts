@@ -1,5 +1,5 @@
 import { TypeTweet } from '@prisma/client';
-import { User } from './user.dto';
+import { InfoUser } from './user.dto';
 
 export interface ReplyDto {
 	id: string;
@@ -18,7 +18,7 @@ export type CreateReplyDto = Pick<
 export type R = Pick<
 	Omit<ReplyDto, 'id'>,
 	'content' | 'type' | 'userId' | 'tweetId' | 'createdAt'
-> & { user?: User };
+> & { user?: InfoUser };
 
 export interface Reply {
 	content: string;
@@ -26,5 +26,5 @@ export interface Reply {
 	userId: string;
 	tweetId: string;
 	createdAt: Date;
-	user?: User;
+	user?: InfoUser;
 }
