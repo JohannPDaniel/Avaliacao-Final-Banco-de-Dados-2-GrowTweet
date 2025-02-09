@@ -8,6 +8,7 @@ export interface UserDto {
 	email: string;
 	username: string;
 	createdAt: Date;
+	updatedAt: Date;
 	tweet?: Array<Tweets>;
 	like?: Array<Like>;
 	followers?: Array<FollowerDetails>;

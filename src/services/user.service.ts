@@ -228,6 +228,8 @@ export class UserService {
 			email: users.email,
 			username: users.username,
 			createdAt: users.createdAt,
+			updatedAt: users.updatedAt,
+
 			tweet: users.Tweet?.map((tweet) => ({
 				id: tweet.id,
 				content: tweet.content,
@@ -237,7 +239,7 @@ export class UserService {
 					id: like.id,
 					userId: like.userId,
 					tweetId: like.tweetId,
-					createdAt: like.createdAt, 
+					createdAt: like.createdAt,
 					user: {
 						id: like.user.id,
 						name: like.user.name,
@@ -250,7 +252,7 @@ export class UserService {
 					type: reply.type,
 					userId: reply.userId,
 					tweetId: reply.tweetId,
-					createdAt: reply.createdAt, 
+					createdAt: reply.createdAt,
 					user: {
 						id: reply.user.id,
 						name: reply.user.name,
