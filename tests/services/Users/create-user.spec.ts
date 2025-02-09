@@ -23,7 +23,7 @@ const mockCreateUser = (params?: Partial<CreateUserDto>) => ({
 	password: params?.password || 'any_password',
 });
 
-describe('Create User Service', () => {
+describe('UserService - Create', () => {
 	const createSut = () => new UserService();
 
 	it('Deve retornar email em uso, quando for fornecido um e-mail já utilizado', async () => {

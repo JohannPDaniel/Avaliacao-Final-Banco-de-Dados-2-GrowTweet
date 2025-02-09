@@ -1,6 +1,7 @@
 import { User } from '@prisma/client';
 import { randomUUID } from 'crypto';
 interface UserMockInterface {
+	id?: string;
 	name?: string;
 	username?: string;
 	email?: string;
