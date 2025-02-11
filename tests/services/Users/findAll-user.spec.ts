@@ -81,7 +81,7 @@ describe('UserService - findAll', () => {
 
         const result = async () => await sut.findAll("")
 
-		expect(result).rejects.toThrow('Erro ao buscar usuários');
+		await expect(result).rejects.toThrow('Erro ao buscar usuários');
 
 		expect(prismaMock.user.findMany).toHaveBeenCalled();
 	});

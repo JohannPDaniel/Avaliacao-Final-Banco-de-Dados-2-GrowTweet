@@ -88,12 +88,11 @@ describe('UserService - update', () => {
 
 		const updateData = { password: 'nova_senha' };
 
-		// Simulando o hash da senha
 		const hashedPassword = 'hashed_nova_senha';
-		(Bcrypt.prototype.generateHash as jest.Mock).mockResolvedValue(
-			hashedPassword
-		);
-        
+
+		jest
+			.spyOn(Bcrypt.prototype, 'generateHash')
+			.mockResolvedValue('hashed_nova_senha');
 
 		prismaMock.user.update.mockResolvedValue({
 			...userMock,
@@ -145,7 +144,7 @@ describe('UserService - update', () => {
 		const result = async () =>
 			await sut.update(userId, userId, { name: 'Novo Nome' });
 
-		expect(result).rejects.toThrow('Erro ao atualizar usuário');
+		await expect(result).rejects.toThrow('Erro ao atualizar usuário');
 
 		expect(prismaMock.user.update).toHaveBeenCalled();
 	});

@@ -64,7 +64,6 @@ describe('UserService - Create', () => {
 		prismaMock.user.create.mockResolvedValue(userMock);
 
 		const result = await sut.create(dto);
-		console.log('result:', result);
 
 		expect(result.success).toBeTruthy();
 		expect(result.code).toBe(201);
