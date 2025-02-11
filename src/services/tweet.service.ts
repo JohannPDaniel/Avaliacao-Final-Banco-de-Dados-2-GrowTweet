@@ -192,6 +192,7 @@ export class TweetService {
 			type: tweet.type,
 			userId: tweet.userId,
 			createdAt: tweet.createdAt,
+			updatedAt: tweet.updatedAt,
 			likeCount: tweet.likeCount ?? 0,
 			likedByCurrentUser: tweet.likedByCurrentUser ?? false,
 			like: tweet.Like?.map((like) => ({

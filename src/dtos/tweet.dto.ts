@@ -9,6 +9,7 @@ export interface TweetDto {
 	type: TypeTweet;
 	userId: string;
 	createdAt: Date;
+	updatedAt: Date;
 	likeCount: number;
 	likedByCurrentUser?: boolean;
 	like?: Array<LikeDtoInterface>;
