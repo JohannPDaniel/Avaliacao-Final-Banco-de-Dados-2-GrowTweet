@@ -68,8 +68,10 @@ export class TweetService {
 
 		const tweetsWithLikes = tweets.map((tweet) => ({
 			...tweet,
-			likedByCurrentUser: tweet.Like.some((like) => like.userId === tokenUser),
-			likeCount: tweet.Like.length,
+			likedByCurrentUser: (tweet.Like ?? []).some(
+				(like) => like.userId === tokenUser
+			), 
+			likeCount: (tweet.Like ?? []).length, 
 		}));
 
 		return {

@@ -9,14 +9,14 @@ interface TweetMockInterface {
 }
 
 export class TweetMock {
-    public static build(params?: TweetMockInterface): Tweet {
-        return {
-            id: randomUUID(),
-            content: params?.content || "any_content",
-            type: TypeTweet.Tweet,
-            userId: "any_id",
-            createdAt: new Date(),
-            updatedAt: new Date()
-        }
-    }
+	public static build(params?: TweetMockInterface): Tweet {
+		return {
+			id: params?.id || randomUUID(),
+			content: params?.content || 'any_content',
+			type: params?.type || TypeTweet.Tweet,
+			userId: params?.userId || 'any_id',
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		};
+	}
 }
