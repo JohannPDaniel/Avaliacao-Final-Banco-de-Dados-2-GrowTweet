@@ -19,18 +19,25 @@ export class LikeService {
 			};
 		}
 
-		const [userExist, tweetExist] = await Promise.all([
-			prisma.user.findUnique({ where: { id: userId } }),
-			prisma.tweet.findUnique({ where: { id: tweetId } }),
-		]);
+		const userExist = await prisma.user.findUnique({ where: { id: userId } });
 
-		if (!userExist || !tweetExist) {
+		if (!userExist) {
 			return {
 				success: false,
 				code: 404,
-				message: !userExist
-					? 'Usuário não encontrado!'
-					: 'Tweet não encontrado!',
+				message: 'Usuário não encontrado!',
+			};
+		}
+
+		const tweetExist = await prisma.tweet.findUnique({
+			where: { id: tweetId },
+		});
+
+		if (!tweetExist) {
+			return {
+				success: false,
+				code: 404,
+				message: 'Tweet não encontrado!',
 			};
 		}
 
@@ -86,6 +93,14 @@ export class LikeService {
 			prisma.like.delete({ where: { id } }),
 			prisma.like.count({ where: { tweetId: likeFound.tweetId } }),
 		]);
+
+		if (likeCount === null) {
+			return {
+				success: false,
+				code: 500,
+				message: 'Erro ao contar os likes restantes!',
+			};
+		}
 
 		return {
 			success: true,
