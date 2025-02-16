@@ -1,5 +1,5 @@
 import { AuthUser, DecodedToken } from '../types/authUser.types';
-import jwt, { SignOptions } from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { StringValue } from "ms";
 
 export class JWT {
@@ -11,7 +11,7 @@ export class JWT {
 
 		const expiresIn = (process.env.EXPIRES_IN || '1h') as StringValue; 
 
-		const options: SignOptions = {
+		const options: jwt.SignOptions = {
 			algorithm: 'HS256',
 			expiresIn,
 		};

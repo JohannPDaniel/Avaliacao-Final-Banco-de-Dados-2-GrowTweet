@@ -54,6 +54,46 @@ describe('UserService - findOneById', () => {
 		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 	});
 
+	it('Deve retornar corretamente um usuário sem tweets, likes, seguidores ou seguindo', async () => {
+		const sut = createSut();
+		const userId = 'user-123';
+
+		// Criando um usuário baseado no Prisma, mas incluindo relações manualmente para testes
+		const userMock = {
+			...UserMock.build({ id: userId }),
+			Tweet: [],
+			Like: [],
+			following: [],
+			followers: [],
+		};
+
+		// Simulando a resposta do Prisma corretamente
+		prismaMock.user.findUnique.mockResolvedValue(userMock as any);
+
+		const result = await sut.findOneById(userId, userId);
+
+		expect(result.success).toBeTruthy();
+		expect(result.code).toBe(200);
+		expect(result.message).toBe('Usuário buscado pelo id com sucesso!');
+		expect(result.data).toEqual({
+			id: userMock.id,
+			name: userMock.name,
+			email: userMock.email,
+			username: userMock.username,
+			createdAt: userMock.createdAt,
+			updatedAt: userMock.updatedAt,
+			tweet: [],
+			like: [],
+			following: [],
+			followers: [],
+		});
+
+		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+			where: { id: userId },
+			include: expect.any(Object),
+		});
+	});
+
 	it('Deve retornar os dados do usuário corretamente quando encontrado', async () => {
 		const sut = createSut();
 		const userId = 'user-123';
@@ -74,6 +114,10 @@ describe('UserService - findOneById', () => {
 			username: userMock.username,
 			createdAt: userMock.createdAt,
 			updatedAt: userMock.updatedAt,
+			tweet: [],
+			like: [],
+			following: [],
+			followers: [],
 		});
 
 		expect(result.data).toHaveProperty('id', userMock.id);

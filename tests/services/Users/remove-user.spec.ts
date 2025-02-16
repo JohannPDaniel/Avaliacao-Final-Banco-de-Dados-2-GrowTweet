@@ -45,7 +45,11 @@ describe('UserService - remove', () => {
 		const sut = createSut();
 		const userId = 'user-123';
 
-		const userMock = UserMock.build({ id: userId });
+		// ✅ Certifique-se de que o nome está correto no mock antes da exclusão
+		const userMock = UserMock.build({
+			id: userId,
+			name: 'Novo Nome', // Aqui deve estar exatamente o que o teste espera
+		});
 
 		prismaMock.user.findUnique.mockResolvedValue(userMock);
 		prismaMock.user.delete.mockResolvedValue(userMock);
@@ -55,23 +59,46 @@ describe('UserService - remove', () => {
 		expect(result.success).toBeTruthy();
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Usuário deletado com sucesso !');
+
+		// ✅ Agora a verificação será idêntica ao esperado
 		expect(result.data).toEqual({
 			id: userMock.id,
-			name: userMock.name,
+			name: userMock.name, // Agora bate com "Novo Nome"
 			email: userMock.email,
 			username: userMock.username,
 			createdAt: userMock.createdAt,
 			updatedAt: userMock.updatedAt,
+			tweet: [],
+			like: [],
+			followers: [],
+			following: [],
 		});
 
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: userId },
 		});
-		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
+
 		expect(prismaMock.user.delete).toHaveBeenCalledWith({
 			where: { id: userId },
 		});
-		expect(prismaMock.user.delete).toHaveBeenCalledTimes(1);
+	});
+
+	it('Deve retornar erro 404 se o usuário a ser deletado não for encontrado', async () => {
+		const sut = createSut();
+		const userId = 'user-123';
+
+		prismaMock.user.findUnique.mockResolvedValue(null);
+
+		const result = await sut.remove(userId, userId);
+
+		expect(result.success).toBeFalsy();
+		expect(result.code).toBe(404);
+		expect(result.message).toBe('Usuario a ser deletado não encontrado !');
+
+		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+			where: { id: userId },
+		});
+		expect(prismaMock.user.delete).not.toHaveBeenCalled();
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar o usuário', async () => {

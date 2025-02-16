@@ -61,11 +61,15 @@ describe('UserService - update', () => {
 		expect(result.message).toBe('Usuário atualizado com sucesso !');
 		expect(result.data).toEqual({
 			id: userMock.id,
-			name: updateData.name,
+			name: 'Novo Nome',
 			email: userMock.email,
 			username: userMock.username,
 			createdAt: userMock.createdAt,
 			updatedAt: userMock.updatedAt,
+			tweet: [],
+			like: [],
+			followers: [],
+			following: [],
 		});
 
 		expect(prismaMock.user.update).toHaveBeenCalledWith({
@@ -73,6 +77,41 @@ describe('UserService - update', () => {
 			data: updateData,
 		});
 		expect(prismaMock.user.update).toHaveBeenCalledTimes(1);
+	});
+
+	it('Deve atualizar o usuário sem alterar a senha quando `password` não for fornecido', async () => {
+		const sut = createSut();
+		const userId = 'user-123';
+
+		const userMock = UserMock.build({ id: userId });
+
+		prismaMock.user.findUnique.mockResolvedValue(userMock);
+		prismaMock.user.update.mockResolvedValue({
+			...userMock,
+			name: 'Novo Nome',
+		});
+
+		const result = await sut.update(userId, userId, { name: 'Novo Nome' });
+
+		expect(result.success).toBeTruthy();
+		expect(result.code).toBe(200);
+		expect(result.message).toBe('Usuário atualizado com sucesso !');
+		expect(result.data).toEqual({
+			id: userMock.id,
+			name: 'Novo Nome',
+			email: userMock.email,
+			username: userMock.username,
+			createdAt: userMock.createdAt,
+			updatedAt: userMock.updatedAt,
+			tweet: [],
+			like: [],
+			followers: [],
+			following: []
+		});
+		expect(prismaMock.user.update).toHaveBeenCalledWith({
+			where: { id: userId },
+			data: { name: 'Novo Nome' }, // Sem alterar `password`
+		});
 	});
 
 	it('Deve atualizar a senha do usuário corretamente', async () => {
