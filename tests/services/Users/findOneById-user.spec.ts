@@ -8,7 +8,7 @@ describe('UserService - findOneById', () => {
 	it('Deve retornar erro 403 se o usuário tentar acessar um ID diferente do próprio', async () => {
 		const sut = createSut();
 		const userId = 'user-123';
-		const tokenUser = 'user-456'; // ID diferente
+		const tokenUser = 'user-456';
 
 		const result = await sut.findOneById(userId, tokenUser);
 
@@ -17,8 +17,8 @@ describe('UserService - findOneById', () => {
 		expect(result.message).toBe(
 			'Acesso negado: você não tem permissão para acessar este usuario.'
 		);
-
 		expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
+		expect(result.data).toBeUndefined();
 	});
 
 	it('Deve retornar erro 404 se o usuário não for encontrado', async () => {
@@ -32,7 +32,7 @@ describe('UserService - findOneById', () => {
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(404);
 		expect(result.message).toBe('Usuário a ser buscado não encontrado!');
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: userId },
 			include: {
@@ -51,6 +51,7 @@ describe('UserService - findOneById', () => {
 				followers: { include: { user: true } },
 			},
 		});
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve retornar os dados do usuário corretamente quando encontrado', async () => {
@@ -66,7 +67,6 @@ describe('UserService - findOneById', () => {
 		expect(result.success).toBeTruthy();
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Usuário buscado pelo id com sucesso!');
-
 		expect(result.data).toEqual({
 			id: userMock.id,
 			name: userMock.name,
@@ -76,6 +76,9 @@ describe('UserService - findOneById', () => {
 			updatedAt: userMock.updatedAt,
 		});
 
+		expect(result.data).toHaveProperty('id', userMock.id);
+		expect(result.data).toHaveProperty('email', userMock.email);
+		expect(result.data).toHaveProperty('username', userMock.username);
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: userId },
 			include: {
@@ -94,6 +97,7 @@ describe('UserService - findOneById', () => {
 				followers: { include: { user: true } },
 			},
 		});
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar o usuário', async () => {
@@ -106,8 +110,26 @@ describe('UserService - findOneById', () => {
 
 		const result = async () => await sut.findOneById(userId, userId);
 
-		expect(result).rejects.toThrow('Erro ao buscar usuário');
-
+		await expect(result).rejects.toThrow('Erro ao buscar usuário');
 		expect(prismaMock.user.findUnique).toHaveBeenCalled();
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
+		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+			where: { id: userId },
+			include: {
+				Tweet: {
+					include: {
+						Like: { include: { user: true } },
+						Reply: { include: { user: true } },
+					},
+				},
+				Like: {
+					include: {
+						tweet: { include: { user: true } },
+					},
+				},
+				following: { include: { follower: true } },
+				followers: { include: { user: true } },
+			},
+		});
 	});
 });

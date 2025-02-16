@@ -19,11 +19,11 @@ describe('TweetService - remove', () => {
 		expect(result.message).toBe(
 			'Acesso negado: você não tem permissão para deletar este tweet.'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.tweet.findFirst).toHaveBeenCalledWith({
 			where: { id: tweetId, userId: tokenUser },
 		});
-
+		expect(prismaMock.tweet.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.delete).not.toHaveBeenCalled();
 	});
 
@@ -49,19 +49,19 @@ describe('TweetService - remove', () => {
 			userId: tweetMock.userId,
 			createdAt: tweetMock.createdAt,
 			updatedAt: tweetMock.updatedAt,
-            likeCount: 0,
-            likedByCurrentUser: false,
-            reply: undefined,
-            like: undefined
+			likeCount: 0,
+			likedByCurrentUser: false,
+			reply: undefined,
+			like: undefined,
 		});
-
 		expect(prismaMock.tweet.findFirst).toHaveBeenCalledWith({
 			where: { id: tweetId, userId: tokenUser },
 		});
-
+		expect(prismaMock.tweet.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.delete).toHaveBeenCalledWith({
 			where: { id: tweetId },
 		});
+		expect(prismaMock.tweet.delete).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar o tweet', async () => {
@@ -78,7 +78,10 @@ describe('TweetService - remove', () => {
 		);
 
 		expect(prismaMock.tweet.findFirst).toHaveBeenCalled();
+		expect(prismaMock.tweet.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.delete).not.toHaveBeenCalled();
+		expect(typeof prismaMock.tweet.findFirst).toBe('function');
+		expect(typeof sut.remove).toBe('function');
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao deletar o tweet', async () => {
@@ -98,6 +101,9 @@ describe('TweetService - remove', () => {
 		);
 
 		expect(prismaMock.tweet.findFirst).toHaveBeenCalled();
+		expect(prismaMock.tweet.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.delete).toHaveBeenCalled();
+		expect(prismaMock.tweet.delete).toHaveBeenCalledTimes(1);
+		expect(typeof prismaMock.tweet.delete).toBe('function');
 	});
 });

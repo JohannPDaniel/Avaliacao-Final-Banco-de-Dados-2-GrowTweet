@@ -18,6 +18,8 @@ describe('FollowerService - create', () => {
 		expect(result.message).toBe(
 			'Acesso negado: você não tem permissão para realizar esta ação em nome de outro usuário.'
 		);
+		expect(result.data).toBeUndefined();
+		expect(typeof createFollowerDto).toBe('object');
 	});
 
 	it('Deve retornar erro 400 se o usuário tentar seguir a si mesmo', async () => {
@@ -29,6 +31,8 @@ describe('FollowerService - create', () => {
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(400);
 		expect(result.message).toBe('Você não pode seguir a si mesmo!');
+		expect(result.data).toBeUndefined();
+		expect(tokenUser).toEqual(createFollowerDto.userId);
 	});
 
 	it('Deve retornar erro 404 se o usuário a ser seguido não existir', async () => {
@@ -36,14 +40,16 @@ describe('FollowerService - create', () => {
 		const createFollowerDto = { userId: tokenUser, followerId: 'user-456' };
 
 		prismaMock.user.findUnique
-			.mockResolvedValueOnce(null) // Usuário não encontrado
-			.mockResolvedValueOnce(UserMock.build({ id: tokenUser })); // Seguidor encontrado
+			.mockResolvedValueOnce(null)
+			.mockResolvedValueOnce(UserMock.build({ id: tokenUser }));
 
 		const result = await sut.create(tokenUser, createFollowerDto);
 
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(404);
 		expect(result.message).toBe('Usuário a ser seguido não encontrado!');
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2);
+		expect(typeof createFollowerDto.followerId).toBe('string');
 	});
 
 	it('Deve retornar erro 404 se o usuário seguidor não existir', async () => {
@@ -51,9 +57,7 @@ describe('FollowerService - create', () => {
 		const createFollowerDto = { userId: tokenUser, followerId: 'user-456' };
 
 		prismaMock.user.findUnique
-			.mockResolvedValueOnce(
-                UserMock.build({ id: tokenUser })
-            ) 
+			.mockResolvedValueOnce(UserMock.build({ id: tokenUser }))
 			.mockResolvedValueOnce(null);
 
 		const result = await sut.create(tokenUser, createFollowerDto);
@@ -61,6 +65,8 @@ describe('FollowerService - create', () => {
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(404);
 		expect(result.message).toBe('Usuário seguidor não encontrado!');
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(2);
+		expect(createFollowerDto.followerId).not.toBe(tokenUser);
 	});
 
 	it('Deve retornar erro 409 se o usuário já estiver seguindo o outro', async () => {
@@ -82,6 +88,8 @@ describe('FollowerService - create', () => {
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(409);
 		expect(result.message).toBe('Usuário já está seguindo este usuário!');
+		expect(prismaMock.follower.findFirst).toHaveBeenCalled();
+		expect(result.data).toBeUndefined();
 	});
 
 	it('Deve criar um seguidor com sucesso', async () => {
@@ -113,7 +121,6 @@ describe('FollowerService - create', () => {
 			followerId: followerMock.followerId,
 			createdAt: followerMock.createdAt,
 		});
-
 		expect(prismaMock.follower.create).toHaveBeenCalledWith({
 			data: { userId: tokenUser, followerId: 'user-456' },
 		});

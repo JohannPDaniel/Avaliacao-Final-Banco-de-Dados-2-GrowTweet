@@ -4,18 +4,6 @@ import { UserService } from './../../../src/services/user.service';
 import { UserMock } from '../../mock/user.mock';
 import { Bcrypt } from '../../../src/utils/bcrypt';
 
-// Testar e-mail único
-// Testar usuário cadastrado com sucesso
-// const userMock: User = {
-// 	id: randomUUID(),
-// 	name: 'any_name',
-// 	email: 'any_email',
-// 	username: 'any_username',
-// 	password: 'hashed_password',
-// 	createdAt: new Date(),
-// 	updatedAt: new Date(),
-// };
-
 const mockCreateUser = (params?: Partial<CreateUserDto>) => ({
 	name: params?.name || 'any_name',
 	email: params?.email || 'any_email',
@@ -26,11 +14,9 @@ const mockCreateUser = (params?: Partial<CreateUserDto>) => ({
 describe('UserService - Create', () => {
 	const createSut = () => new UserService();
 
-	it('Deve retornar email em uso, quando for fornecido um e-mail já utilizado', async () => {
+	it('Deve retornar erro 409 se o e-mail já estiver em uso', async () => {
 		const sut = createSut();
-
 		const dto = mockCreateUser({ email: 'any_email' });
-
 		const userMock = UserMock.build({ email: 'any_email' });
 
 		prismaMock.user.findFirst.mockResolvedValue(userMock);
@@ -43,24 +29,18 @@ describe('UserService - Create', () => {
 		expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
 			where: { email: dto.email },
 		});
-		expect(prismaMock.user.findFirst).toHaveBeenCalledTimes(1);
-
 		expect(prismaMock.user.create).not.toHaveBeenCalled();
 	});
 
-	it('Deve retornar o usuário criado quando sucesso', async () => {
+	it('Deve criar um usuário com sucesso', async () => {
 		const sut = createSut();
-
 		const dto = mockCreateUser();
-
 		const userMock = UserMock.build();
 
 		prismaMock.user.findFirst.mockResolvedValue(null);
-
 		jest
 			.spyOn(Bcrypt.prototype, 'generateHash')
 			.mockResolvedValue('hashed_password');
-
 		prismaMock.user.create.mockResolvedValue(userMock);
 
 		const result = await sut.create(dto);
@@ -81,5 +61,70 @@ describe('UserService - Create', () => {
 		});
 		expect(Bcrypt.prototype.generateHash).toHaveBeenCalledWith(dto.password);
 		expect(prismaMock.user.create).toHaveBeenCalled();
+	});
+
+	it('Deve lançar erro se o Prisma falhar ao verificar o e-mail', async () => {
+		const sut = createSut();
+		const dto = mockCreateUser();
+
+		prismaMock.user.findFirst.mockRejectedValue(
+			new Error('Erro ao buscar usuário')
+		);
+
+		await expect(sut.create(dto)).rejects.toThrow('Erro ao buscar usuário');
+
+		expect(prismaMock.user.findFirst).toHaveBeenCalled();
+		expect(prismaMock.user.create).not.toHaveBeenCalled();
+		expect(typeof prismaMock.user.findFirst).toBe('function');
+		expect(typeof sut.create).toBe('function');
+		expect(prismaMock.user.findFirst).toHaveBeenCalledTimes(1);
+	});
+
+	it('Deve lançar erro se o Prisma falhar ao criar um usuário', async () => {
+		const sut = createSut();
+		const dto = mockCreateUser();
+
+		prismaMock.user.findFirst.mockResolvedValue(null);
+		jest
+			.spyOn(Bcrypt.prototype, 'generateHash')
+			.mockResolvedValue('hashed_password');
+		prismaMock.user.create.mockRejectedValue(
+			new Error('Erro ao criar usuário')
+		);
+
+		await expect(sut.create(dto)).rejects.toThrow('Erro ao criar usuário');
+
+		expect(prismaMock.user.findFirst).toHaveBeenCalled();
+		expect(prismaMock.user.create).toHaveBeenCalled();
+		expect(prismaMock.user.create).toHaveBeenCalledTimes(1);
+		expect(Bcrypt.prototype.generateHash).toHaveBeenCalledWith(dto.password);
+		expect(typeof prismaMock.user.create).toBe('function');
+	});
+
+	it('Deve garantir que a senha do usuário seja criptografada antes de salvar', async () => {
+		const sut = createSut();
+		const dto = mockCreateUser();
+		const userMock = UserMock.build();
+
+		prismaMock.user.findFirst.mockResolvedValue(null);
+		const hashSpy = jest
+			.spyOn(Bcrypt.prototype, 'generateHash')
+			.mockResolvedValue('hashed_password');
+		prismaMock.user.create.mockResolvedValue(userMock);
+
+		const result = await sut.create(dto);
+
+		expect(result.success).toBeTruthy();
+		expect(hashSpy).toHaveBeenCalledWith(dto.password);
+		expect(prismaMock.user.create).toHaveBeenCalledWith({
+			data: {
+				name: dto.name,
+				email: dto.email,
+				username: dto.username,
+				password: 'hashed_password',
+			},
+		});
+		expect(prismaMock.user.create).toHaveBeenCalledTimes(1);
+		expect(result.data.password).toBeUndefined();
 	});
 });

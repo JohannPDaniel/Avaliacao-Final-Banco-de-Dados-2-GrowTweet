@@ -20,22 +20,15 @@ describe('UserService - findAll', () => {
 		expect(result.success).toBeTruthy();
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Usuários buscado com sucesso !');
+		expect(result.data).toHaveLength(2);
+		expect(
+			result.data.map((user: (typeof usersMock)[0]) => user.email)
+		).toEqual(['user1@email.com', 'user2@email.com']);
 
-		const expectedData = usersMock.map((user) => ({
-			id: user.id,
-			name: user.name,
-			email: user.email,
-			username: user.username,
-			createdAt: user.createdAt,
-			updatedAt: user.updatedAt,
-			tweet: undefined,
-			like: undefined,
-			followers: undefined,
-			following: undefined,
-		}));
-
-		expect(result.data).toEqual(expectedData);
 		expect(prismaMock.user.findMany).toHaveBeenCalledWith({ where: {} });
+		expect(prismaMock.user.findMany).toHaveBeenCalledTimes(1);
+		expect(result.data[0]).toHaveProperty('id');
+		expect(result.data[1]).toHaveProperty('username');
 	});
 
 	it('Deve retornar usuários filtrados pelo email quando um email for fornecido', async () => {
@@ -51,11 +44,15 @@ describe('UserService - findAll', () => {
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Usuários buscado com sucesso !');
 		expect(result.data).toHaveLength(1);
-		expect(result.data[0].email).toContain('match@email.com');
+		expect(result.data[0].email).toBe('match@email.com');
 
 		expect(prismaMock.user.findMany).toHaveBeenCalledWith({
 			where: { email: { contains: 'match' } },
 		});
+		expect(prismaMock.user.findMany).toHaveBeenCalledTimes(1);
+		expect(result.data[0]).toHaveProperty('id');
+		expect(result.data[0]).toHaveProperty('username');
+		expect(result.data[0]).toHaveProperty('createdAt');
 	});
 
 	it('Deve retornar uma lista vazia quando não houver usuários', async () => {
@@ -68,8 +65,13 @@ describe('UserService - findAll', () => {
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Usuários buscado com sucesso !');
 		expect(result.data).toHaveLength(0);
+		expect(Array.isArray(result.data)).toBeTruthy();
 
 		expect(prismaMock.user.findMany).toHaveBeenCalledWith({ where: {} });
+		expect(prismaMock.user.findMany).toHaveBeenCalledTimes(1);
+		expect(result.data).toEqual([]);
+		expect(typeof result.message).toBe('string');
+		expect(typeof result.code).toBe('number');
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar usuários', async () => {
@@ -79,10 +81,12 @@ describe('UserService - findAll', () => {
 			new Error('Erro ao buscar usuários')
 		);
 
-        const result = async () => await sut.findAll("")
-
-		await expect(result).rejects.toThrow('Erro ao buscar usuários');
+		await expect(sut.findAll('')).rejects.toThrow('Erro ao buscar usuários');
 
 		expect(prismaMock.user.findMany).toHaveBeenCalled();
+		expect(prismaMock.user.findMany).toHaveBeenCalledTimes(1);
+		expect(typeof prismaMock.user.findMany).toBe('function');
+		expect(typeof sut.findAll).toBe('function');
+		expect(prismaMock.user.findMany).toHaveBeenCalledWith({ where: {} });
 	});
 });

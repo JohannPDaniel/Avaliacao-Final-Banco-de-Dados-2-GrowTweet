@@ -1,6 +1,6 @@
-import { ReplyService } from "../../../src/services/reply.service";
-import { prismaMock } from "../../config/prisma.mock";
-import { ReplyMock } from "../../mock/reply.mock";
+import { ReplyService } from '../../../src/services/reply.service';
+import { prismaMock } from '../../config/prisma.mock';
+import { ReplyMock } from '../../mock/reply.mock';
 
 describe('ReplyService - remove', () => {
 	const createSut = () => new ReplyService();
@@ -19,10 +19,11 @@ describe('ReplyService - remove', () => {
 		expect(result.message).toBe(
 			'Reply a ser deletada não encontrada ou não pertence ao usuário autenticado!'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
 			where: { id: replyId, userId: tokenUser },
 		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.reply.delete).not.toHaveBeenCalled();
 	});
 
@@ -51,10 +52,14 @@ describe('ReplyService - remove', () => {
 			type: replyMock.type,
 			createdAt: replyMock.createdAt,
 		});
-
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
+			where: { id: replyId, userId: tokenUser },
+		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.reply.delete).toHaveBeenCalledWith({
 			where: { id: replyId },
 		});
+		expect(prismaMock.reply.delete).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve lançar erro padronizado se o Prisma falhar ao buscar a reply', async () => {
@@ -69,7 +74,10 @@ describe('ReplyService - remove', () => {
 			'Erro ao buscar reply'
 		);
 
-		expect(prismaMock.reply.findFirst).toHaveBeenCalled();
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
+			where: { id: replyId, userId: tokenUser },
+		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.reply.delete).not.toHaveBeenCalled();
 	});
 
@@ -91,10 +99,14 @@ describe('ReplyService - remove', () => {
 			'Erro ao deletar reply'
 		);
 
-		expect(prismaMock.reply.findFirst).toHaveBeenCalled();
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
+			where: { id: replyId, userId: tokenUser },
+		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.reply.delete).toHaveBeenCalledWith({
 			where: { id: replyId },
 		});
+		expect(prismaMock.reply.delete).toHaveBeenCalledTimes(1);
 	});
 
 	it('Não deve chamar delete se a reply não for encontrada', async () => {
@@ -110,8 +122,9 @@ describe('ReplyService - remove', () => {
 		expect(result.message).toBe(
 			'Reply a ser deletada não encontrada ou não pertence ao usuário autenticado!'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.reply.findFirst).toHaveBeenCalled();
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.reply.delete).not.toHaveBeenCalled();
 	});
 });

@@ -89,12 +89,22 @@ export class LikeService {
 			};
 		}
 
-		const [likeDeleted, likeCount] = await prisma.$transaction([
+		const transactionResult = await prisma.$transaction([
 			prisma.like.delete({ where: { id } }),
 			prisma.like.count({ where: { tweetId: likeFound.tweetId } }),
 		]);
 
-		if (likeCount === null) {
+		if (!Array.isArray(transactionResult) || transactionResult.length < 2) {
+			return {
+				success: false,
+				code: 500,
+				message: 'Erro ao processar a remoção do like!',
+			};
+		}
+
+		const [likeDeleted, likeCount] = transactionResult;
+
+		if (typeof likeCount !== 'number' || isNaN(likeCount)) {
 			return {
 				success: false,
 				code: 500,
@@ -109,7 +119,6 @@ export class LikeService {
 			data: this.mapToDto(likeDeleted, { liked: false, likeCount }),
 		};
 	}
-
 	private mapToDto(
 		like: LikePrisma,
 		additionalData: { liked?: boolean; likeCount?: number } = {}

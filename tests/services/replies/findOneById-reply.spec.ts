@@ -19,17 +19,17 @@ describe('ReplyService - findOneById', () => {
 		expect(result.message).toBe(
 			'Reply a ser buscado não encontrado ou não pertence ao usuário autenticado!'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
 			where: { id: replyId, userId: tokenUser },
 		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve retornar erro 404 se a reply existir, mas não pertencer ao usuário', async () => {
 		const sut = createSut();
 		const replyId = 'reply-123';
 
-		// Simular que a reply não foi encontrada (porque não pertence ao usuário autenticado)
 		prismaMock.reply.findFirst.mockResolvedValue(null);
 
 		const result = await sut.findOneById(tokenUser, replyId);
@@ -39,10 +39,11 @@ describe('ReplyService - findOneById', () => {
 		expect(result.message).toBe(
 			'Reply a ser buscado não encontrado ou não pertence ao usuário autenticado!'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
 			where: { id: replyId, userId: tokenUser },
 		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve retornar a reply corretamente quando encontrada', async () => {
@@ -67,10 +68,11 @@ describe('ReplyService - findOneById', () => {
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Reply buscada pelo id com sucesso!');
 		expect(result.data).toEqual(sut['mapToDto'](replyMock));
-
+		expect(result.data?.id).toBe(replyMock.id);
 		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
 			where: { id: replyId, userId: tokenUser },
 		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar a reply', async () => {
@@ -85,14 +87,16 @@ describe('ReplyService - findOneById', () => {
 			'Erro ao buscar reply'
 		);
 
+		expect(prismaMock.reply.findFirst).toHaveBeenCalled();
 		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
 			where: { id: replyId, userId: tokenUser },
 		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 	});
 
 	it('Não deve retornar uma reply caso o ID seja inválido (string vazia)', async () => {
 		const sut = createSut();
-		const replyId = ''; // ID inválido
+		const replyId = ''; 
 
 		prismaMock.reply.findFirst.mockResolvedValue(null);
 
@@ -103,9 +107,10 @@ describe('ReplyService - findOneById', () => {
 		expect(result.message).toBe(
 			'Reply a ser buscado não encontrado ou não pertence ao usuário autenticado!'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.reply.findFirst).toHaveBeenCalledWith({
 			where: { id: replyId, userId: tokenUser },
 		});
+		expect(prismaMock.reply.findFirst).toHaveBeenCalledTimes(1);
 	});
 });

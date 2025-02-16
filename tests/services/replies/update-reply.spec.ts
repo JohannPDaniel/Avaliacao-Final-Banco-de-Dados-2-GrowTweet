@@ -1,6 +1,6 @@
-import { ReplyService } from "../../../src/services/reply.service";
-import { prismaMock } from "../../config/prisma.mock";
-import { ReplyMock } from "../../mock/reply.mock";
+import { ReplyService } from '../../../src/services/reply.service';
+import { prismaMock } from '../../config/prisma.mock';
+import { ReplyMock } from '../../mock/reply.mock';
 
 describe('ReplyService - update', () => {
 	const createSut = () => new ReplyService();
@@ -19,10 +19,11 @@ describe('ReplyService - update', () => {
 		expect(result.message).toBe(
 			'Reply a ser atualizado não encontrado ou não pertence ao usuário autenticado!'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.reply.findUnique).toHaveBeenCalledWith({
 			where: { id: replyId, userId: tokenUser },
 		});
+		expect(prismaMock.reply.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.reply.update).not.toHaveBeenCalled();
 	});
 
@@ -56,11 +57,12 @@ describe('ReplyService - update', () => {
 			type: replyMock.type,
 			createdAt: replyMock.createdAt,
 		});
-
+		expect(result.data.content).toBe(newContent);
 		expect(prismaMock.reply.update).toHaveBeenCalledWith({
 			where: { id: replyId },
 			data: { content: newContent },
 		});
+		expect(prismaMock.reply.update).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve manter o conteúdo inalterado se `content` for undefined', async () => {
@@ -81,7 +83,14 @@ describe('ReplyService - update', () => {
 		expect(result.success).toBeTruthy();
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Reply atualizado com sucesso !');
-		expect(result.data.content).toBe('Conteúdo inalterado');
+		expect(result.data).toEqual({
+			id: replyMock.id,
+			userId: replyMock.userId,
+			tweetId: replyMock.tweetId,
+			content: 'Conteúdo inalterado',
+			type: replyMock.type,
+			createdAt: replyMock.createdAt,
+		});
 
 		expect(prismaMock.reply.update).toHaveBeenCalledWith({
 			where: { id: replyId },
@@ -102,6 +111,7 @@ describe('ReplyService - update', () => {
 		).rejects.toThrow('Erro ao buscar reply');
 
 		expect(prismaMock.reply.findUnique).toHaveBeenCalled();
+		expect(prismaMock.reply.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.reply.update).not.toHaveBeenCalled();
 	});
 
@@ -125,9 +135,11 @@ describe('ReplyService - update', () => {
 		);
 
 		expect(prismaMock.reply.findUnique).toHaveBeenCalled();
+		expect(prismaMock.reply.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.reply.update).toHaveBeenCalledWith({
 			where: { id: replyId },
 			data: { content: newContent },
 		});
+		expect(prismaMock.reply.update).toHaveBeenCalledTimes(1);
 	});
 });

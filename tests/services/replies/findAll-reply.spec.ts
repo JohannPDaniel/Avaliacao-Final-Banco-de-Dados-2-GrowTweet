@@ -76,7 +76,7 @@ describe('ReplyService - findAll', () => {
 		expect(result.success).toBeTruthy();
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Replies buscados com sucesso !');
-		expect(result.data).toEqual([]); // Lista vazia
+		expect(result.data).toEqual([]);
 
 		expect(prismaMock.reply.findMany).toHaveBeenCalledWith({
 			where: { userId: tokenUser },
@@ -97,5 +97,7 @@ describe('ReplyService - findAll', () => {
 		expect(prismaMock.reply.findMany).toHaveBeenCalledWith({
 			where: { userId: tokenUser },
 		});
+
+		expect(prismaMock.reply.findMany).toHaveBeenCalledTimes(1);
 	});
 });

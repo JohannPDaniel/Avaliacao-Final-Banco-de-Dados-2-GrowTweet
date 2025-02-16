@@ -23,6 +23,7 @@ describe('TweetService - findAll', () => {
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Tweets buscados com sucesso!');
 		expect(result.data).toHaveLength(2);
+		expect(result.data[0]).toHaveProperty('id');
 
 		expect(prismaMock.tweet.findMany).toHaveBeenCalledWith({
 			where: {},
@@ -34,6 +35,7 @@ describe('TweetService - findAll', () => {
 				},
 			},
 		});
+		expect(prismaMock.tweet.findMany).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve retornar tweets filtrados pelo tipo quando `type` for fornecido', async () => {
@@ -63,6 +65,9 @@ describe('TweetService - findAll', () => {
 				},
 			},
 		});
+		expect(prismaMock.tweet.findMany).toHaveBeenCalledTimes(1);
+		expect(result.data[0]).toHaveProperty('id');
+		expect(result.data[0]).toHaveProperty('content');
 	});
 
 	it('Deve retornar os tweets corretamente incluindo curtidas e likeCount', async () => {
@@ -72,10 +77,7 @@ describe('TweetService - findAll', () => {
 		const tweetsMock = [
 			{
 				...TweetMock.build({ id: 'tweet-1' }),
-				Like: [
-					{ userId: 'user-123' }, 
-					{ userId: 'user-456' },
-				],
+				Like: [{ userId: 'user-123' }, { userId: 'user-456' }],
 			},
 			{
 				...TweetMock.build({ id: 'tweet-2' }),
@@ -91,10 +93,9 @@ describe('TweetService - findAll', () => {
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Tweets buscados com sucesso!');
 		expect(result.data).toHaveLength(2);
-
 		expect(result.data[0].likeCount).toBe(2);
-		expect(result.data[0].likedByCurrentUser).toBeTruthy();
 
+		expect(result.data[0].likedByCurrentUser).toBeTruthy();
 		expect(result.data[1].likeCount).toBe(1);
 		expect(result.data[1].likedByCurrentUser).toBeFalsy();
 
@@ -108,6 +109,9 @@ describe('TweetService - findAll', () => {
 				},
 			},
 		});
+		expect(prismaMock.tweet.findMany).toHaveBeenCalledTimes(1);
+		expect(result.data[0]).toHaveProperty('content');
+		expect(result.data[1]).toHaveProperty('createdAt');
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar tweets', async () => {
@@ -123,5 +127,18 @@ describe('TweetService - findAll', () => {
 		);
 
 		expect(prismaMock.tweet.findMany).toHaveBeenCalled();
+		expect(prismaMock.tweet.findMany).toHaveBeenCalledTimes(1);
+		expect(prismaMock.tweet.findMany).toHaveBeenCalledWith({
+			where: {},
+			include: {
+				Like: {
+					include: {
+						user: true,
+					},
+				},
+			},
+		});
+
+		await expect(sut.findAll(tokenUser)).rejects.toBeInstanceOf(Error);
 	});
 });

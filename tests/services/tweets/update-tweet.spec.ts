@@ -19,11 +19,11 @@ describe('TweetService - update', () => {
 		expect(result.message).toBe(
 			'Acesso negado: você não tem permissão para atualizar este tweet.'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.tweet.findFirst).toHaveBeenCalledWith({
 			where: { id: tweetId, userId: tokenUserId },
 		});
-
+		expect(prismaMock.tweet.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.update).not.toHaveBeenCalled();
 	});
 
@@ -53,20 +53,20 @@ describe('TweetService - update', () => {
 			userId: tweetMock.userId,
 			createdAt: tweetMock.createdAt,
 			updatedAt: tweetMock.updatedAt,
-            likeCount: 0,
-            likedByCurrentUser: false,
-            like: undefined,
-            reply: undefined
+			likeCount: 0,
+			likedByCurrentUser: false,
+			like: undefined,
+			reply: undefined,
 		});
-
 		expect(prismaMock.tweet.findFirst).toHaveBeenCalledWith({
 			where: { id: tweetId, userId: tokenUserId },
 		});
-
+		expect(prismaMock.tweet.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.update).toHaveBeenCalledWith({
 			where: { id: tweetId },
 			data: { content: newContent },
 		});
+		expect(prismaMock.tweet.update).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar o tweet', async () => {
@@ -83,7 +83,10 @@ describe('TweetService - update', () => {
 		).rejects.toThrow('Erro ao buscar tweet');
 
 		expect(prismaMock.tweet.findFirst).toHaveBeenCalled();
+		expect(prismaMock.tweet.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.update).not.toHaveBeenCalled();
+		expect(typeof prismaMock.tweet.findFirst).toBe('function');
+		expect(typeof sut.update).toBe('function');
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao atualizar o tweet', async () => {
@@ -104,6 +107,9 @@ describe('TweetService - update', () => {
 		);
 
 		expect(prismaMock.tweet.findFirst).toHaveBeenCalled();
+		expect(prismaMock.tweet.findFirst).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.update).toHaveBeenCalled();
+		expect(prismaMock.tweet.update).toHaveBeenCalledTimes(1);
+		expect(typeof prismaMock.tweet.update).toBe('function');
 	});
 });

@@ -12,7 +12,7 @@ describe('ReplyService - create', () => {
 	it('Deve retornar erro 403 se o usuário tentar responder em nome de outro usuário', async () => {
 		const sut = createSut();
 		const createReplyDto = {
-			userId: 'user-456', // Diferente do tokenUser
+			userId: 'user-456',
 			tweetId: 'tweet-123',
 			content: 'Minha resposta',
 			type: TypeTweet.Reply,
@@ -25,6 +25,8 @@ describe('ReplyService - create', () => {
 		expect(result.message).toBe(
 			'Acesso negado: você não tem permissão para responder em nome de outro usuário.'
 		);
+		expect(result.data).toBeUndefined();
+		expect(prismaMock.reply.create).not.toHaveBeenCalled();
 	});
 
 	it('Deve retornar erro 404 se o usuário não existir', async () => {
@@ -46,11 +48,12 @@ describe('ReplyService - create', () => {
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(404);
 		expect(result.message).toBe('Usuário não encontrado!');
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: tokenUser },
 		});
 		expect(prismaMock.tweet.findUnique).not.toHaveBeenCalled();
+		expect(prismaMock.reply.create).not.toHaveBeenCalled();
 	});
 
 	it('Deve retornar erro 404 se o tweet não existir', async () => {
@@ -72,13 +75,14 @@ describe('ReplyService - create', () => {
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(404);
 		expect(result.message).toBe('Tweet não encontrado!');
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: tokenUser },
 		});
 		expect(prismaMock.tweet.findUnique).toHaveBeenCalledWith({
 			where: { id: 'tweet-123' },
 		});
+		expect(prismaMock.reply.create).not.toHaveBeenCalled();
 	});
 
 	it('Deve criar um reply com sucesso', async () => {
@@ -118,7 +122,6 @@ describe('ReplyService - create', () => {
 			tweetId: replyMock.tweetId,
 			createdAt: replyMock.createdAt,
 		});
-
 		expect(prismaMock.reply.create).toHaveBeenCalledWith({
 			data: {
 				content: createReplyDto.content,
@@ -127,6 +130,7 @@ describe('ReplyService - create', () => {
 				tweetId: createReplyDto.tweetId,
 			},
 		});
+		expect(prismaMock.reply.create).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar o usuário', async () => {
@@ -148,5 +152,7 @@ describe('ReplyService - create', () => {
 
 		expect(prismaMock.user.findUnique).toHaveBeenCalled();
 		expect(prismaMock.tweet.findUnique).not.toHaveBeenCalled();
+		expect(prismaMock.reply.create).not.toHaveBeenCalled();
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 	});
 });

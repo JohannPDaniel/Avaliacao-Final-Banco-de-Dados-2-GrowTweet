@@ -27,7 +27,7 @@ describe('TweetService - create', () => {
 		expect(result.message).toBe(
 			'Acesso negado: você não tem permissão para criar um tweet.'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
 		expect(prismaMock.tweet.create).not.toHaveBeenCalled();
 	});
@@ -54,10 +54,11 @@ describe('TweetService - create', () => {
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(404);
 		expect(result.message).toBe('Usuário não encontrado!');
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: userId },
 		});
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.create).not.toHaveBeenCalled();
 	});
 
@@ -97,13 +98,12 @@ describe('TweetService - create', () => {
 			like: undefined,
 			likeCount: 0,
 			likedByCurrentUser: false,
-			reply: undefined
+			reply: undefined,
 		});
-
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: userId },
 		});
-
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.create).toHaveBeenCalledWith({
 			data: {
 				content: tweetMock.content,
@@ -111,6 +111,7 @@ describe('TweetService - create', () => {
 				userId,
 			},
 		});
+		expect(prismaMock.tweet.create).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar o usuário', async () => {
@@ -137,6 +138,7 @@ describe('TweetService - create', () => {
 		);
 
 		expect(prismaMock.user.findUnique).toHaveBeenCalled();
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.create).not.toHaveBeenCalled();
 	});
 
@@ -163,6 +165,8 @@ describe('TweetService - create', () => {
 		await expect(sut.create(tweetData)).rejects.toThrow('Erro ao criar tweet');
 
 		expect(prismaMock.user.findUnique).toHaveBeenCalled();
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.tweet.create).toHaveBeenCalled();
+		expect(prismaMock.tweet.create).toHaveBeenCalledTimes(1);
 	});
 });

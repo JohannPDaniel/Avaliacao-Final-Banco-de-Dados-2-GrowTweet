@@ -8,7 +8,7 @@ describe('UserService - remove', () => {
 	it('Deve retornar erro 403 se o usuário tentar deletar um ID diferente do próprio', async () => {
 		const sut = createSut();
 		const userId = 'user-123';
-		const tokenUser = 'user-456'; 
+		const tokenUser = 'user-456';
 
 		const result = await sut.remove(userId, tokenUser);
 
@@ -17,7 +17,7 @@ describe('UserService - remove', () => {
 		expect(result.message).toBe(
 			'Acesso negado: você não tem permissão para deletar este usuario.'
 		);
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.user.findUnique).not.toHaveBeenCalled();
 		expect(prismaMock.user.delete).not.toHaveBeenCalled();
 	});
@@ -33,10 +33,11 @@ describe('UserService - remove', () => {
 		expect(result.success).toBeFalsy();
 		expect(result.code).toBe(404);
 		expect(result.message).toBe('Usuario a ser deletado não encontrado !');
-
+		expect(result.data).toBeUndefined();
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: userId },
 		});
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.user.delete).not.toHaveBeenCalled();
 	});
 
@@ -66,10 +67,11 @@ describe('UserService - remove', () => {
 		expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
 			where: { id: userId },
 		});
-
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.user.delete).toHaveBeenCalledWith({
 			where: { id: userId },
 		});
+		expect(prismaMock.user.delete).toHaveBeenCalledTimes(1);
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar o usuário', async () => {
@@ -85,6 +87,7 @@ describe('UserService - remove', () => {
 		);
 
 		expect(prismaMock.user.findUnique).toHaveBeenCalled();
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.user.delete).not.toHaveBeenCalled();
 	});
 
@@ -104,6 +107,8 @@ describe('UserService - remove', () => {
 		);
 
 		expect(prismaMock.user.findUnique).toHaveBeenCalled();
+		expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
 		expect(prismaMock.user.delete).toHaveBeenCalled();
+		expect(prismaMock.user.delete).toHaveBeenCalledTimes(1);
 	});
 });
