@@ -77,7 +77,7 @@ export class FollowerService {
 			data: this.mapToDto(createFollower),
 		};
 	}
-
+	
 	public async remove(tokenUser: string, id: string): Promise<ResponseApi> {
 		const followerFound = await prisma.follower.findFirst({
 			where: {
