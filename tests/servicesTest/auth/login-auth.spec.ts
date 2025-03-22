@@ -1,8 +1,8 @@
 import { prismaMock } from '../../config/prisma.mock';
 import { UserMock } from '../../mock/user.mock';
-import { JWT } from '../../../src/utils/jwt';
-import { Bcrypt } from '../../../src/utils/bcrypt';
-import { AuthService } from './../../../src/services/auth.service';
+import { AuthService } from '../../services/auth.service';
+import { Bcrypt } from '../../utils/bcrypt';
+import { JWT } from '../../utils/jwt';
 
 describe('UserService - login', () => {
 	const createSut = () => new AuthService();

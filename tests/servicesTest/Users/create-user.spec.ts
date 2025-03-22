@@ -1,8 +1,8 @@
-import { CreateUserDto, UserDto } from '../../../src/dtos';
 import { prismaMock } from '../../config/prisma.mock';
-import { UserService } from './../../../src/services/user.service';
+import { CreateUserDto } from '../../dtos';
 import { UserMock } from '../../mock/user.mock';
-import { Bcrypt } from '../../../src/utils/bcrypt';
+import { UserService } from '../../services/user.service';
+import { Bcrypt } from '../../utils/bcrypt';
 
 const mockCreateUser = (params?: Partial<CreateUserDto>) => ({
 	name: params?.name || 'any_name',

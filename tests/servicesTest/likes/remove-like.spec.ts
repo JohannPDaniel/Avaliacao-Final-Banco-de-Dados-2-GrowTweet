@@ -1,6 +1,6 @@
-import { LikeService } from '../../../src/services/like.service';
-import { prismaMock } from '../../config/prisma.mock';
 import { Like } from '@prisma/client';
+import { prismaMock } from '../../config/prisma.mock';
+import { LikeService } from '../../services/like.service';
 
 describe('LikeService - remove', () => {
 	const createSut = () => new LikeService();

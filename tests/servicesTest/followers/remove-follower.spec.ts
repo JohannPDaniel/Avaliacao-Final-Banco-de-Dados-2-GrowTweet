@@ -1,5 +1,5 @@
-import { FollowerService } from '../../../src/services/follower.service';
 import { prismaMock } from '../../config/prisma.mock';
+import { FollowerService } from '../../services/follower.service';
 
 describe('FollowerService - remove', () => {
 	const createSut = () => new FollowerService();
@@ -13,15 +13,15 @@ describe('FollowerService - remove', () => {
 
 		const result = await sut.remove(tokenUser, followerId);
 
-		expect(result.success).toBeFalsy(); 
-		expect(result.code).toBe(404); 
+		expect(result.success).toBeFalsy();
+		expect(result.code).toBe(404);
 		expect(result.message).toBe(
 			'Relação de seguidor a ser deletada não encontrada ou não pertence ao usuário autenticado!'
-		); 
+		);
 		expect(prismaMock.follower.findFirst).toHaveBeenCalledWith({
 			where: { id: followerId, userId: tokenUser },
-		}); 
-		expect(prismaMock.follower.delete).not.toHaveBeenCalled(); 
+		});
+		expect(prismaMock.follower.delete).not.toHaveBeenCalled();
 	});
 
 	it('Deve deletar a relação de seguidor com sucesso', async () => {
@@ -40,18 +40,18 @@ describe('FollowerService - remove', () => {
 
 		const result = await sut.remove(tokenUser, followerId);
 
-		expect(result.success).toBeTruthy(); 
-		expect(result.code).toBe(200); 
-		expect(result.message).toBe('Seguidor deletado com sucesso!'); 
+		expect(result.success).toBeTruthy();
+		expect(result.code).toBe(200);
+		expect(result.message).toBe('Seguidor deletado com sucesso!');
 		expect(result.data).toEqual({
 			id: followerMock.id,
 			userId: followerMock.userId,
 			followerId: followerMock.followerId,
 			createdAt: followerMock.createdAt,
-		}); 
+		});
 		expect(prismaMock.follower.delete).toHaveBeenCalledWith({
 			where: { id: followerId },
-		}); 
+		});
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao buscar a relação de seguidor', async () => {
@@ -63,11 +63,11 @@ describe('FollowerService - remove', () => {
 
 		await expect(sut.remove(tokenUser, followerId)).rejects.toThrow(
 			'Erro ao buscar relação de seguidor'
-		); 
-		expect(prismaMock.follower.findFirst).toHaveBeenCalled(); 
+		);
+		expect(prismaMock.follower.findFirst).toHaveBeenCalled();
 		expect(prismaMock.follower.delete).not.toHaveBeenCalled();
-		expect(typeof followerId).toBe('string'); 
-		expect(tokenUser).not.toBeNull(); 
+		expect(typeof followerId).toBe('string');
+		expect(tokenUser).not.toBeNull();
 	});
 
 	it('Deve lançar um erro se o Prisma falhar ao deletar a relação de seguidor', async () => {
@@ -88,13 +88,13 @@ describe('FollowerService - remove', () => {
 
 		await expect(sut.remove(tokenUser, followerId)).rejects.toThrow(
 			'Erro ao deletar relação de seguidor'
-		); 
+		);
 
 		expect(prismaMock.follower.delete).toHaveBeenCalledWith({
 			where: { id: followerId },
-		}); 
-		expect(followerMock).toHaveProperty('id'); 
-		expect(followerMock).toHaveProperty('userId'); 
-		expect(followerMock.followerId).toBe('user-456'); 
+		});
+		expect(followerMock).toHaveProperty('id');
+		expect(followerMock).toHaveProperty('userId');
+		expect(followerMock.followerId).toBe('user-456');
 	});
 });

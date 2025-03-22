@@ -1,6 +1,6 @@
 import { TypeTweet } from '@prisma/client';
 import { prismaMock } from '../../config/prisma.mock';
-import { ReplyService } from '../../../src/services/reply.service';
+import { ReplyService } from '../../services/reply.service';
 
 describe('ReplyService - findOneById', () => {
 	const createSut = () => new ReplyService();
@@ -96,7 +96,7 @@ describe('ReplyService - findOneById', () => {
 
 	it('Não deve retornar uma reply caso o ID seja inválido (string vazia)', async () => {
 		const sut = createSut();
-		const replyId = ''; 
+		const replyId = '';
 
 		prismaMock.reply.findFirst.mockResolvedValue(null);
 

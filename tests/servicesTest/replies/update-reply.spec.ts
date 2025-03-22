@@ -1,6 +1,6 @@
-import { ReplyService } from '../../../src/services/reply.service';
 import { prismaMock } from '../../config/prisma.mock';
 import { ReplyMock } from '../../mock/reply.mock';
+import { ReplyService } from '../../services/reply.service';
 
 describe('ReplyService - update', () => {
 	const createSut = () => new ReplyService();

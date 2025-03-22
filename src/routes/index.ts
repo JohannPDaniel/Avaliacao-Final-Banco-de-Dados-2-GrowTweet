@@ -16,7 +16,7 @@ export const makeRoutes = (app: Express) => {
 		});
 	});
 
-	app.use('/docs', swaggerUI.serve); 
+	app.use('/docs', swaggerUI.serve);
 	app.get('/docs', swaggerUI.setup(swaggerDOC));
 
 	app.use(AuthRoutes.execute());

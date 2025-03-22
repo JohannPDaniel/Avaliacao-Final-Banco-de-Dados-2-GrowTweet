@@ -1,9 +1,9 @@
 import { TypeTweet } from '@prisma/client';
-import { ReplyService } from './../../../src/services/reply.service';
-import { prismaMock } from './../../config/prisma.mock';
-import { TweetMock } from './../../mock/tweet.mock';
-import { UserMock } from './../../mock/user.mock';
+import { prismaMock } from '../../config/prisma.mock';
 import { ReplyMock } from '../../mock/reply.mock';
+import { TweetMock } from '../../mock/tweet.mock';
+import { UserMock } from '../../mock/user.mock';
+import { ReplyService } from '../../services/reply.service';
 
 describe('ReplyService - create', () => {
 	const createSut = () => new ReplyService();

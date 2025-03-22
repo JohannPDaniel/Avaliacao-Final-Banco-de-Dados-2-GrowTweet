@@ -1,7 +1,7 @@
-import { UserService } from '../../../src/services/user.service';
 import { prismaMock } from '../../config/prisma.mock';
 import { UserMock } from '../../mock/user.mock';
-import { Bcrypt } from '../../../src/utils/bcrypt';
+import { UserService } from '../../services/user.service';
+import { Bcrypt } from '../../utils/bcrypt';
 
 describe('UserService - update', () => {
 	const createSut = () => new UserService();
@@ -106,7 +106,7 @@ describe('UserService - update', () => {
 			tweet: [],
 			like: [],
 			followers: [],
-			following: []
+			following: [],
 		});
 		expect(prismaMock.user.update).toHaveBeenCalledWith({
 			where: { id: userId },

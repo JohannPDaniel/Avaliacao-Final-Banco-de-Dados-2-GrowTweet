@@ -1,6 +1,6 @@
-import { UserService } from '../../../src/services/user.service';
 import { prismaMock } from '../../config/prisma.mock';
 import { UserMock } from '../../mock/user.mock';
+import { UserService } from '../../services/user.service';
 
 describe('UserService - findAll', () => {
 	const createSut = () => new UserService();

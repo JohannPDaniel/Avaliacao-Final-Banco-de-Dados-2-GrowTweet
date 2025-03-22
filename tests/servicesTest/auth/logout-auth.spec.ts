@@ -1,8 +1,7 @@
-import { UserService } from '../../../src/services/user.service';
 import { prismaMock } from '../../config/prisma.mock';
-import { JWT } from '../../../src/utils/jwt';
-import { AuthService } from "../../../src/services/auth.service";
-import { DecodedToken } from "../../../src/types/authUser.types";
+import { AuthService } from '../../services/auth.service';
+import { DecodedToken } from '../../types/authUser.types';
+import { JWT } from '../../utils/jwt';
 
 describe('UserService - logout', () => {
 	const createSut = () => new AuthService();
