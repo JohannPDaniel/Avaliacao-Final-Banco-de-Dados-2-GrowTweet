@@ -1,8 +1,8 @@
+import { LikeService } from "../../../src/services/like.service";
 import { prismaMock } from '../../config/prisma.mock';
 import { LikeMock } from '../../mock/like.mock';
 import { TweetMock } from '../../mock/tweet.mock';
 import { UserMock } from '../../mock/user.mock';
-import { LikeService } from '../../services/like.service';
 
 describe('LikeService - create', () => {
 	const createSut = () => new LikeService();

@@ -1,6 +1,6 @@
 import { TypeTweet } from '@prisma/client';
 import { prismaMock } from '../../config/prisma.mock';
-import { ReplyService } from '../../services/reply.service';
+import { ReplyService } from "../../../src/services/reply.service";
 
 describe('ReplyService - findOneById', () => {
 	const createSut = () => new ReplyService();

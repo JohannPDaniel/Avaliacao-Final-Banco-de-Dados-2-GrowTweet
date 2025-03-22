@@ -1,8 +1,8 @@
+import { CreateTweetDto } from "../../../src/dtos";
+import { TweetService } from "../../../src/services/tweet.service";
 import { prismaMock } from '../../config/prisma.mock';
-import { CreateTweetDto } from '../../dtos';
 import { TweetMock } from '../../mock/tweet.mock';
 import { UserMock } from '../../mock/user.mock';
-import { TweetService } from '../../services/tweet.service';
 
 describe('TweetService - create', () => {
 	const createSut = () => new TweetService();

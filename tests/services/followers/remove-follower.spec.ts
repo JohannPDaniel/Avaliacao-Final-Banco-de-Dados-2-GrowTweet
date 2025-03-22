@@ -1,5 +1,5 @@
+import { FollowerService } from "../../../src/services/follower.service";
 import { prismaMock } from '../../config/prisma.mock';
-import { FollowerService } from '../../services/follower.service';
 
 describe('FollowerService - remove', () => {
 	const createSut = () => new FollowerService();

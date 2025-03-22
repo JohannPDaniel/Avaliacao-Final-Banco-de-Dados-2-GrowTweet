@@ -1,6 +1,6 @@
+import { TweetService } from "../../../src/services/tweet.service";
 import { prismaMock } from '../../config/prisma.mock';
 import { TweetMock } from '../../mock/tweet.mock';
-import { TweetService } from '../../services/tweet.service';
 
 describe('TweetService - findOneById', () => {
 	const createSut = () => new TweetService();

@@ -1,7 +1,7 @@
+import { UserService } from "../../../src/services/user.service";
+import { Bcrypt } from "../../../src/utils/bcrypt";
 import { prismaMock } from '../../config/prisma.mock';
 import { UserMock } from '../../mock/user.mock';
-import { UserService } from '../../services/user.service';
-import { Bcrypt } from '../../utils/bcrypt';
 
 describe('UserService - update', () => {
 	const createSut = () => new UserService();
