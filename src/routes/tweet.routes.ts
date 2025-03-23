@@ -6,7 +6,7 @@ import {
 	UpdateTweetMiddleware,
 } from '../middlewares/tweet';
 import { ValidateUuidMiddleware } from '../middlewares/validate-uuid.middleware';
-import { AuthMiddleware } from "../middlewares/auth/auth.middleware";
+import { AuthMiddleware } from '../middlewares/auth/auth.middleware';
 
 export class TweetRoutes {
 	public static execute(): Router {

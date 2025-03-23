@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { createExpressServer } from './../../../src/express.server';
-import { AuthService } from "../../../src/services/auth.service";
+import { AuthService } from '../../../src/services/auth.service';
 
 describe('POST /login', () => {
 	const server = createExpressServer();
@@ -50,7 +50,7 @@ describe('POST /login', () => {
 		);
 	});
 
-	it.only('Deve retornar 200 quando fornecido um body válido', async () => {
+	it('Deve retornar 200 quando fornecido um body válido', async () => {
 		const body = { email: 'email@email.com', password: 'senha123' };
 
 		// mock do service
@@ -66,10 +66,35 @@ describe('POST /login', () => {
 			},
 		};
 		jest.spyOn(AuthService.prototype, 'login').mockResolvedValue(mockLogin);
+
 		const response = await supertest(server).post(endpoint).send(body);
 
-		console.log(response.body);
-
 		expect(response.statusCode).toBe(200);
+		expect(response.body).toEqual({
+			success: true,
+			message: 'Login efetuado com sucesso',
+			data: {
+				token: 'any_token',
+				userId: 'any_user',
+				tweetId: 'any_tweet',
+				followerId: [],
+			},
+		});
+	});
+
+	it('Deve retornar 500 quando houver um erro', async () => {
+		const body = { email: 'email@email.com', password: 'senha123' };
+
+		jest
+			.spyOn(AuthService.prototype, 'login')
+			.mockRejectedValue(new Error('Exceção !!!'));
+
+		const response = await supertest(server).post(endpoint).send(body);
+
+		expect(response.statusCode).toBe(500);
+		expect(response.body).toEqual({
+			success: false,
+			message: 'Erro no servidor: Exceção !!!',
+		});
 	});
 });
