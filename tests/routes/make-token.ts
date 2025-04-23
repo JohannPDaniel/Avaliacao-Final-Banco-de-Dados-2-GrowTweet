@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { AuthUser } from '../../src/types/authUser.types';
 import { JWT } from '../../src/utils/jwt';
 

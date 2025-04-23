@@ -2,6 +2,7 @@ import { AuthUser, DecodedToken } from '../types/authUser.types';
 import * as jwt from 'jsonwebtoken';
 import { StringValue } from "ms";
 
+
 export class JWT {
 	public generateToken(user: AuthUser): string {
 		const secret = process.env.JWT_SECRET;
@@ -19,6 +20,7 @@ export class JWT {
 		const token = jwt.sign(user, secret, options);
 		return token;
 	}
+	
 	public verifyToken(token: string): DecodedToken | null {
 		try {
 			if (!process.env.JWT_SECRET) {

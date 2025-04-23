@@ -13,7 +13,7 @@ interface AuthTestConfig {
 export function runAuthTests({ server, method, endpoint }: AuthTestConfig) {
 	const userMock = UserMock.build();
 
-	describe(`AuthMiddleware para ${method.toUpperCase()} ${endpoint}`, () => {
+	describe(`AuthMiddleware para ${method.toUpperCase()} - ${endpoint}`, () => {
 		it('Deve retornar 401 quando não for informado um token', async () => {
 			const response = await supertest(server)[method](endpoint);
 
