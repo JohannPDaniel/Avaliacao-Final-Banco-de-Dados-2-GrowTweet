@@ -3,6 +3,8 @@ import { createExpressServer } from '../../../src/express.server';
 import { UserMock } from '../../mock/user.mock';
 import { runAuthTests } from '../helpers/test-auth-helper';
 import { makeToken } from '../make-token';
+import { TweetService } from '../../../src/services/tweet.service';
+import { randomUUID } from 'crypto';
 
 describe('POST /tweets', () => {
 	const server = createExpressServer();
@@ -146,6 +148,26 @@ describe('POST /tweets', () => {
 			type: 'Tweet',
 			userId: userMock.id,
 		};
+		const mockTweet = {
+			success: true,
+			code: 201,
+			message: 'Tweet criado com sucesso !',
+			data: {
+				id: randomUUID(),
+				content: expect.any(String),
+				type: 'Tweet',
+				userId: userMock.id,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				likeCount: expect.any(Number),
+				likedByCurrentUser: expect.any(Boolean),
+				like: undefined,
+				reply: undefined,
+			},
+		};
+
+		jest.spyOn(TweetService.prototype, 'create').mockResolvedValue(mockTweet);
+
 		const response = await supertest(server)
 			.post(endpoint)
 			.set('Authorization', `Bearer ${token}`)
@@ -159,5 +181,28 @@ describe('POST /tweets', () => {
 		expect(typeof response.body).toBe('object');
 		expect(Object.keys(response.body).length).toBeGreaterThanOrEqual(1);
 		expect(response.headers['content-type']).toContain('application/json');
+	});
+
+	it('Deve retornar 500 quando houver um erro', async () => {
+		const body = {
+			content: 'Este é um tweet válido',
+			type: 'Tweet',
+			userId: userMock.id,
+		};
+
+		jest
+			.spyOn(TweetService.prototype, 'create')
+			.mockRejectedValue(new Error('Exceção !!!'));
+
+		const response = await supertest(server)
+			.post(endpoint)
+			.set('Authorization', `Bearer ${token}`)
+			.send(body);
+
+		expect(response.statusCode).toBe(500);
+		expect(response.body).toEqual({
+			success: false,
+			message: 'Erro no servidor: Exceção !!!',
+		});
 	});
 });
