@@ -1,8 +1,9 @@
 import {
+	Follower as FollowerPrisma,
 	Like as LikePrisma,
 	Reply as ReplyPrisma,
 	Tweet as TweetPrisma,
-	User as UserPrisma
+	User as UserPrisma,
 } from '@prisma/client';
 import { prisma } from '../database/prisma.database';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
@@ -56,7 +57,7 @@ export class UserService {
 			success: true,
 			code: 200,
 			message: 'Usuários buscado com sucesso !',
-			data: users.map((user) => this.mapToDto(user)),
+			data: users.map((user: UserPrisma) => this.mapToDto(user)),
 		};
 	}
 
@@ -230,12 +231,12 @@ export class UserService {
 			createdAt: users.createdAt,
 			updatedAt: users.updatedAt,
 
-			tweet: users.Tweet?.map((tweet) => ({
+			tweet: users.Tweet?.map((tweet: TweetPrisma) => ({
 				id: tweet.id,
 				content: tweet.content,
 				type: tweet.type,
 				createdAt: tweet.createdAt,
-				like: tweet.Like?.map((like) => ({
+				like: tweet.Like?.map((like: LikePrisma) => ({
 					id: like.id,
 					userId: like.userId,
 					tweetId: like.tweetId,
@@ -247,7 +248,7 @@ export class UserService {
 						email: like.user.email,
 					},
 				})),
-				reply: tweet.Reply?.map((reply) => ({
+				reply: tweet.Reply?.map((reply: ReplyPrisma) => ({
 					content: reply.content,
 					type: reply.type,
 					userId: reply.userId,
@@ -261,7 +262,7 @@ export class UserService {
 					},
 				})),
 			})),
-			like: users.Like?.map((like) => ({
+			like: users.Like?.map((like: LikePrisma) => ({
 				id: like.id,
 				userId: like.userId,
 				tweetId: like.tweetId,
@@ -276,14 +277,14 @@ export class UserService {
 					},
 				},
 			})),
-			following: users.following?.map((followed) => ({
+			following: users.following?.map((followed: FollowerPrisma) => ({
 				userId: followed.follower.id,
 				name: followed.follower.name,
 				username: followed.follower.username,
 				email: followed.follower.email,
 				createdAt: followed.follower.createdAt,
 			})),
-			followers: users.followers?.map((follower) => ({
+			followers: users.followers?.map((follower: FollowerPrisma) => ({
 				userId: follower.user.id,
 				name: follower.user.name,
 				username: follower.user.username,

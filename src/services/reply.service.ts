@@ -75,7 +75,7 @@ export class ReplyService {
 			success: true,
 			code: 200,
 			message: 'Replies buscados com sucesso !',
-			data: replies.map((reply) => this.mapToDto(reply)),
+			data: replies.map((reply: ReplyPrisma) => this.mapToDto(reply)),
 		};
 	}
 
@@ -83,7 +83,6 @@ export class ReplyService {
 		tokenUser: string,
 		id: string
 	): Promise<ResponseApi> {
-
 		const reply = await prisma.reply.findFirst({
 			where: { id, userId: tokenUser },
 		});
@@ -105,7 +104,11 @@ export class ReplyService {
 		};
 	}
 
-	public async update(id: string, tokenUser: string, content?: string): Promise<ResponseApi> {
+	public async update(
+		id: string,
+		tokenUser: string,
+		content?: string
+	): Promise<ResponseApi> {
 		const replyFound = await prisma.reply.findUnique({
 			where: { id, userId: tokenUser },
 		});
@@ -165,7 +168,7 @@ export class ReplyService {
 			type: reply.type,
 			userId: reply.userId,
 			tweetId: reply.tweetId,
-			createdAt: reply.createdAt
+			createdAt: reply.createdAt,
 		};
 	}
 }

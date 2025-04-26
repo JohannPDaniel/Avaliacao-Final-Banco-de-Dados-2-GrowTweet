@@ -66,19 +66,19 @@ export class TweetService {
 			},
 		});
 
-		const tweetsWithLikes = tweets.map((tweet) => ({
+		const tweetsWithLikes = tweets.map((tweet: TweetPrisma) => ({
 			...tweet,
 			likedByCurrentUser: (tweet.Like ?? []).some(
-				(like) => like.userId === tokenUser
-			), 
-			likeCount: (tweet.Like ?? []).length, 
+				(like: LikePrisma) => like.userId === tokenUser
+			),
+			likeCount: (tweet.Like ?? []).length,
 		}));
 
 		return {
 			success: true,
 			code: 200,
 			message: 'Tweets buscados com sucesso!',
-			data: tweetsWithLikes.map((tweet) => this.mapToDto(tweet)),
+			data: tweetsWithLikes.map((tweet: TweetPrisma) => this.mapToDto(tweet)),
 		};
 	}
 
@@ -197,13 +197,13 @@ export class TweetService {
 			updatedAt: tweet.updatedAt,
 			likeCount: tweet.likeCount ?? 0,
 			likedByCurrentUser: tweet.likedByCurrentUser ?? false,
-			like: tweet.Like?.map((like) => ({
+			like: tweet.Like?.map((like: LikePrisma) => ({
 				id: like.id,
 				userId: like.userId,
 				tweetId: like.tweetId,
 				createdAt: like.createdAt,
 			})),
-			reply: tweet.Reply?.map((reply) => ({
+			reply: tweet.Reply?.map((reply: ReplyPrisma) => ({
 				id: reply.id,
 				content: reply.content,
 				type: reply.type,

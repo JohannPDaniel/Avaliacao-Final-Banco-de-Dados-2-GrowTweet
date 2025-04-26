@@ -1,19 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
-import { TypeTweetEnum } from "../../types";
+import { TypeTweetEnum } from '../../types';
 
 export class FindAllTweetMiddleware {
 	public static validateTypes(req: Request, res: Response, next: NextFunction) {
 		const { type } = req.query;
 
-		const isValidType =
-			type && Object.values(TypeTweetEnum).includes(type as TypeTweetEnum);
+		const isValidType = !type || type === TypeTweetEnum.Tweet;
 
-		if (!isValidType && type) {
+		if (!isValidType) {
 			res.status(400).json({
 				success: false,
-				message: `Tipo inválido fornecido: ${type}. Os tipos válidos são ${Object.values(
-					TypeTweetEnum
-				).join(', ')}.`,
+				message: `Tipo inválido fornecido: ${type}. Apenas o tipo '${TypeTweetEnum.Tweet}' é permitido.`,
 			});
 			return;
 		}

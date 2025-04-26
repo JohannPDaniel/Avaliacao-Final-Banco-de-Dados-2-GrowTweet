@@ -2,8 +2,12 @@ import { prisma } from '../database/prisma.database';
 import { LoginDto } from '../dtos';
 import { ResponseApi } from '../types';
 import { Bcrypt } from '../utils/bcrypt';
-import { JWT } from "../utils/jwt";
-import { AuthUser, DecodedToken } from "../types/authUser.types";
+import { JWT } from '../utils/jwt';
+import { AuthUser, DecodedToken } from '../types/authUser.types';
+import {
+	Follower as FollowerPrisma,
+	Tweet as TweetPrima,
+} from '@prisma/client';
 
 export class AuthService {
 	public async login(
@@ -50,7 +54,7 @@ export class AuthService {
 		const token = jwt.generateToken(payload);
 
 		const selectedTweetId = likedTweetId
-			? user.Tweet.find((tweet) => tweet.id === likedTweetId)?.id
+			? user.Tweet.find((tweet: TweetPrima) => tweet.id === likedTweetId)?.id
 			: user.Tweet[0]?.id;
 
 		return {
@@ -62,7 +66,7 @@ export class AuthService {
 				userId: user.id,
 				tweetId: selectedTweetId,
 				followerId: Array.isArray(user.followers)
-					? user.followers.map((follower) => follower.id)
+					? user.followers.map((follower: FollowerPrisma) => follower.id)
 					: [],
 			},
 		};
@@ -75,7 +79,7 @@ export class AuthService {
 		await prisma.revokedToken.create({
 			data: {
 				token,
-				expiresAt: new Date(decoded.exp * 1000), 
+				expiresAt: new Date(decoded.exp * 1000),
 			},
 		});
 
