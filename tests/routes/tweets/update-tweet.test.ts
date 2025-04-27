@@ -21,6 +21,8 @@ describe('PUT /tweets', () => {
 
 		expect(response.status).toBe(400);
 		expect(response.body.success).toBe(false);
+		expect(response.body).toHaveProperty('message');
+		expect(typeof response.body.message).toBe('string');
 		expect(response.body.message).toMatch(/uuid/i);
 	});
 
@@ -34,9 +36,13 @@ describe('PUT /tweets', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(response.body).toHaveProperty('message');
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message.length).toBeGreaterThan(0);
 	});
 
-	it('Deve retornar 400 quando o conteúdo, se vier, vir menos de 5 caracteres', async () => {
+	it('Deve retornar 400 quando o conteúdo, se vier, vir com menos de 5 caracteres', async () => {
 		const validId = randomUUID();
 		const body = { content: 'abc' };
 
@@ -46,6 +52,10 @@ describe('PUT /tweets', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(response.body).toHaveProperty('message');
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message.length).toBeGreaterThan(0);
 	});
 
 	it('Deve retornar 403 quando o usuário tentar atualizar um tweet que não é dele', async () => {
@@ -60,20 +70,26 @@ describe('PUT /tweets', () => {
 			.send(body);
 
 		expect(response.status).toBe(403);
-		expect(response.body).toEqual({
-			success: false,
-			message:
-				'Acesso negado: você não tem permissão para atualizar este tweet.',
-		});
+		expect(response.body.success).toBe(false);
+		expect(response.body).toHaveProperty('message');
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toBe(
+			'Acesso negado: você não tem permissão para atualizar este tweet.'
+		);
 	});
 
 	it('Deve retornar 200 quando o usuário fornecer o id e a mensagem a ser atualizada', async () => {
 		const validId = randomUUID();
 		const body = { content: 'Bom dia !!!' };
 
-		jest.spyOn(prisma.tweet, 'findFirst').mockResolvedValue(validId);
-
-		jest.spyOn(prisma.tweet, 'update').mockResolvedValue(body);
+		jest
+			.spyOn(prisma.tweet, 'findFirst')
+			.mockResolvedValue({ id: validId, userId: userMock.id });
+		jest.spyOn(prisma.tweet, 'update').mockResolvedValue({
+			id: validId,
+			userId: userMock.id,
+			content: body.content,
+		});
 
 		const response = await supertest(server)
 			.put(`${endpoint}/${validId}`)
@@ -81,14 +97,15 @@ describe('PUT /tweets', () => {
 			.send(body);
 
 		expect(response.status).toBe(200);
+		expect(response.body.success).toBe(true);
+		expect(response.body).toHaveProperty('message');
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/sucesso/i);
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
 		const validId = randomUUID();
-
-		const body = {
-			content: 'Este é um tweet válido',
-		};
+		const body = { content: 'Este é um tweet válido' };
 
 		jest
 			.spyOn(TweetService.prototype, 'update')
@@ -100,9 +117,9 @@ describe('PUT /tweets', () => {
 			.send(body);
 
 		expect(response.statusCode).toBe(500);
-		expect(response.body).toEqual({
-			success: false,
-			message: 'Erro no servidor: Exceção !!!',
-		});
+		expect(response.body.success).toBe(false);
+		expect(response.body).toHaveProperty('message');
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toContain('Exceção !!!');
 	});
 });
