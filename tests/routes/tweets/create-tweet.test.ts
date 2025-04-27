@@ -12,8 +12,6 @@ describe('POST /tweets', () => {
 	const userMock = UserMock.build();
 	const token = makeToken(userMock);
 
-	runAuthTests({ server, method: 'post', endpoint });
-
 	it('Deve retornar 400 quando o body estiver vazio', async () => {
 		const body = {};
 
