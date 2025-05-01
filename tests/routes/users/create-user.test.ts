@@ -1,12 +1,14 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { UserMock } from '../../mock/user.mock';
+import { UserMock, UserMockWithRelations } from '../../mock/user.mock';
 import { makeToken } from '../make-token';
+import { UserService } from '../../../src/services/user.service';
+import { randomUUID } from 'crypto';
 
 describe('POST /users', () => {
 	const server = createExpressServer();
 	const endpoint = '/users';
-	const userMock = UserMock.build();
+	const userMock = UserMock.build()
 	const token = makeToken(userMock);
 
 	it('Deve retornar 400 quando o body estiver vazio', async () => {
@@ -48,7 +50,7 @@ describe('POST /users', () => {
 		const body = {
 			name: 'Maria',
 			email: 'maria@email.com',
-            username: "maria123"
+			username: 'maria123',
 		};
 
 		const response = await supertest(server).post(endpoint).send(body);
@@ -64,8 +66,8 @@ describe('POST /users', () => {
 		const body = {
 			name: 123,
 			email: 'maria@email.com',
-            username: "maria123",
-            password: "senha123"
+			username: 'maria123',
+			password: 'senha123',
 		};
 
 		const response = await supertest(server).post(endpoint).send(body);
@@ -79,10 +81,10 @@ describe('POST /users', () => {
 
 	it('Deve retornar 400 quando o e-mail for diferente de string', async () => {
 		const body = {
-			name: "Maria",
+			name: 'Maria',
 			email: true,
-            username: "maria123",
-            password: "senha123"
+			username: 'maria123',
+			password: 'senha123',
 		};
 
 		const response = await supertest(server).post(endpoint).send(body);
@@ -96,10 +98,10 @@ describe('POST /users', () => {
 
 	it('Deve retornar 400 quando o username for diferente de string', async () => {
 		const body = {
-			name: "Maria",
-			email: "maria@email.com",
-            username: {},
-            password: "senha123"
+			name: 'Maria',
+			email: 'maria@email.com',
+			username: {},
+			password: 'senha123',
 		};
 		const response = await supertest(server).post(endpoint).send(body);
 
@@ -112,10 +114,10 @@ describe('POST /users', () => {
 
 	it('Deve retornar 400 quando o password for diferente de string', async () => {
 		const body = {
-			name: "Maria",
-			email: "maria@email.com",
-            username: "maria123",
-            password: []
+			name: 'Maria',
+			email: 'maria@email.com',
+			username: 'maria123',
+			password: [],
 		};
 		const response = await supertest(server).post(endpoint).send(body);
 
@@ -128,10 +130,10 @@ describe('POST /users', () => {
 
 	it('Deve retornar 400 quando o name tiver menos de 3 caracteres', async () => {
 		const body = {
-			name: "ab",
-			email: "maria@email.com",
-            username: "maria123",
-            password: "senha123"
+			name: 'ab',
+			email: 'maria@email.com',
+			username: 'maria123',
+			password: 'senha123',
 		};
 		const response = await supertest(server).post(endpoint).send(body);
 
@@ -144,10 +146,10 @@ describe('POST /users', () => {
 
 	it('Deve retornar 400 quando o email não tiver @ e .com', async () => {
 		const body = {
-			name: "Maria",
-			email: "maria",
-            username: "maria123",
-            password: "senha123"
+			name: 'Maria',
+			email: 'maria',
+			username: 'maria123',
+			password: 'senha123',
 		};
 		const response = await supertest(server).post(endpoint).send(body);
 
@@ -160,10 +162,10 @@ describe('POST /users', () => {
 
 	it('Deve retornar 400 quando o username tiver menos de 5 caracteres', async () => {
 		const body = {
-			name: "Maria",
-			email: "maria@email.com",
-            username: "abc",
-            password: "senha123"
+			name: 'Maria',
+			email: 'maria@email.com',
+			username: 'abc',
+			password: 'senha123',
 		};
 		const response = await supertest(server).post(endpoint).send(body);
 
@@ -176,10 +178,10 @@ describe('POST /users', () => {
 
 	it('Deve retornar 400 quando o password tiver menos de 5 caracteres', async () => {
 		const body = {
-			name: "Maria",
-			email: "maria@email.com",
-            username: "maria123",
-            password: "abc"
+			name: 'Maria',
+			email: 'maria@email.com',
+			username: 'maria123',
+			password: 'abc',
 		};
 		const response = await supertest(server).post(endpoint).send(body);
 
@@ -187,6 +189,55 @@ describe('POST /users', () => {
 		expect(response.body).toEqual({
 			success: false,
 			message: 'O atributo senha deve ter pelo menos 5 caracteres !',
+		});
+	});
+
+	it('Deve criar um usuário quando fornecido um body válido', async () => {
+		const body = {
+			name: 'Maria',
+			email: 'maria@email.com',
+			username: 'maria123',
+			password: 'senha123',
+		};
+
+		const mockUsers = {
+			success: true,
+			code: 201,
+			message: 'Usuário criado com sucesso !',
+			data: {
+				id: userMock.id,
+				name: userMock.name,
+				username: userMock.username,
+				createdAt: userMock.createdAt.toISOString(),
+				updatedAt: userMock.updatedAt.toISOString(),
+				tweet: undefined,
+				reply: undefined,
+				like: undefined,
+				following: undefined,
+				followers: undefined,
+			},
+		};
+		jest.spyOn(UserService.prototype, 'create').mockResolvedValue(mockUsers);
+
+		const response = await supertest(server).post(endpoint).send(body);
+		console.log('response:', response.body);
+
+		expect(response.status).toBe(201);
+		expect(response.body).toEqual({
+			success: true,
+			message: 'Usuário criado com sucesso !',
+			data: {
+				id: userMock.id,
+				name: userMock.name,
+				username: userMock.username,
+				createdAt: userMock.createdAt,
+				updatedAt: userMock.updatedAt,
+				tweet: undefined,
+				reply: undefined,
+				like: undefined,
+				following: undefined,
+				followers: undefined,
+			},
 		});
 	});
 });

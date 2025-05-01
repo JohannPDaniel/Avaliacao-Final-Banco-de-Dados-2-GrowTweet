@@ -47,12 +47,11 @@ describe('DELETE /tweet', () => {
 	it('Deve retornar 200 quando o usuário fornecer o id e a mensagem a ser atualizada', async () => {
 		const validId = randomUUID();
 
-		jest
-			.spyOn(prisma.tweet, 'findFirst')
-			.mockResolvedValue({ id: validId, userId: userMock.id });
-
-		jest.spyOn(prisma.tweet, 'delete').mockResolvedValue({
-			id: validId,
+		jest.spyOn(TweetService.prototype, 'remove').mockResolvedValue({
+			success: true,
+			code: 200,
+			message: 'Tweet deletado com sucesso!',
+			data: {}
 		});
 
 		const response = await supertest(server)

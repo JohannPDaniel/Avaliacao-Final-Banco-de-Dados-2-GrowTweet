@@ -231,12 +231,12 @@ export class UserService {
 			createdAt: users.createdAt,
 			updatedAt: users.updatedAt,
 
-			tweet: users.Tweet?.map((tweet: TweetPrisma) => ({
+			tweet: users.Tweet?.map((tweet) => ({
 				id: tweet.id,
 				content: tweet.content,
 				type: tweet.type,
 				createdAt: tweet.createdAt,
-				like: tweet.Like?.map((like: LikePrisma) => ({
+				like: tweet.Like?.map((like) => ({
 					id: like.id,
 					userId: like.userId,
 					tweetId: like.tweetId,
@@ -248,7 +248,7 @@ export class UserService {
 						email: like.user.email,
 					},
 				})),
-				reply: tweet.Reply?.map((reply: ReplyPrisma) => ({
+				reply: tweet.Reply?.map((reply) => ({
 					content: reply.content,
 					type: reply.type,
 					userId: reply.userId,
@@ -262,7 +262,7 @@ export class UserService {
 					},
 				})),
 			})),
-			like: users.Like?.map((like: LikePrisma) => ({
+			like: users.Like?.map((like) => ({
 				id: like.id,
 				userId: like.userId,
 				tweetId: like.tweetId,
@@ -277,14 +277,14 @@ export class UserService {
 					},
 				},
 			})),
-			following: users.following?.map((followed: FollowerPrisma) => ({
+			following: users.following?.map((followed) => ({
 				userId: followed.follower.id,
 				name: followed.follower.name,
 				username: followed.follower.username,
 				email: followed.follower.email,
 				createdAt: followed.follower.createdAt,
 			})),
-			followers: users.followers?.map((follower: FollowerPrisma) => ({
+			followers: users.followers?.map((follower) => ({
 				userId: follower.user.id,
 				name: follower.user.name,
 				username: follower.user.username,

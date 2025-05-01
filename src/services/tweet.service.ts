@@ -66,7 +66,7 @@ export class TweetService {
 			},
 		});
 
-		const tweetsWithLikes = tweets.map((tweet: TweetPrisma) => ({
+		const tweetsWithLikes = tweets.map((tweet) => ({
 			...tweet,
 			likedByCurrentUser: (tweet.Like ?? []).some(
 				(like: LikePrisma) => like.userId === tokenUser

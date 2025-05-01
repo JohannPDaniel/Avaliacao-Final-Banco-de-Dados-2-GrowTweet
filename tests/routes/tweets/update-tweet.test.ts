@@ -82,13 +82,11 @@ describe('PUT /tweets', () => {
 		const validId = randomUUID();
 		const body = { content: 'Bom dia !!!' };
 
-		jest
-			.spyOn(prisma.tweet, 'findFirst')
-			.mockResolvedValue({ id: validId, userId: userMock.id });
-		jest.spyOn(prisma.tweet, 'update').mockResolvedValue({
-			id: validId,
-			userId: userMock.id,
-			content: body.content,
+		jest.spyOn(TweetService.prototype, 'update').mockResolvedValue({
+			success: true,
+			code: 200,
+			message: 'Tweet atualizado com sucesso!',
+			data: {}
 		});
 
 		const response = await supertest(server)
