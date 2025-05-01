@@ -24,7 +24,11 @@ export class UserRoutes {
 
 		router.get(
 			'/users',
-			[AuthMiddleware.validate, FindAllUserMiddleware.validateTypes],
+			[
+				AuthMiddleware.validate,
+				FindAllUserMiddleware.validateTypes,
+				FindAllUserMiddleware.ValidateData,
+			],
 			UserController.findAll
 		);
 

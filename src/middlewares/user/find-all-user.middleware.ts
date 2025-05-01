@@ -14,4 +14,18 @@ export class FindAllUserMiddleware {
 
 		next();
 	}
+
+	public static ValidateData(req: Request, res: Response, next: NextFunction) {
+		const { email } = req.query;
+		const emailRegex = /^[^\s@]{3,}@[^\s@]{3,}\.com$/;
+		if (email && !emailRegex.test(email as string)) {
+			res.status(400).json({
+				success: false,
+				message: 'O atributo e-mail deve ter formato de e-mail',
+			});
+			return;
+		}
+
+		next();
+	}
 }
