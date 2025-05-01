@@ -8,7 +8,7 @@ import { randomUUID } from 'crypto';
 describe('POST /users', () => {
 	const server = createExpressServer();
 	const endpoint = '/users';
-	const userMock = UserMock.build()
+	const userMock = UserMock.build();
 	const token = makeToken(userMock);
 
 	it('Deve retornar 400 quando o body estiver vazio', async () => {
@@ -220,7 +220,6 @@ describe('POST /users', () => {
 		jest.spyOn(UserService.prototype, 'create').mockResolvedValue(mockUsers);
 
 		const response = await supertest(server).post(endpoint).send(body);
-		console.log('response:', response.body);
 
 		expect(response.status).toBe(201);
 		expect(response.body).toEqual({
@@ -230,14 +229,35 @@ describe('POST /users', () => {
 				id: userMock.id,
 				name: userMock.name,
 				username: userMock.username,
-				createdAt: userMock.createdAt,
-				updatedAt: userMock.updatedAt,
+				createdAt: userMock.createdAt.toISOString(),
+				updatedAt: userMock.updatedAt.toISOString(),
 				tweet: undefined,
 				reply: undefined,
 				like: undefined,
 				following: undefined,
 				followers: undefined,
 			},
+		});
+	});
+
+	it('Deve retornar 500 quando houver um erro', async () => {
+		const body = {
+			name: 'Maria',
+			email: 'maria@email.com',
+			username: 'maria123',
+			password: 'senha123',
+		};
+
+		jest
+			.spyOn(UserService.prototype, 'create')
+			.mockRejectedValue(new Error('Exceção !!!'));
+
+		const response = await supertest(server).post(endpoint).send(body);
+
+		expect(response.statusCode).toBe(500);
+		expect(response.body).toEqual({
+			success: false,
+			message: 'Erro no servidor: Exceção !!!',
 		});
 	});
 });
