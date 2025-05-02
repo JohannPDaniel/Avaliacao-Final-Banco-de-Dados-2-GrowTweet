@@ -4,56 +4,56 @@ import { UserMock } from '../../mock/user.mock';
 import { makeToken } from '../make-token';
 import { UserService } from '../../../src/services/user.service';
 
-describe('GET /users/:id', () => {
+describe('DELETE /users/:id', () => {
 	const server = createExpressServer();
 	const userMock = UserMock.build();
 	const endpoint = '/users';
 	const token = makeToken(userMock);
 
-	it('Deve retornar 400 se o identificador do parâmetro não for um UUID', async () => {
+	it('Deve retornar 400 se o identificador do parametro não for um UUID', async () => {
 		const response = await supertest(server)
-			.get(`${endpoint}/abc`)
+			.delete(`${endpoint}/abc`)
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(400);
-		expect(response.body.success).toBe(false);
+		expect(response.body.success).toBeFalsy();
 		expect(typeof response.body.message).toBe('string');
 		expect(response.body.message).toMatch(/uuid/i);
-		expect(response.headers['content-type']).toContain('application/json');
+		expect(response.headers['content-type']).toMatch(/application\/json/);
 	});
 
-	it('Deve permitir a consulta por ID quando informado um ID válido', async () => {
-		jest.spyOn(UserService.prototype, 'findOneById').mockResolvedValue({
+	it('Deve permitir deletar um usuário quando informado um ID correto', async () => {
+		jest.spyOn(UserService.prototype, 'remove').mockResolvedValue({
 			success: true,
 			code: 200,
-			message: 'Usuário buscado pelo id com sucesso!',
+			message: 'Usuário deletado com sucesso !',
 			data: {},
 		});
 
 		const response = await supertest(server)
-			.get(`${endpoint}/${userMock.id}`)
+			.delete(`${endpoint}/${userMock.id}`)
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(200);
-		expect(response.body.success).toBe(true);
-		expect(response.body.message).toBe('Usuário buscado pelo id com sucesso!');
-		expect(response.body).toHaveProperty('data');
-		expect(response.headers['content-type']).toMatch(/json/);
+		expect(response.body.success).toBeTruthy();
+		expect(response.body.message).toBe('Usuário deletado com sucesso !');
+		expect(response.body.data).toEqual({});
+		expect(response.headers['content-type']).toMatch(/application\/json/);
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
 		jest
-			.spyOn(UserService.prototype, 'findOneById')
+			.spyOn(UserService.prototype, 'remove')
 			.mockRejectedValue(new Error('Exceção !!!'));
 
 		const response = await supertest(server)
-			.get(`${endpoint}/${userMock.id}`)
+			.delete(`${endpoint}/${userMock.id}`)
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.statusCode).toBe(500);
-		expect(response.body.success).toBe(false);
-		expect(typeof response.body.message).toBe('string');
+		expect(response.body.success).toBeFalsy();
 		expect(response.body.message).toBe('Erro no servidor: Exceção !!!');
-		expect(response.headers['content-type']).toContain('application/json');
+		expect(typeof response.body.message).toBe('string');
+		expect(response.headers['content-type']).toMatch(/application\/json/);
 	});
 });

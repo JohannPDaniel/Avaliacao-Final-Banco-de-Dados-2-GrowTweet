@@ -17,7 +17,9 @@ describe('GET /users', () => {
 
 		expect(response.status).toBe(400);
 		expect(response.body.success).toBe(false);
-		expect(response.body.message).toMatch(/e-mail/i);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/e-?mail.*texto/i);
+		expect(response.headers['content-type']).toMatch(/application\/json/);
 	});
 
 	it('Deve retornar 400 quando se vier um e-mail, ele não vir em formato de e-mail', async () => {
@@ -27,7 +29,9 @@ describe('GET /users', () => {
 
 		expect(response.status).toBe(400);
 		expect(response.body.success).toBeFalsy();
-		expect(response.body.message).toMatch(/e-mail/i);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/formato.*e-?mail/i);
+		expect(response.headers['content-type']).toContain('application/json');
 	});
 
 	it('Deve permitir a consulta de usuários se informado um e-mail correto', async () => {
@@ -43,6 +47,10 @@ describe('GET /users', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(200);
+		expect(response.body.success).toBe(true);
+		expect(response.body.message).toMatch(/usuários buscado com sucesso/i);
+		expect(response.body).toHaveProperty('data');
+		expect(response.headers['content-type']).toMatch(/json/);
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
@@ -55,9 +63,9 @@ describe('GET /users', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.statusCode).toBe(500);
-		expect(response.body).toEqual({
-			success: false,
-			message: 'Erro no servidor: Exceção !!!',
-		});
+		expect(response.body.success).toBe(false);
+		expect(response.body.message).toBe('Erro no servidor: Exceção !!!');
+		expect(typeof response.body.message).toBe('string');
+		expect(response.headers['content-type']).toContain('application/json');
 	});
 });

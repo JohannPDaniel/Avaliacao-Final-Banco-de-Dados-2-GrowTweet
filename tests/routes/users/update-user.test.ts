@@ -10,12 +10,16 @@ describe('PUT /users/:id', () => {
 	const endpoint = '/users';
 	const token = makeToken(userMock);
 
-	it('Deve retornar 400 se o identificador do parametro não for um UUID', async () => {
+	it('Deve retornar 400 se o identificador do parâmetro não for um UUID', async () => {
 		const response = await supertest(server)
 			.put(`${endpoint}/abc`)
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBeFalsy();
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/uuid/i);
+		expect(response.headers['content-type']).toMatch(/application\/json/);
 	});
 
 	it('Deve retornar 400 se name se vier for diferente de um formato de string', async () => {
@@ -27,6 +31,12 @@ describe('PUT /users/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(response.body).toHaveProperty('message');
+		expect(response.body.message).toMatch(
+			'O atributo nome deve vir em formato de texto !'
+		);
+		expect(response.headers['content-type']).toContain('application/json');
 	});
 
 	it('Deve retornar 400 se username se vier for diferente de um formato de string', async () => {
@@ -38,6 +48,12 @@ describe('PUT /users/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(response.body.message).toMatch(
+			'O atributo username deve vir em formato de texto !'
+		);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.headers).toHaveProperty('content-type');
 	});
 
 	it('Deve retornar 400 se password se vier for diferente de um formato de string', async () => {
@@ -53,6 +69,12 @@ describe('PUT /users/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(response.body.message).toMatch(
+			'O atributo senha deve vir em formato de texto !'
+		);
+		expect(response.body).toHaveProperty('message');
+		expect(response.headers['content-type']).toMatch(/json/);
 	});
 
 	it('Deve retornar 400 se os dados do name vierem com menos de 3 caracteres', async () => {
@@ -68,6 +90,12 @@ describe('PUT /users/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(response.body.message).toMatch(
+			'O atributo nome deve ter pelo menos 3 caracteres !'
+		);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.headers['content-type']).toContain('application/json');
 	});
 
 	it('Deve retornar 400 se os dados do username vierem com menos de 5 caracteres', async () => {
@@ -83,6 +111,12 @@ describe('PUT /users/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(response.body.message).toMatch(
+			'O atributo username deve ter pelo menos 5 caracteres !'
+		);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.headers['content-type']).toMatch(/json/);
 	});
 
 	it('Deve retornar 400 se os dados do password vierem com menos de 5 caracteres', async () => {
@@ -98,6 +132,12 @@ describe('PUT /users/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(response.body.message).toMatch(
+			'O atributo senha deve ter pelo menos 5 caracteres !'
+		);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.headers['content-type']).toMatch(/json/);
 	});
 
 	it('Deve retornar 200 se os dados do body e o id do usuário forem enviados corretamente', async () => {
@@ -120,6 +160,10 @@ describe('PUT /users/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(200);
+		expect(response.body.success).toBe(true);
+		expect(response.body.message).toBe('Usuário atualizado com sucesso !');
+		expect(response.body.data).toEqual({});
+		expect(response.headers['content-type']).toMatch(/json/);
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
@@ -132,9 +176,9 @@ describe('PUT /users/:id', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.statusCode).toBe(500);
-		expect(response.body).toEqual({
-			success: false,
-			message: 'Erro no servidor: Exceção !!!',
-		});
+		expect(response.body.success).toBe(false);
+		expect(response.body.message).toBe('Erro no servidor: Exceção !!!');
+		expect(typeof response.body.message).toBe('string');
+		expect(response.headers['content-type']).toMatch(/application\/json/);
 	});
 });
