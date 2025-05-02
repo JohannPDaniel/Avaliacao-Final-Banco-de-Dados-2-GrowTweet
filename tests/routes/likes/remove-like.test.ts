@@ -35,7 +35,6 @@ describe('DELETE /likes/:id', () => {
 			.delete(`${endpoint}/${likeMock.id}`)
 			.set('Authorization', `Bearer ${token}`);
 
-		console.log('likeMock.id:', likeMock.id);
 		expect(response.status).toBe(200);
 	});
 

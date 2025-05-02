@@ -60,7 +60,8 @@ export class CreateReplyMiddleware {
 		res: Response,
 		next: NextFunction
 	): void {
-		const { content, type, userId, tweetId } = req.body;
+		const { content, type, userId } = req.body;
+		const tweetId = req.headers['x-tweet-id'];
 
 		if (content.length < 5) {
 			res.status(400).json({
@@ -86,7 +87,7 @@ export class CreateReplyMiddleware {
 			return;
 		}
 
-		if (tweetId && (typeof tweetId !== 'string' || !regexUuid.test(tweetId))) {
+		if (!tweetId && (typeof tweetId !== 'string' || !regexUuid.test(tweetId))) {
 			res.status(400).json({
 				success: false,
 				message: 'Identificador tweetId precisa ser um UUID válido!',
