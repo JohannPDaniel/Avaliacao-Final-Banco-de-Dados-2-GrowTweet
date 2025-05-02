@@ -1,9 +1,8 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { UserMock } from '../../mock/user.mock';
+import { LikeService } from '../../../src/services';
+import { TweetMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
-import { TweetMock } from '../../mock/tweet.mock';
-import { LikeService } from '../../../src/services/like.service';
 
 describe('POST /likes', () => {
 	const server = createExpressServer();
@@ -64,7 +63,7 @@ describe('POST /likes', () => {
 
 	it('Deve retornar 500 quando houver um erro', async () => {
 		const body = {
-			userId: ""
+			userId: '',
 		};
 
 		jest
