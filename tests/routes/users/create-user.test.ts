@@ -9,7 +9,6 @@ describe('POST /users', () => {
 	const server = createExpressServer();
 	const endpoint = '/users';
 	const userMock = UserMock.build();
-	const token = makeToken(userMock);
 
 	it('Deve retornar 400 quando o body estiver vazio', async () => {
 		const body = {};
