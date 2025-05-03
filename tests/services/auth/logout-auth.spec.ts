@@ -14,7 +14,7 @@ describe('UserService - logout', () => {
 			name: 'any_name',
 			username: 'any_username',
 			iat: Math.floor(Date.now() / 1000),
-			exp: Math.floor(Date.now() / 1000) + 3600, // Expira em 1 hora
+			exp: Math.floor(Date.now() / 1000) + 3600, 
 		};
 
 		jest.spyOn(JWT.prototype, 'verifyToken').mockReturnValue(decodedToken);
@@ -57,7 +57,7 @@ describe('UserService - logout', () => {
 			name: 'any_name',
 			username: 'any_username',
 			iat: Math.floor(Date.now() / 1000),
-			exp: Math.floor(Date.now() / 1000) + 3600, // Expira em 1 hora
+			exp: Math.floor(Date.now() / 1000) + 3600,  
 		};
 
 		jest.spyOn(JWT.prototype, 'verifyToken').mockReturnValue(decodedToken);

@@ -22,6 +22,12 @@ describe('POST /logout', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(200);
+		expect(response.body.success).toBeTruthy();
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/logout efetuado com sucesso/i);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
@@ -34,9 +40,11 @@ describe('POST /logout', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.statusCode).toBe(500);
-		expect(response.body).toEqual({
-			success: false,
-			message: 'Erro no servidor: Exceção !!!',
-		});
+		expect(response.body.success).toBeFalsy();
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/exceção/i);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 });

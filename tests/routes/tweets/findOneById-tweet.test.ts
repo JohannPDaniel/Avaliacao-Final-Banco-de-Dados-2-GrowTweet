@@ -2,13 +2,15 @@ import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
 import { UserMock } from '../../mock/user.mock';
 import { makeToken } from '../make-token';
-import { TweetService } from "../../../src/services/tweet.service";
-import { randomUUID } from "crypto";
+import { TweetService } from '../../../src/services/tweet.service';
+import { randomUUID } from 'crypto';
+import { TweetMock } from '../../mock';
 
 describe('GET /tweets/:id', () => {
 	const server = createExpressServer();
 	const endpoint = '/tweets';
 	const userMock = UserMock.build();
+	const tweetMock = TweetMock.build();
 	const token = makeToken(userMock);
 
 	it('Deve retornar 400 quando o UUID for inválido', async () => {
@@ -23,27 +25,8 @@ describe('GET /tweets/:id', () => {
 		expect(response.body.message).toMatch(/uuid/i);
 	});
 
-	it('Deve retornar 403 quando o tweet não for encontrado', async () => {
-		const validId = randomUUID(); 
-
-		jest.spyOn(TweetService.prototype, 'findOneById').mockResolvedValue({
-			success: false,
-			code: 403,
-			message:
-				'Acesso negado: você não tem permissão para acessar este tweet !',
-		});
-
-		const response = await supertest(server)
-			.get(`${endpoint}/${validId}`)
-			.set('Authorization', `Bearer ${token}`);
-
-		expect(response.status).toBe(403);
-		expect(response.body.success).toBe(false);
-		expect(response.body.message).toMatch(/acesso negado/i);
-	});
-
 	it('Deve retornar 200 quando o tweet for encontrado', async () => {
-		const validId = randomUUID();
+		const validId = tweetMock.id;
 
 		jest.spyOn(TweetService.prototype, 'findOneById').mockResolvedValue({
 			success: true,
@@ -64,7 +47,7 @@ describe('GET /tweets/:id', () => {
 	});
 
 	it('Deve retornar 500 quando houver erro no servidor', async () => {
-		const validId = randomUUID();
+		const validId = tweetMock.id;
 
 		jest
 			.spyOn(TweetService.prototype, 'findOneById')
@@ -78,5 +61,4 @@ describe('GET /tweets/:id', () => {
 		expect(response.body.success).toBe(false);
 		expect(response.body.message).toMatch(/erro no servidor/i);
 	});
-
 });

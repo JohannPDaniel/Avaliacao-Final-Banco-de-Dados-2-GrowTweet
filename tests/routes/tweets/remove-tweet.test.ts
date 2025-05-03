@@ -5,11 +5,13 @@ import { makeToken } from '../make-token';
 import { randomUUID } from 'crypto';
 import { prisma } from '../../../src/database/prisma.database';
 import { TweetService } from '../../../src/services/tweet.service';
+import { TweetMock } from "../../mock";
 
 describe('DELETE /tweet', () => {
 	const server = createExpressServer();
 	const endpoint = '/tweets';
 	const userMock = UserMock.build();
+	const tweetMock = TweetMock.build()
 	const token = makeToken(userMock);
 
 	it('Deve retornar 400 quando o UUID for inválido', async () => {
@@ -27,7 +29,7 @@ describe('DELETE /tweet', () => {
 	});
 
 	it('Deve retornar 403 quando o usuário tentar atualizar um tweet que não é dele', async () => {
-		const validId = randomUUID();
+		const validId = tweetMock.id;
 
 		jest.spyOn(prisma.tweet, 'findFirst').mockResolvedValue(null);
 
@@ -45,7 +47,7 @@ describe('DELETE /tweet', () => {
 	});
 
 	it('Deve retornar 200 quando o usuário fornecer o id e a mensagem a ser atualizada', async () => {
-		const validId = randomUUID();
+		const validId = tweetMock.id;
 
 		jest.spyOn(TweetService.prototype, 'remove').mockResolvedValue({
 			success: true,
@@ -66,7 +68,7 @@ describe('DELETE /tweet', () => {
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
-		const validId = randomUUID();
+		const validId = tweetMock.id;
 
 		jest
 			.spyOn(TweetService.prototype, 'update')

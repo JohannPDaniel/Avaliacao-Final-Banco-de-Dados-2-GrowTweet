@@ -1,7 +1,6 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
 import { UserMock } from '../../mock/user.mock';
-import { runAuthTests } from '../helpers/test-auth-helper';
 import { makeToken } from '../make-token';
 import { TweetService } from '../../../src/services/tweet.service';
 import { randomUUID } from 'crypto';

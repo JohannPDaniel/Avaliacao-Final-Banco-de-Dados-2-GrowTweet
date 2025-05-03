@@ -45,10 +45,9 @@ describe('UserService - remove', () => {
 		const sut = createSut();
 		const userId = 'user-123';
 
-		// ✅ Certifique-se de que o nome está correto no mock antes da exclusão
 		const userMock = UserMock.build({
 			id: userId,
-			name: 'Novo Nome', // Aqui deve estar exatamente o que o teste espera
+			name: 'Novo Nome', 
 		});
 
 		prismaMock.user.findUnique.mockResolvedValue(userMock);
@@ -60,10 +59,9 @@ describe('UserService - remove', () => {
 		expect(result.code).toBe(200);
 		expect(result.message).toBe('Usuário deletado com sucesso !');
 
-		// ✅ Agora a verificação será idêntica ao esperado
 		expect(result.data).toEqual({
 			id: userMock.id,
-			name: userMock.name, // Agora bate com "Novo Nome"
+			name: userMock.name, 
 			email: userMock.email,
 			username: userMock.username,
 			createdAt: userMock.createdAt,

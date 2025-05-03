@@ -15,7 +15,7 @@ describe('PUT /replies/:id', () => {
 		const invalidId = 'abc';
 
 		const response = await supertest(server)
-			.put(`${endpoint}/${invalidId}`) // Corrigido de GET para PUT
+			.put(`${endpoint}/${invalidId}`) 
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(400);
@@ -61,7 +61,7 @@ describe('PUT /replies/:id', () => {
 		expect(typeof response.body.message).toBe('string');
 		expect(response.body.message.toLowerCase()).toMatch(
 			/mínimo|caracteres|pequeno/
-		); // tentativa genérica
+		);
 		expect(Object.keys(response.body)).toEqual(
 			expect.arrayContaining(['success', 'message'])
 		);

@@ -40,7 +40,7 @@ describe('LikeService - remove', () => {
 		};
 
 		prismaMock.like.findFirst.mockResolvedValue(likeMock);
-		prismaMock.$transaction.mockResolvedValue([likeMock, 3]); // 3 likes restantes
+		prismaMock.$transaction.mockResolvedValue([likeMock, 3]); 
 
 		const result = await sut.remove(tokenUser, likeId);
 
@@ -75,7 +75,7 @@ describe('LikeService - remove', () => {
 		};
 
 		prismaMock.like.findFirst.mockResolvedValue(likeMock);
-		prismaMock.$transaction.mockResolvedValue([likeMock, 0]); // Último like removido
+		prismaMock.$transaction.mockResolvedValue([likeMock, 0]); 
 
 		const result = await sut.remove(tokenUser, likeId);
 
@@ -107,7 +107,7 @@ describe('LikeService - remove', () => {
 		};
 
 		prismaMock.like.findFirst.mockResolvedValue(likeMock);
-		prismaMock.$transaction.mockResolvedValueOnce([likeMock]); // Array incompleto
+		prismaMock.$transaction.mockResolvedValueOnce([likeMock]); 
 
 		const result = await sut.remove(tokenUser, likeId);
 
@@ -132,7 +132,7 @@ describe('LikeService - remove', () => {
 		};
 
 		prismaMock.like.findFirst.mockResolvedValue(likeMock);
-		prismaMock.$transaction.mockResolvedValueOnce([likeMock, null]); // Erro ao contar likes
+		prismaMock.$transaction.mockResolvedValueOnce([likeMock, null]); 
 
 		const result = await sut.remove(tokenUser, likeId);
 

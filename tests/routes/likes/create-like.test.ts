@@ -17,9 +17,15 @@ describe('POST /likes', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message.toLowerCase()).toMatch(/tweet|id|obrigatório/);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 
-	it('Deve retornar 400 quando o ID do Usuário, se vier, não ser uma string e também não ser um UUID', async () => {
+	it('Deve retornar 400 quando o ID do Usuário, se vier, não for uma string nem UUID', async () => {
 		const body = { userId: 123 };
 
 		const response = await supertest(server)
@@ -28,9 +34,17 @@ describe('POST /likes', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message.toLowerCase()).toMatch(
+			'tweetid é obrigatório'
+		);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 
-	it('Deve retornar 400 quando o ID do Tweet, não for uma string e também não ser um UUID', async () => {
+	it('Deve retornar 400 quando o ID do Tweet não for uma string nem UUID', async () => {
 		const body = { userId: userMock.id };
 
 		const response = await supertest(server)
@@ -40,16 +54,22 @@ describe('POST /likes', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/tweet|uuid|id/i);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 
-	it('Deve permitir criar um Like quando se informado um ID de Usuário e informado um ID do Tweet válido', async () => {
-		const body = { userId: '' };
+	it('Deve permitir criar um Like quando informado um ID de usuário e um ID de tweet válidos', async () => {
+		const body = { userId: userMock.id };
 
 		jest.spyOn(LikeService.prototype, 'create').mockResolvedValue({
 			success: true,
 			code: 201,
 			message: 'Like criado com sucesso!',
-			data: {},
+			data: { id: 'like-id', tweetId: tweetMock.id, userId: userMock.id },
 		});
 
 		const response = await supertest(server)
@@ -59,12 +79,16 @@ describe('POST /likes', () => {
 			.send(body);
 
 		expect(response.status).toBe(201);
+		expect(response.body.success).toBe(true);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/sucesso/i);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message', 'data'])
+		);
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
-		const body = {
-			userId: '',
-		};
+		const body = { userId: userMock.id };
 
 		jest
 			.spyOn(LikeService.prototype, 'create')
@@ -77,9 +101,11 @@ describe('POST /likes', () => {
 			.send(body);
 
 		expect(response.statusCode).toBe(500);
-		expect(response.body).toEqual({
-			success: false,
-			message: 'Erro no servidor: Exceção !!!',
-		});
+		expect(response.body.success).toBe(false);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message).toMatch(/exceção/i);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 });

@@ -110,7 +110,7 @@ describe('UserService - update', () => {
 		});
 		expect(prismaMock.user.update).toHaveBeenCalledWith({
 			where: { id: userId },
-			data: { name: 'Novo Nome' }, // Sem alterar `password`
+			data: { name: 'Novo Nome' }, 
 		});
 	});
 

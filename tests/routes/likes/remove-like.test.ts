@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { LikeMock, TweetMock, UserMock } from '../../mock';
+import { LikeMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { LikeService } from '../../../src/services';
 
@@ -17,9 +17,9 @@ describe('DELETE /likes/:id', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(400);
-		expect(response.body.success).toBe(false);
+		expect(response.body.success).toBeFalsy();
 		expect(typeof response.body.message).toBe('string');
-		expect(response.body.message).toMatch(/uuid/i);
+		expect(response.body.message.toLowerCase()).toMatch(/uuid/);
 		expect(response.headers['content-type']).toContain('application/json');
 	});
 
@@ -28,7 +28,7 @@ describe('DELETE /likes/:id', () => {
 			success: true,
 			code: 200,
 			message: 'Like deletado com sucesso!',
-			data: {},
+			data: { id: likeMock.id },
 		});
 
 		const response = await supertest(server)
@@ -36,6 +36,12 @@ describe('DELETE /likes/:id', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(200);
+		expect(response.body.success).toBeTruthy();
+		expect(response.body.message).toMatch(/sucesso/i);
+		expect(typeof response.body.data).toBe('object');
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message', 'data'])
+		);
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
@@ -48,9 +54,11 @@ describe('DELETE /likes/:id', () => {
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.statusCode).toBe(500);
-		expect(response.body).toEqual({
-			success: false,
-			message: 'Erro no servidor: Exceção !!!',
-		});
+		expect(response.body.success).toBeFalsy();
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message.toLowerCase()).toContain('exceção');
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 });

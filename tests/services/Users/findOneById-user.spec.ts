@@ -58,7 +58,6 @@ describe('UserService - findOneById', () => {
 		const sut = createSut();
 		const userId = 'user-123';
 
-		// Criando um usuário baseado no Prisma, mas incluindo relações manualmente para testes
 		const userMock = {
 			...UserMock.build({ id: userId }),
 			Tweet: [],
@@ -67,7 +66,6 @@ describe('UserService - findOneById', () => {
 			followers: [],
 		};
 
-		// Simulando a resposta do Prisma corretamente
 		prismaMock.user.findUnique.mockResolvedValue(userMock as any);
 
 		const result = await sut.findOneById(userId, userId);
