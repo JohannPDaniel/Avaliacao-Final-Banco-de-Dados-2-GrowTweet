@@ -3,12 +3,15 @@ import { UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { createExpressServer } from '../../../src/express.server';
 import { AuthService } from '../../../src/services';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('POST /logout', () => {
 	const server = createExpressServer();
 	const userMock = UserMock.build();
 	const token = makeToken(userMock);
 	const endpoint = '/logout';
+
+	runAuthTests({ server, method: 'post', endpoint });
 
 	it('Deve permitir fazer o logout quando informado um token autenticado', async () => {
 		jest.spyOn(AuthService.prototype, 'logout').mockResolvedValue({

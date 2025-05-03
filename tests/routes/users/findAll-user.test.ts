@@ -1,14 +1,17 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { UserMock } from '../../mock/user.mock';
-import { makeToken } from '../make-token';
 import { UserService } from '../../../src/services/user.service';
+import { UserMock } from '../../mock';
+import { runAuthTests } from '../helpers/test-auth-helper';
+import { makeToken } from '../make-token';
 
 describe('GET /users', () => {
 	const server = createExpressServer();
 	const endpoint = '/users';
 	const userMock = UserMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'get', endpoint });
 
 	it('Deve retornar 400 quando se vier um e-mail, ele não vir como uma string', async () => {
 		const response = await supertest(server)

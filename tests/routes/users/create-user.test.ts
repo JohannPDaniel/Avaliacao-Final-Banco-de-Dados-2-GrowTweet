@@ -1,9 +1,7 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { UserMock, UserMockWithRelations } from '../../mock/user.mock';
-import { makeToken } from '../make-token';
 import { UserService } from '../../../src/services/user.service';
-import { randomUUID } from 'crypto';
+import { UserMock } from '../../mock';
 
 describe('POST /users', () => {
 	const server = createExpressServer();

@@ -3,12 +3,15 @@ import { createExpressServer } from '../../../src/express.server';
 import { UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { ReplyService } from '../../../src/services';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('GET /replies', () => {
 	const server = createExpressServer();
 	const endpoint = '/replies';
 	const userMock = UserMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'get', endpoint });
 
 	it('Deve retornar 400 quando o tipo do tweet não for "REPLY"', async () => {
 		const query = { type: 'any_thing' };

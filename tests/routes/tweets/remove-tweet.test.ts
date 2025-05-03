@@ -1,18 +1,19 @@
 import supertest from 'supertest';
-import { createExpressServer } from '../../../src/express.server';
-import { UserMock } from '../../mock/user.mock';
-import { makeToken } from '../make-token';
-import { randomUUID } from 'crypto';
 import { prisma } from '../../../src/database/prisma.database';
+import { createExpressServer } from '../../../src/express.server';
 import { TweetService } from '../../../src/services/tweet.service';
-import { TweetMock } from "../../mock";
+import { TweetMock, UserMock } from '../../mock';
+import { runAuthTests } from '../helpers/test-auth-helper';
+import { makeToken } from '../make-token';
 
-describe('DELETE /tweet', () => {
+describe('DELETE /tweet/:id', () => {
 	const server = createExpressServer();
 	const endpoint = '/tweets';
 	const userMock = UserMock.build();
-	const tweetMock = TweetMock.build()
+	const tweetMock = TweetMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'delete', endpoint: `${endpoint}/:id` });
 
 	it('Deve retornar 400 quando o UUID for inválido', async () => {
 		const invalidId = 'abc';
@@ -53,7 +54,7 @@ describe('DELETE /tweet', () => {
 			success: true,
 			code: 200,
 			message: 'Tweet deletado com sucesso!',
-			data: {}
+			data: {},
 		});
 
 		const response = await supertest(server)

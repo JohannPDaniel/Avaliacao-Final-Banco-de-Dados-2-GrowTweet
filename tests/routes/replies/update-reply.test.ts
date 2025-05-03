@@ -3,6 +3,7 @@ import { createExpressServer } from '../../../src/express.server';
 import { ReplyMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { ReplyService } from '../../../src/services';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('PUT /replies/:id', () => {
 	const server = createExpressServer();
@@ -11,11 +12,17 @@ describe('PUT /replies/:id', () => {
 	const replyMock = ReplyMock.build();
 	const token = makeToken(userMock);
 
+	runAuthTests({
+		server,
+		method: 'put',
+		endpoint: `${endpoint}/:id`,
+	});
+
 	it('Deve retornar 400 quando o UUID for inválido', async () => {
 		const invalidId = 'abc';
 
 		const response = await supertest(server)
-			.put(`${endpoint}/${invalidId}`) 
+			.put(`${endpoint}/${invalidId}`)
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(400);

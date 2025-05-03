@@ -1,14 +1,17 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { UserMock } from '../../mock/user.mock';
-import { makeToken } from '../make-token';
 import { UserService } from '../../../src/services/user.service';
+import { UserMock } from '../../mock';
+import { runAuthTests } from '../helpers/test-auth-helper';
+import { makeToken } from '../make-token';
 
 describe('DELETE /users/:id', () => {
 	const server = createExpressServer();
 	const userMock = UserMock.build();
 	const endpoint = '/users';
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'delete', endpoint: `${endpoint}/:id` });
 
 	it('Deve retornar 400 se o identificador do parametro não for um UUID', async () => {
 		const response = await supertest(server)

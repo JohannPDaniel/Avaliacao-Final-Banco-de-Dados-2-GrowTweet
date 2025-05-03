@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { UserMock } from '../../mock/user.mock';
+import { UserMock } from '../../mock';
 import { runAuthTests } from '../helpers/test-auth-helper';
 import { makeToken } from '../make-token';
 import { TweetService } from '../../../src/services/tweet.service';
@@ -10,6 +10,8 @@ describe('GET /tweets - Middleware de validação de tipo (type)', () => {
 	const endpoint = '/tweets';
 	const userMock = UserMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'get', endpoint });
 
 	it('Deve retornar 400 quando o tipo do tweet não for "TWEET"', async () => {
 		const query = { type: 'any_thing' };

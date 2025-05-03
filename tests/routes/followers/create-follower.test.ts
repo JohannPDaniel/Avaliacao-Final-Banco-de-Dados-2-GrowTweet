@@ -3,6 +3,7 @@ import { createExpressServer } from '../../../src/express.server';
 import { FollowerMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { FollowerService } from '../../../src/services';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('POST /followers', () => {
 	const server = createExpressServer();
@@ -10,6 +11,8 @@ describe('POST /followers', () => {
 	const userMock = UserMock.build();
 	const followerMock = FollowerMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'post', endpoint });
 
 	it('Deve retornar 400 quando o ID do usuário for diferente de string e de UUID', async () => {
 		const body = { userId: 123 };

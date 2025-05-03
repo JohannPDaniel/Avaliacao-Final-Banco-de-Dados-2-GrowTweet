@@ -3,6 +3,7 @@ import { createExpressServer } from '../../../src/express.server';
 import { TweetMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { ReplyService } from '../../../src/services';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('POST /replies', () => {
 	const server = createExpressServer();
@@ -10,6 +11,8 @@ describe('POST /replies', () => {
 	const userMock = UserMock.build();
 	const tweetMock = TweetMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'post', endpoint });
 
 	it('Deve retornar 400 quando não for informado um conteúdo', async () => {
 		const body = {};

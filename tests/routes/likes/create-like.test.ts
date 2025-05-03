@@ -3,6 +3,7 @@ import { createExpressServer } from '../../../src/express.server';
 import { LikeService } from '../../../src/services';
 import { TweetMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
+import { runAuthTests } from "../helpers/test-auth-helper";
 
 describe('POST /likes', () => {
 	const server = createExpressServer();
@@ -10,6 +11,8 @@ describe('POST /likes', () => {
 	const userMock = UserMock.build();
 	const tweetMock = TweetMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'post', endpoint });
 
 	it('Deve retornar 400 quando o ID do Tweet não estiver sido informado', async () => {
 		const response = await supertest(server)

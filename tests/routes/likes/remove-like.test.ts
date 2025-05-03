@@ -3,6 +3,7 @@ import { createExpressServer } from '../../../src/express.server';
 import { LikeMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { LikeService } from '../../../src/services';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('DELETE /likes/:id', () => {
 	const server = createExpressServer();
@@ -10,6 +11,12 @@ describe('DELETE /likes/:id', () => {
 	const userMock = UserMock.build();
 	const likeMock = LikeMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({
+		server,
+		method: 'delete',
+		endpoint: `${endpoint}/:id`,
+	});
 
 	it('Deve retornar 400 se o identificador do parâmetro não for um UUID', async () => {
 		const response = await supertest(server)

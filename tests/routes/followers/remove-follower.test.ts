@@ -3,6 +3,7 @@ import { createExpressServer } from '../../../src/express.server';
 import { FollowerMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { FollowerService } from '../../../src/services';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('DELETE /followers/:id', () => {
 	const server = createExpressServer();
@@ -10,6 +11,12 @@ describe('DELETE /followers/:id', () => {
 	const userMock = UserMock.build();
 	const followerMock = FollowerMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({
+		server,
+		method: 'delete',
+		endpoint: `${endpoint}/:id`,
+	});
 
 	it('Deve retornar 400 quando o ID do seguidor não for um UUID válido', async () => {
 		const invalidId = 'abc';

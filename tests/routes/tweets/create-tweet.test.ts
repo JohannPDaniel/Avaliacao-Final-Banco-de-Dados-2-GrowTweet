@@ -1,15 +1,18 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { UserMock } from '../../mock/user.mock';
+import { UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { TweetService } from '../../../src/services/tweet.service';
 import { randomUUID } from 'crypto';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('POST /tweets', () => {
 	const server = createExpressServer();
 	const endpoint = '/tweets';
 	const userMock = UserMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'post', endpoint });
 
 	it('Deve retornar 400 quando o body estiver vazio', async () => {
 		const body = {};

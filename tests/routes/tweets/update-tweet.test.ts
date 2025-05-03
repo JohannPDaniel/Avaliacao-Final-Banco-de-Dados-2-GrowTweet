@@ -1,11 +1,9 @@
 import supertest from 'supertest';
 import { createExpressServer } from '../../../src/express.server';
-import { UserMock } from '../../mock/user.mock';
-import { makeToken } from '../make-token';
-import { randomUUID } from 'crypto';
 import { TweetService } from '../../../src/services/tweet.service';
-import { prisma } from '../../../src/database/prisma.database';
-import { TweetMock } from '../../mock';
+import { TweetMock, UserMock } from '../../mock';
+import { runAuthTests } from '../helpers/test-auth-helper';
+import { makeToken } from '../make-token';
 
 describe('PUT /tweets', () => {
 	const server = createExpressServer();
@@ -13,6 +11,8 @@ describe('PUT /tweets', () => {
 	const userMock = UserMock.build();
 	const tweetMock = TweetMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({ server, method: 'put', endpoint: `${endpoint}/:id` });
 
 	it('Deve retornar 400 quando o UUID for inválido', async () => {
 		const invalidId = 'abc';

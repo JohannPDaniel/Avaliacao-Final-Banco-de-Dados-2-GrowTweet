@@ -3,6 +3,7 @@ import { createExpressServer } from '../../../src/express.server';
 import { ReplyMock, UserMock } from '../../mock';
 import { makeToken } from '../make-token';
 import { ReplyService } from '../../../src/services';
+import { runAuthTests } from '../helpers/test-auth-helper';
 
 describe('DELETE /replies/:id', () => {
 	const server = createExpressServer();
@@ -10,6 +11,12 @@ describe('DELETE /replies/:id', () => {
 	const userMock = UserMock.build();
 	const replyMock = ReplyMock.build();
 	const token = makeToken(userMock);
+
+	runAuthTests({
+		server,
+		method: 'delete',
+		endpoint: `${endpoint}/:id`,
+	});
 
 	it('Deve retornar 400 quando o UUID for inválido', async () => {
 		const invalidId = 'abc';
