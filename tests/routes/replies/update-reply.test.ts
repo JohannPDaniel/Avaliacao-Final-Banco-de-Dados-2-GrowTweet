@@ -15,15 +15,19 @@ describe('PUT /replies/:id', () => {
 		const invalidId = 'abc';
 
 		const response = await supertest(server)
-			.get(`${endpoint}/${invalidId}`)
+			.put(`${endpoint}/${invalidId}`) // Corrigido de GET para PUT
 			.set('Authorization', `Bearer ${token}`);
 
 		expect(response.status).toBe(400);
-		expect(response.body.success).toBeFalsy();
-		expect(response.body.message).toMatch(/uuid/i);
+		expect(response.body.success).toBe(false);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message.toLowerCase()).toMatch(/uuid/);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 
-	it('Deve retornar 400 quando se houver content ele retornar diferente de string', async () => {
+	it('Deve retornar 400 quando se houver content e ele for diferente de string', async () => {
 		const body = { content: 123 };
 		const validId = replyMock.id;
 
@@ -33,9 +37,17 @@ describe('PUT /replies/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message.toLowerCase()).toMatch(
+			'o atributo conteúdo deve vir em formato de texto !'
+		);
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 
-	it('Deve retornar 400 quando se houver content seus dados forem menores que 5 caracteres', async () => {
+	it('Deve retornar 400 quando se houver content com menos de 5 caracteres', async () => {
 		const body = { content: 'abc' };
 		const validId = replyMock.id;
 
@@ -45,6 +57,14 @@ describe('PUT /replies/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(400);
+		expect(response.body.success).toBe(false);
+		expect(typeof response.body.message).toBe('string');
+		expect(response.body.message.toLowerCase()).toMatch(
+			/mínimo|caracteres|pequeno/
+		); // tentativa genérica
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 
 	it('Deve permitir a atualização quando informado um conteúdo válido', async () => {
@@ -64,11 +84,16 @@ describe('PUT /replies/:id', () => {
 			.send(body);
 
 		expect(response.status).toBe(200);
+		expect(response.body.success).toBe(true);
+		expect(response.body.message).toMatch(/sucesso/i);
+		expect(typeof response.body.data).toBe('object');
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message', 'data'])
+		);
 	});
 
 	it('Deve retornar 500 quando houver um erro', async () => {
 		const body = { content: 'Este reply é valido !' };
-
 		const validId = replyMock.id;
 
 		jest
@@ -81,9 +106,11 @@ describe('PUT /replies/:id', () => {
 			.send(body);
 
 		expect(response.statusCode).toBe(500);
-		expect(response.body.success).toBeFalsy();
-		expect(response.body.message).toMatch(/exceção/i);
+		expect(response.body.success).toBe(false);
+		expect(response.body.message.toLowerCase()).toContain('exceção');
 		expect(typeof response.body.message).toBe('string');
-		expect(Object.keys(response.body)).toContain('message');
+		expect(Object.keys(response.body)).toEqual(
+			expect.arrayContaining(['success', 'message'])
+		);
 	});
 });
