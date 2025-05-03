@@ -53,7 +53,6 @@ describe('POST /login', () => {
 	it('Deve retornar 200 quando fornecido um body válido', async () => {
 		const body = { email: 'email@email.com', password: 'senha123' };
 
-		// mock do service
 		const mockLogin = {
 			success: true,
 			code: 200,
