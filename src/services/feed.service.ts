@@ -7,7 +7,7 @@ export class FeedService {
 		tokenUser: string,
 		type: TypeTweet
 	): Promise<ResponseApi> {
-		// Busca o usuário com nome e username
+		// 1. Buscar o usuário logado
 		const user = await prisma.user.findUnique({
 			where: { id: tokenUser },
 			select: { name: true, username: true },
@@ -17,12 +17,12 @@ export class FeedService {
 			return {
 				success: false,
 				code: 404,
-				message: 'Usuário não encontrado',
+				message: 'Usuário não encontrado.',
 				data: [],
 			};
 		}
 
-		// Busca as pessoas que ele segue
+		// 2. Buscar quem ele segue
 		const following = await prisma.follower.findMany({
 			where: { userId: tokenUser },
 			select: { followerId: true },
@@ -30,59 +30,25 @@ export class FeedService {
 
 		const followedIds = following.map((f) => f.followerId);
 
-		const tweets = await prisma.tweet.findMany({
+		// 3. Buscar todos os tweets que podem ser relevantes
+		const allTweets = await prisma.tweet.findMany({
 			where: {
-				AND: [
-					{ type },
+				type,
+				OR: [
+					{ userId: tokenUser }, // próprios tweets
 					{
-						OR: [
-							// 1. Tweets do próprio usuário
-							{ userId: tokenUser },
-
-							// 2. Tweets que mencionam o usuário (nome ou username)
-							{
-								OR: [
-									{
-										content: {
-											contains: user.name.split(' ')[0],
-											mode: 'insensitive',
-										},
-									},
-									{
-										content: {
-											contains: `@${user.username}`,
-											mode: 'insensitive',
-										},
-									},
-								],
-							},
-
-							// 3. Tweets de pessoas que ele segue, mas que NÃO mencionam ninguém
-							{
-								AND: [
-									{ userId: { in: followedIds } },
-									{
-										NOT: {
-											OR: [
-												{
-													content: {
-														contains: '@',
-														mode: 'insensitive',
-													},
-												},
-												{
-													content: {
-														contains: 'Olá',
-														mode: 'insensitive',
-													},
-												},
-											],
-										},
-									},
-								],
-							},
-						],
+						content: {
+							contains: user.name.split(' ')[0],
+							mode: 'insensitive',
+						},
 					},
+					{
+						content: {
+							contains: `@${user.username}`,
+							mode: 'insensitive',
+						},
+					},
+					{ userId: { in: followedIds } }, // tweets de pessoas seguidas
 				],
 			},
 			orderBy: { createdAt: 'desc' },
@@ -99,13 +65,49 @@ export class FeedService {
 			},
 		});
 
+		// 4. Buscar todos os usuários do sistema
+		const allUsers = await prisma.user.findMany({
+			select: { id: true, name: true, username: true },
+		});
+
+		// 5. Filtrar os tweets de seguidos que mencionam outra pessoa
+		const filteredTweets = allTweets.filter((tweet) => {
+			const isFromFollowed = followedIds.includes(tweet.userId);
+			const isOwnTweet = tweet.userId === tokenUser;
+
+			// Se for próprio tweet ou tweet que menciona o usuário → mantém
+			if (
+				isOwnTweet ||
+				tweet.content
+					.toLowerCase()
+					.includes(user.name.split(' ')[0].toLowerCase()) ||
+				tweet.content.toLowerCase().includes(`@${user.username.toLowerCase()}`)
+			) {
+				return true;
+			}
+
+			// Se for de pessoa seguida e mencionar outra pessoa → remover
+			if (isFromFollowed) {
+				return !allUsers.some((otherUser) => {
+					if (otherUser.id === tokenUser) return false; // ignora menções ao próprio usuário
+					const firstName = otherUser.name.split(' ')[0].toLowerCase();
+					return (
+						tweet.content
+							.toLowerCase()
+							.includes(`@${otherUser.username.toLowerCase()}`) ||
+						tweet.content.toLowerCase().includes(firstName)
+					);
+				});
+			}
+
+			return false;
+		});
+
 		return {
 			success: true,
 			code: 200,
-			message: `Tweets de ${
-				user.name.split(' ')[0]
-			} relacionados ao usuário buscados com sucesso!`,
-			data: tweets,
+			message: `Feed de ${user.name.split(" ")[0]} buscado com sucesso!`,
+			data: filteredTweets,
 		};
 	}
 }
