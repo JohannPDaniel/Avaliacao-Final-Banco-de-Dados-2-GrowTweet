@@ -7,6 +7,7 @@ import { LikeRoutes } from './like.routes';
 import { ReplyRoutes } from './reply.routes';
 import { TweetRoutes } from './tweet.routes';
 import { UserRoutes } from './user.routes';
+import { FeedRoutes } from "./feed.routes";
 
 export const makeRoutes = (app: Express) => {
 	app.get('/', (_req: Request, res: Response) => {
@@ -25,4 +26,5 @@ export const makeRoutes = (app: Express) => {
 	app.use(LikeRoutes.execute());
 	app.use(ReplyRoutes.execute());
 	app.use(FollowerRoutes.execute());
+	app.use(FeedRoutes.execute())
 };
